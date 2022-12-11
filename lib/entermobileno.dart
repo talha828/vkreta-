@@ -17,21 +17,22 @@ class _EnterMobileNoState extends State<EnterMobileNo> {
    final TextEditingController _mobileno=TextEditingController();
   @override
   Widget build(BuildContext context) {
+    var width=MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: width * 0.06),
           child: SafeArea(
             child: Column(
               children: [
-                SizedBox(height: 20,),
+                SizedBox(height: width * 0.06,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      height: 60,
-                      width: 140,
+                      height: width * 0.15,
+                      width: width * 0.35,
                       child: Image.asset('assets/logo.png',fit: BoxFit.fill,color: Colors.blue.shade900),
                     ),
                   ],
@@ -41,42 +42,42 @@ class _EnterMobileNoState extends State<EnterMobileNo> {
                   width: MediaQuery.of(context).size.width/1.5,
                   child: Image.asset('assets/no.png',fit: BoxFit.cover,),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: width * 0.05,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Enter your mobile number to',style:  GoogleFonts.poppins(
                       textStyle:TextStyle(
-                        color:Colors.black,fontWeight: FontWeight.bold,fontSize: 18
+                        color:Colors.black,fontWeight: FontWeight.bold,fontSize: width * 0.05
                       )
                     ),),
                    
       
                   ],
                 ),
-                 SizedBox(height: 5,),
+                 SizedBox(height: width * 0.03,),
                  Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('continue',style:  GoogleFonts.poppins(
                       textStyle:TextStyle(
-                        color:Colors.black,fontWeight: FontWeight.bold,fontSize: 18
+                        color:Colors.black,fontWeight: FontWeight.bold,fontSize: width * 0.05
                       )
                     ),),
                    
       
                   ],
                 ),
-                SizedBox(height: 30,),
+                SizedBox(height: width * 0.06,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('+91 ',style:  GoogleFonts.poppins(
                       textStyle:TextStyle(
-                        color:Colors.blue.shade900,fontSize: 18
+                        color:Colors.blue.shade900,fontSize: width * 0.05
                       )
                     ),),
-                    SizedBox(width: 10,),
+                    SizedBox(width: width * 0.04,),
                     Expanded(child: 
                     TextFormField(
                   controller: _mobileno,
@@ -86,16 +87,17 @@ class _EnterMobileNoState extends State<EnterMobileNo> {
                   hintStyle: GoogleFonts.poppins(
                     textStyle:TextStyle(
                       color:Colors.grey.shade600,
-                       fontSize: 14
+                       fontSize: width * 0.04
             )
                   )
                 ),
                 ),)
                     ],
                 ),
-                SizedBox(height: 50,),
+                 SizedBox(height: width * 0.08,),
                  InkWell(
                    onTap: (){
+
                       Navigator.of(context).pushReplacement(PageRouteBuilder(
                           transitionDuration: Duration(seconds: 1),
                           transitionsBuilder: (BuildContext context,
@@ -121,7 +123,7 @@ class _EnterMobileNoState extends State<EnterMobileNo> {
                           }));
                    },
                    child: Container(
-                               height: 45,
+                               height: width * 0.12,
                                width: MediaQuery.of(context).size.width,
                                decoration: BoxDecoration(
                     color: Colors.blue.shade900,
@@ -129,8 +131,8 @@ class _EnterMobileNoState extends State<EnterMobileNo> {
                                ),
                                child: Center(
                     child: Text('Continue',style: GoogleFonts.poppins(
-                      textStyle:TextStyle(
-                        color:Colors.white,fontWeight: FontWeight.bold,fontSize: 15
+                      textStyle: TextStyle(
+                        color:Colors.white,fontWeight: FontWeight.bold,fontSize: width * 0.04
                       )
                     ),),
                                ),

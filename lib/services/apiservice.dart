@@ -68,7 +68,7 @@ class ApiService {
   //   return response;
   // }
 
-  Future userRegister(String firstname, String lastname, String email, String telephone, String password, String confirm, dynamic newsletter) async {
+    Future userRegister(String firstname, String lastname, String email, String telephone, String password, String confirm, String newsletter) async {
     String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/register");
     final response = await http.post(loginUrl, headers: {
@@ -85,7 +85,7 @@ class ApiService {
     // print(response.statusCode.toString());
     // print(response.body.toString());
     RegisterModel _model = registerModelFromJson(response.body);
-    // print(_model);
+     print(_model);
     return _model;
     // return json.decode(response.body);
   }
@@ -103,7 +103,7 @@ class ApiService {
     // print(response.statusCode.toString());
     // print(response.body.toString());
     LoginModel _model = loginModelFromJson(response.body);
-    // print(_model);
+    print(_model.error);
     return _model;
     // return json.decode(response.body);
   }

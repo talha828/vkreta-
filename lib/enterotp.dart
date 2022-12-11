@@ -20,20 +20,21 @@ required this.t
 class _EnterOtpState extends State<EnterOtp> {
   @override
   Widget build(BuildContext context) {
+    var width =MediaQuery.of(context).size.width;
       return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: width * 0.08),
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: 20,),
+              SizedBox(height: width * 0.06,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    height: 60,
-                    width: 140,
+                    height: width * 0.15,
+                    width: width * 0.35,
                     child: Image.asset('assets/logo.png',fit: BoxFit.fill,color: Colors.blue.shade900),
                   ),
                 ],
@@ -43,53 +44,53 @@ class _EnterOtpState extends State<EnterOtp> {
                 width: MediaQuery.of(context).size.width/1.5,
                 child: Image.asset('assets/mark.png',fit: BoxFit.cover,),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: width * 0.04,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Enter the OTP sent to your',style:  GoogleFonts.poppins(
                     textStyle:TextStyle(
-                      color:Colors.black,fontWeight: FontWeight.bold,fontSize: 18
+                      color:Colors.black,fontWeight: FontWeight.bold,fontSize: width * 0.05
                     )
                   ),),
                  
 
                 ],
               ),
-               SizedBox(height: 5,),
+               SizedBox(height: width * 0.03,),
                Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('number',style:  GoogleFonts.poppins(
                     textStyle:TextStyle(
-                      color:Colors.black,fontWeight: FontWeight.bold,fontSize: 18
+                      color:Colors.black,fontWeight: FontWeight.bold,fontSize: width * 0.05
                     )
                   ),),
                  
 
                 ],
               ),
-               SizedBox(height: 5,),
+               SizedBox(height: width * 0.03,),
                Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                    Text('+91-',style:  GoogleFonts.poppins(
                       textStyle:TextStyle(
-                        color:Colors.black,fontSize: 18,fontWeight: FontWeight.bold
+                        color:Colors.black,fontSize: width * 0.05,fontWeight: FontWeight.bold
                       )
                     ),),
                   Text(widget.no,style:  GoogleFonts.poppins(
                     textStyle:TextStyle(
-                      color:Colors.black,fontWeight: FontWeight.bold,fontSize: 18
+                      color:Colors.black,fontWeight: FontWeight.bold,fontSize: width * 0.05
                     )
                   ),),
                  
 
                 ],
               ),
-              SizedBox(height:20),
+              SizedBox(height:width * 0.06),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
+                padding: EdgeInsets.symmetric(horizontal: width * 0.08),
                 child: OTPTextField(
                   length: 4,
                   width: MediaQuery.of(context).size.width,
@@ -99,7 +100,7 @@ class _EnterOtpState extends State<EnterOtp> {
 
                 ),
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: width * 0.25,),
               
              
                InkWell(
@@ -135,7 +136,7 @@ class _EnterOtpState extends State<EnterOtp> {
                              child: Center(
                   child: Text('Continue',style: GoogleFonts.poppins(
                     textStyle:TextStyle(
-                      color:Colors.white,fontWeight: FontWeight.bold,fontSize: 15
+                      color:Colors.white,fontWeight: FontWeight.bold,fontSize: width * 0.045
                     )
                   ),),
                              ),
