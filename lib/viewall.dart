@@ -17,9 +17,10 @@ required this.title,
 class _ViewAllState extends State<ViewAll> {
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    var width=MediaQuery.of(context).size.width;
+    return Scaffold(
      appBar: AppBar(
-       toolbarHeight:70,
+       toolbarHeight:width * 0.2,
       elevation: 0,
        actions: [
          
@@ -30,7 +31,7 @@ class _ViewAllState extends State<ViewAll> {
                 icon: Icon(
                    FontAwesomeIcons.filter,
                color: Colors.black,
-                  size: 18,
+                  size: width * 0.05,
                 ),
                 itemBuilder: (context) => [
                   PopupMenuItem(
@@ -43,17 +44,17 @@ class _ViewAllState extends State<ViewAll> {
                                style: GoogleFonts.poppins(
                                  textStyle:TextStyle(
                                    color:Colors.black,
-                                   fontSize: 15
+                                   fontSize: width * 0.02
                                  )
                                ),),
                              ),
                            ],
                          ),
-                         SizedBox(height: 15,),
+                         SizedBox(height: width * 0.02,),
                          Divider(
                            height: 1,color: Colors.grey.shade500,
                          ),
-                         SizedBox(height: 15,),
+                         SizedBox(height:  width * 0.02,),
                           Row(
                             children: [
                               GestureDetector(
@@ -61,17 +62,17 @@ class _ViewAllState extends State<ViewAll> {
                                style: GoogleFonts.poppins(
                                  textStyle:TextStyle(
                                    color:Colors.black,
-                                   fontSize: 15
+                                   fontSize:  width * 0.02,
                                  )
                                ),),
                          ),
                             ],
                           ),
-                          SizedBox(height: 15,),
+                          SizedBox(height:  width * 0.02,),
                          Divider(
                            height: 1,color: Colors.grey.shade500,
                          ),
-                         SizedBox(height: 15,),
+                         SizedBox(height:  width * 0.02,),
                           Row(
                             children: [
                               GestureDetector(
@@ -79,17 +80,17 @@ class _ViewAllState extends State<ViewAll> {
                                style: GoogleFonts.poppins(
                                  textStyle:TextStyle(
                                    color:Colors.black,
-                                   fontSize: 15
+                                   fontSize:  width * 0.02,
                                  )
                                ),),
                          ),
                             ],
                           ),
-                          SizedBox(height: 15,),
+                          SizedBox(height:  width * 0.02,),
                          Divider(
                            height: 1,color: Colors.grey.shade500,
                          ),
-                         SizedBox(height: 15,),
+                         SizedBox(height:  width * 0.02,),
                           Row(
                             children: [
                               GestureDetector(
@@ -97,17 +98,17 @@ class _ViewAllState extends State<ViewAll> {
                                style: GoogleFonts.poppins(
                                  textStyle:TextStyle(
                                    color:Colors.black,
-                                   fontSize: 15
+                                   fontSize:  width * 0.02,
                                  )
                                ),),
                          ),
                             ],
                           ),
-                           SizedBox(height: 15,),
+                           SizedBox(height:  width * 0.02,),
                          Divider(
                            height: 1,color: Colors.grey.shade500,
                          ),
-                         SizedBox(height: 15,),
+                         SizedBox(height:  width * 0.02,),
                           Row(
                             children: [
                               GestureDetector(
@@ -115,7 +116,7 @@ class _ViewAllState extends State<ViewAll> {
                                style: GoogleFonts.poppins(
                                  textStyle:TextStyle(
                                    color:Colors.black,
-                                   fontSize: 15
+                                   fontSize:  width * 0.02,
                                  )
                                ),),
                          ),
@@ -134,7 +135,7 @@ class _ViewAllState extends State<ViewAll> {
                              style: GoogleFonts.poppins(
                                textStyle:TextStyle(
                                  color:Colors.black,
-                                 fontSize: 12
+                                 fontSize:  width * 0.035,
                                )
                              ),),
             ],
@@ -144,12 +145,12 @@ class _ViewAllState extends State<ViewAll> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: EdgeInsets.only(right:  width * 0.02,),
                 child: PopupMenuButton(
                   icon: Icon(
                     Icons.format_line_spacing,
                     color: Colors.black,
-                    size: 25,
+                    size:  width * 0.06,
                   ),
                   itemBuilder: (context) => [
                     PopupMenuItem(
@@ -162,17 +163,17 @@ class _ViewAllState extends State<ViewAll> {
                                  style: GoogleFonts.poppins(
                                    textStyle:TextStyle(
                                      color:Colors.black,
-                                     fontSize: 15
+                                     fontSize:  width * 0.035,
                                    )
                                  ),),
                                ),
                              ],
                            ),
-                           SizedBox(height: 15,),
+                           SizedBox(height:  width * 0.04,),
                            Divider(
                              height: 1,color: Colors.grey.shade500,
                            ),
-                           SizedBox(height: 15,),
+                           SizedBox(height:  width * 0.035,),
                             Row(
                               children: [
                                 GestureDetector(
@@ -180,17 +181,17 @@ class _ViewAllState extends State<ViewAll> {
                                  style: GoogleFonts.poppins(
                                    textStyle:TextStyle(
                                      color:Colors.black,
-                                     fontSize: 15
+                                     fontSize:  width * 0.02,
                                    )
                                  ),),
                            ),
                               ],
                             ),
-                            SizedBox(height: 15,),
+                            SizedBox(height:  width * 0.02,),
                            Divider(
                              height: 1,color: Colors.grey.shade500,
                            ),
-                           SizedBox(height: 15,),
+                           SizedBox(height:  width * 0.02,),
                             Row(
                               children: [
                                 GestureDetector(
@@ -198,17 +199,17 @@ class _ViewAllState extends State<ViewAll> {
                                  style: GoogleFonts.poppins(
                                    textStyle:TextStyle(
                                      color:Colors.black,
-                                     fontSize: 15
+                                     fontSize:  width * 0.02,
                                    )
                                  ),),
                            ),
                               ],
                             ),
-                            SizedBox(height: 15,),
+                            SizedBox(height:  width * 0.02,),
                            Divider(
                              height: 1,color: Colors.grey.shade500,
                            ),
-                           SizedBox(height: 15,),
+                           SizedBox(height:  width * 0.02,),
                             Row(
                               children: [
                                 GestureDetector(
@@ -216,17 +217,17 @@ class _ViewAllState extends State<ViewAll> {
                                  style: GoogleFonts.poppins(
                                    textStyle:TextStyle(
                                      color:Colors.black,
-                                     fontSize: 15
+                                     fontSize:  width * 0.02,
                                    )
                                  ),),
                            ),
                               ],
                             ),
-                             SizedBox(height: 15,),
+                             SizedBox(height:  width * 0.02,),
                            Divider(
                              height: 1,color: Colors.grey.shade500,
                            ),
-                           SizedBox(height: 15,),
+                           SizedBox(height:  width * 0.02,),
                             Row(
                               children: [
                                 GestureDetector(
@@ -234,7 +235,7 @@ class _ViewAllState extends State<ViewAll> {
                                  style: GoogleFonts.poppins(
                                    textStyle:TextStyle(
                                      color:Colors.black,
-                                     fontSize: 15
+                                     fontSize:  width * 0.02,
                                    )
                                  ),),
                            ),
@@ -252,7 +253,7 @@ class _ViewAllState extends State<ViewAll> {
                              style: GoogleFonts.poppins(
                                textStyle:TextStyle(
                                  color:Colors.black,
-                                 fontSize: 12
+                                 fontSize:  width * 0.02,
                                )
                              ),),
             ],
@@ -264,7 +265,7 @@ class _ViewAllState extends State<ViewAll> {
           style: GoogleFonts.poppins(
               textStyle: TextStyle(
                   color: Colors.black,
-                  fontSize: 17,
+                  fontSize:  width * 0.05,
                   fontWeight: FontWeight.bold)),
         ),
        leading: IconButton(
@@ -274,7 +275,7 @@ class _ViewAllState extends State<ViewAll> {
             icon: Icon(
               Icons.arrow_back,
               color: Colors.black,
-              size: 25,
+              size:  width * 0.06,
             )),
      ),
      backgroundColor: Colors.white,
@@ -284,8 +285,8 @@ class _ViewAllState extends State<ViewAll> {
          child: Column(
            children: [
              Container(
-                    height: 70,
-                    decoration: BoxDecoration(
+                    height:  width * 0.2,
+                    decoration:const BoxDecoration(
                       color: Colors.white,
                       // boxShadow: [BoxShadow(
                       //   color: Colors.grey.shade100,spreadRadius: 5,
@@ -311,1296 +312,174 @@ class _ViewAllState extends State<ViewAll> {
                               hintText: 'Search Product',
                               hintStyle: GoogleFonts.poppins(
                                   textStyle: TextStyle(
-                                      color: Colors.grey.shade600, fontSize: 14))),
+                                      color: Colors.grey.shade600, fontSize:  width * 0.04))),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height:  width * 0.02,),
                   Divider(
                     height: 1,
                     color: Colors.grey.shade400,
                   ),
-                   SizedBox(height: 20,),
-           Padding(
-             padding: const EdgeInsets.symmetric(horizontal: 35),
-             child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                   InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  transitionDuration: Duration(seconds: 1),
-                                  transitionsBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation,
-                                      Widget child) {
-                                    animation = CurvedAnimation(
-                                        parent: animation, curve: Curves.linear);
-                                    return SharedAxisTransition(
-                                        child: child,
-                                        animation: animation,
-                                        secondaryAnimation: secAnimation,
-                                        transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                  },
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation) {
-                                    return ProductDisplay();
-                                  }));
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 135,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 3))
-                                  ]),
-                              child: Stack(
-                                children: [Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      width: 130,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset('assets/shoes.png'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Here is the title of your product',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade900,
-                                                fontSize: 13)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '₹ 100',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '(150)',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                 Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(children: [
+                   SizedBox(height:  width * 0.02,),
+           SizedBox(height:  width * 0.02,),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(PageRouteBuilder(
+                    transitionDuration:const Duration(seconds: 1),
+                    transitionsBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secAnimation,
+                        Widget child) {
+                      animation = CurvedAnimation(
+                          parent: animation, curve: Curves.linear);
+                      return SharedAxisTransition(
+                          child: child,
+                          animation: animation,
+                          secondaryAnimation: secAnimation,
+                          transitionType:
+                              SharedAxisTransitionType.horizontal);
+                    },
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secAnimation) {
+                      return const ProductDisplay();
+                    }));
+              },
+              child: Container(
+                height:  width * 0.53,
+                width:  width * 0.4,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(7),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade200,
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          offset:const Offset(1, 3))
+                    ]),
+                child: Stack(
+                  children: [Column(
+                    children: [
+                      SizedBox(
+                        height:  width * 0.02,
+                      ),
                       Container(
-                          height: 25,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20))),
-                          child: Center(
-                            child: Text(
-                              '-60%',
+                        height:  width * 0.25,
+                        width: width * 0.4,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Padding(
+                          padding:  EdgeInsets.all( width * 0.02,),
+                          child: Image.asset('assets/shirt.png'),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                             EdgeInsets.symmetric(horizontal:  width * 0.02,),
+                        child: Text(
+                          'Here is the title of your product',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                  color: Colors.grey.shade900,
+                                  fontSize: width * 0.04)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: width * 0.015,
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal:  width * 0.02,),
+                        child: Row(
+                          children: [
+                            Text(
+                              '₹ 100',
                               style: GoogleFonts.poppins(
                                   textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 10)),
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize:  width * 0.038)),
                             ),
-                          ))
-                    ]),
-                  ),
-                                ]
-                              ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Padding(
+                        padding:
+                             EdgeInsets.symmetric(horizontal:  width * 0.02,),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
                             ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  transitionDuration: Duration(seconds: 1),
-                                  transitionsBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation,
-                                      Widget child) {
-                                    animation = CurvedAnimation(
-                                        parent: animation, curve: Curves.linear);
-                                    return SharedAxisTransition(
-                                        child: child,
-                                        animation: animation,
-                                        secondaryAnimation: secAnimation,
-                                        transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                  },
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation) {
-                                    return ProductDisplay();
-                                  }));
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 135,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 3))
-                                  ]),
-                              child: Stack(
-                                children: [Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      width: 130,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset('assets/shirt.png'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Here is the title of your product',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade900,
-                                                fontSize: 13)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '₹ 100',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '(150)',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                 Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(children: [
-                      Container(
-                          height: 25,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20))),
-                          child: Center(
-                            child: Text(
-                              '-60%',
+                            Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              '(150)',
                               style: GoogleFonts.poppins(
                                   textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 10)),
+                                      color: Colors.grey.shade500,
+                                      fontSize:  width * 0.03)),
                             ),
-                          ))
-                    ]),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                                ]
-                              ),
-                            ),
-                          ),
-               ],
-             ),
-           ),
-           SizedBox(height: 10,),
-            Padding(
-             padding: const EdgeInsets.symmetric(horizontal: 35),
-             child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                   InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  transitionDuration: Duration(seconds: 1),
-                                  transitionsBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation,
-                                      Widget child) {
-                                    animation = CurvedAnimation(
-                                        parent: animation, curve: Curves.linear);
-                                    return SharedAxisTransition(
-                                        child: child,
-                                        animation: animation,
-                                        secondaryAnimation: secAnimation,
-                                        transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                  },
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation) {
-                                    return ProductDisplay();
-                                  }));
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 135,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 3))
-                                  ]),
-                              child: Stack(
-                                children: [Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      width: 130,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset('assets/shoes.png'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Here is the title of your product',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade900,
-                                                fontSize: 13)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '₹ 100',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '(150)',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                 Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(children: [
-                      Container(
-                          height: 25,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20))),
-                          child: Center(
-                            child: Text(
-                              '-60%',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 10)),
-                            ),
-                          ))
-                    ]),
-                  ),
-                                ]
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  transitionDuration: Duration(seconds: 1),
-                                  transitionsBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation,
-                                      Widget child) {
-                                    animation = CurvedAnimation(
-                                        parent: animation, curve: Curves.linear);
-                                    return SharedAxisTransition(
-                                        child: child,
-                                        animation: animation,
-                                        secondaryAnimation: secAnimation,
-                                        transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                  },
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation) {
-                                    return ProductDisplay();
-                                  }));
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 135,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 3))
-                                  ]),
-                              child: Stack(
-                                children: [Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      width: 130,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset('assets/shirt.png'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Here is the title of your product',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade900,
-                                                fontSize: 13)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '₹ 100',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '(150)',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                 Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(children: [
-                      Container(
-                          height: 25,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20))),
-                          child: Center(
-                            child: Text(
-                              '-60%',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 10)),
-                            ),
-                          ))
-                    ]),
-                  ),
-                                ]
-                              ),
-                            ),
-                          ),
-               ],
-             ),
-           ),
-           SizedBox(height: 10,),
-            Padding(
-             padding: const EdgeInsets.symmetric(horizontal: 35),
-             child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                   InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  transitionDuration: Duration(seconds: 1),
-                                  transitionsBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation,
-                                      Widget child) {
-                                    animation = CurvedAnimation(
-                                        parent: animation, curve: Curves.linear);
-                                    return SharedAxisTransition(
-                                        child: child,
-                                        animation: animation,
-                                        secondaryAnimation: secAnimation,
-                                        transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                  },
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation) {
-                                    return ProductDisplay();
-                                  }));
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 135,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 3))
-                                  ]),
-                              child: Stack(
-                                children: [Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      width: 130,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset('assets/shoes.png'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Here is the title of your product',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade900,
-                                                fontSize: 13)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '₹ 100',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '(150)',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                 Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(children: [
-                      Container(
-                          height: 25,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20))),
-                          child: Center(
-                            child: Text(
-                              '-60%',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 10)),
-                            ),
-                          ))
-                    ]),
-                  ),
-                                ]
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  transitionDuration: Duration(seconds: 1),
-                                  transitionsBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation,
-                                      Widget child) {
-                                    animation = CurvedAnimation(
-                                        parent: animation, curve: Curves.linear);
-                                    return SharedAxisTransition(
-                                        child: child,
-                                        animation: animation,
-                                        secondaryAnimation: secAnimation,
-                                        transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                  },
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation) {
-                                    return ProductDisplay();
-                                  }));
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 135,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 3))
-                                  ]),
-                              child: Stack(
-                                children: [Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      width: 130,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset('assets/shirt.png'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Here is the title of your product',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade900,
-                                                fontSize: 13)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '₹ 100',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '(150)',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                 Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(children: [
-                      Container(
-                          height: 25,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20))),
-                          child: Center(
-                            child: Text(
-                              '-60%',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 10)),
-                            ),
-                          ))
-                    ]),
-                  ),
-                                ]
-                              ),
-                            ),
-                          ),
-               ],
-             ),
-           ),
-           SizedBox(height:10),
-           Padding(
-             padding: const EdgeInsets.symmetric(horizontal: 35),
-             child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                   InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  transitionDuration: Duration(seconds: 1),
-                                  transitionsBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation,
-                                      Widget child) {
-                                    animation = CurvedAnimation(
-                                        parent: animation, curve: Curves.linear);
-                                    return SharedAxisTransition(
-                                        child: child,
-                                        animation: animation,
-                                        secondaryAnimation: secAnimation,
-                                        transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                  },
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation) {
-                                    return ProductDisplay();
-                                  }));
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 135,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 3))
-                                  ]),
-                              child: Stack(
-                                children: [Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      width: 130,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset('assets/shoes.png'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Here is the title of your product',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade900,
-                                                fontSize: 13)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '₹ 100',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '(150)',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                 Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(children: [
-                      Container(
-                          height: 25,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20))),
-                          child: Center(
-                            child: Text(
-                              '-60%',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 10)),
-                            ),
-                          ))
-                    ]),
-                  ),
-                                ]
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  transitionDuration: Duration(seconds: 1),
-                                  transitionsBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation,
-                                      Widget child) {
-                                    animation = CurvedAnimation(
-                                        parent: animation, curve: Curves.linear);
-                                    return SharedAxisTransition(
-                                        child: child,
-                                        animation: animation,
-                                        secondaryAnimation: secAnimation,
-                                        transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                  },
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secAnimation) {
-                                    return ProductDisplay();
-                                  }));
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 135,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(1, 3))
-                                  ]),
-                              child: Stack(
-                                children: [Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 100,
-                                      width: 130,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset('assets/shirt.png'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Here is the title of your product',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade900,
-                                                fontSize: 13)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '₹ 100',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 15,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '(150)',
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                 Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(children: [
-                      Container(
-                          height: 25,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20))),
-                          child: Center(
-                            child: Text(
-                              '-60%',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 10)),
-                            ),
-                          ))
-                    ]),
-                  ),
-                                ]
-                              ),
-                            ),
-                          ),
-               ],
-             ),
-           ),
+                   Padding(
+                   padding: EdgeInsets.all( width * 0.02,),
+                   child: Row(children: [
+                     Container(
+            height: 25,
+            width: 40,
+            decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(20))),
+            child: Center(
+              child: Text(
+                '-60%',
+                style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                        color: Colors.white, fontSize: 10)),
+              ),
+            ))
+                   ]),
+                 ),
+                  ]
+                ),
+              ),
+            ),
                       
            ],
          ),

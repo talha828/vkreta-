@@ -1,114 +1,105 @@
-// To parse this JSON data, do
-//
-//     final homeModel = homeModelFromJson(jsonString);
-
-import 'dart:convert';
-
-HomeModel homeModelFromJson(String str) => HomeModel.fromJson(json.decode(str));
-
-String homeModelToJson(HomeModel data) => json.encode(data.toJson());
+import 'package:vkreta/models/sliderModel.dart';
 
 class HomeModel {
-  HomeModel({
-    this.logoLink,
-    this.topCategories,
-    this.layout,
-  });
-
   String? logoLink;
-  List<TopCategory>? topCategories;
+  String? whatsappNumber;
+  List<TopCategories>? topCategories;
   List<Layout>? layout;
+  SliderModel? slider;
 
-  factory HomeModel.fromJson(Map<String, dynamic> json) => HomeModel(
-    logoLink: json["logo_link"],
-    topCategories: List<TopCategory>.from(json["top_categories"].map((x) => TopCategory.fromJson(x))),
-    layout: List<Layout>.from(json["layout"].map((x) => Layout.fromJson(x))),
-  );
+  HomeModel(
+      {this.logoLink, this.whatsappNumber, this.topCategories, this.layout,this.slider});
 
-  Map<String, dynamic> toJson() => {
-    "logo_link": logoLink,
-    "top_categories": List<dynamic>.from(topCategories!.map((x) => x.toJson())),
-    "layout": List<dynamic>.from(layout!.map((x) => x.toJson())),
-  };
+  HomeModel.fromJson(Map<String, dynamic> json) {
+    logoLink = json['logo_link'];
+    whatsappNumber = json['whatsapp_number'];
+    if (json['top_categories'] != null) {
+      topCategories = <TopCategories>[];
+      json['top_categories'].forEach((v) {
+        topCategories!.add(new TopCategories.fromJson(v));
+      });
+    }
+    if (json['layout'] != null) {
+      layout = <Layout>[];
+        slider= SliderModel.fromJson(json['layout'][0]);
+       int i=0;
+       for(var j in json['layout']){
+         if(i>0 && i<5){
+           layout!.add(new Layout.fromJson(j));
+         }
+         i++;
+         print(i);
+       }
+
+      //   json['layout'].forEach((v) {
+      //
+      // });
+    }
+  }
+
+
+}
+
+class TopCategories {
+  String? categoryId;
+  String? name;
+  String? image;
+
+  TopCategories({this.categoryId, this.name, this.image});
+
+  TopCategories.fromJson(Map<String, dynamic> json) {
+    categoryId = json['category_id'];
+    name = json['name'];
+    image = json['image'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['category_id'] = this.categoryId;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    return data;
+  }
 }
 
 class Layout {
-  Layout({
-    this.title,
-    this.layout,
-    this.sort,
-    this.column,
-    this.data,
-  });
-
   String? title;
   String? layout;
   String? sort;
   String? column;
-  dynamic data;
+  List<Data>? data;
 
-  factory Layout.fromJson(Map<String, dynamic> json) => Layout(
-    title: json["title"],
-    layout: json["layout"],
-    sort: json["sort"],
-    column: json["column"],
-    data: json["data"],
-  );
+  Layout({this.title, this.layout, this.sort, this.column, this.data});
 
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "layout": layout,
-    "sort": sort,
-    "column": column,
-    "data": data,
-  };
+  Layout.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    layout = json['layout'];
+    sort = json['sort'];
+    column = json['column'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = this.title;
+    data['layout'] = this.layout;
+    data['sort'] = this.sort;
+    data['column'] = this.column;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }
 
-class DatumElement {
-  DatumElement({
-    this.name,
-    this.image,
-    this.link,
-  });
-
+class Data {
   String? name;
-  String? image;
-  String? link;
-
-  factory DatumElement.fromJson(Map<String, dynamic> json) => DatumElement(
-    name: json["name"],
-    image: json["image"],
-    link: json["link"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "image": image,
-    "link": link,
-  };
-}
-
-class DatumValue {
-  DatumValue({
-    this.productId,
-    this.name,
-    this.quantity,
-    this.stockStatus,
-    this.thumb,
-    this.secondThumb,
-    this.priceValue,
-    this.description,
-    this.price,
-    this.special,
-    this.tax,
-    this.minimum,
-    this.rating,
-    this.dateEnd,
-    this.href,
-  });
-
   String? productId;
-  String? name;
   String? quantity;
   String? stockStatus;
   String? thumb;
@@ -118,68 +109,67 @@ class DatumValue {
   String? price;
   String? special;
   bool? tax;
-  int? minimum;
+  String? minimum;
   int? rating;
-  dynamic dateEnd;
+  Null? dateEnd;
   String? href;
 
-  factory DatumValue.fromJson(Map<String, dynamic> json) => DatumValue(
-    productId: json["product_id"],
-    name: json["name"],
-    quantity: json["quantity"],
-    stockStatus: json["stock_status"],
-    thumb: json["thumb"],
-    secondThumb: json["second_thumb"],
-    priceValue: json["price_value"],
-    description: json["description"],
-    price: json["price"],
-    special: json["special"],
-    tax: json["tax"],
-    minimum: json["minimum"],
-    rating: json["rating"],
-    dateEnd: json["date_end"],
-    href: json["href"],
-  );
+  Data(
+      {this.name,
+        this.productId,
+        this.quantity,
+        this.stockStatus,
+        this.thumb,
+        this.secondThumb,
+        this.priceValue,
+        this.description,
+        this.price,
+        this.special,
+        this.tax,
+        this.minimum,
+        this.rating,
+        this.dateEnd,
+        this.href});
 
-  Map<String, dynamic> toJson() => {
-    "product_id": productId,
-    "name": name,
-    "quantity": quantity,
-    "stock_status": stockStatus,
-    "thumb": thumb,
-    "second_thumb": secondThumb,
-    "price_value": priceValue,
-    "description": description,
-    "price": price,
-    "special": special,
-    "tax": tax,
-    "minimum": minimum,
-    "rating": rating,
-    "date_end": dateEnd,
-    "href": href,
-  };
-}
+  Data.fromJson(Map<String, dynamic> json) {
+   try{
+     name = json['name'];
+     productId = json['product_id'];
+     quantity = json['quantity'];
+     stockStatus = json['stock_status'];
+     thumb = json['thumb'];
+     secondThumb = json['second_thumb'].toString();
+     priceValue = json['price_value'];
+     description = json['description'];
+     price = json['price'];
+     special = json['special'];
+     tax = json['tax'];
+     minimum = json['minimum'].toString();
+     rating = json['rating'];
+     dateEnd = json['date_end'];
+     href = json['href'];
+   }catch(e){
+     print(e.toString());
+   }
+  }
 
-class TopCategory {
-  TopCategory({
-    this.categoryId,
-    this.name,
-    this.image,
-  });
-
-  String? categoryId;
-  String? name;
-  String? image;
-
-  factory TopCategory.fromJson(Map<String, dynamic> json) => TopCategory(
-    categoryId: json["category_id"],
-    name: json["name"],
-    image: json["image"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "category_id": categoryId,
-    "name": name,
-    "image": image,
-  };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['product_id'] = this.productId;
+    data['quantity'] = this.quantity;
+    data['stock_status'] = this.stockStatus;
+    data['thumb'] = this.thumb;
+    data['second_thumb'] = this.secondThumb;
+    data['price_value'] = this.priceValue;
+    data['description'] = this.description;
+    data['price'] = this.price;
+    data['special'] = this.special;
+    data['tax'] = this.tax;
+    data['minimum'] = this.minimum;
+    data['rating'] = this.rating;
+    data['date_end'] = this.dateEnd;
+    data['href'] = this.href;
+    return data;
+  }
 }

@@ -1,13 +1,20 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:provider/provider.dart';
 import 'package:vkreta/entermobileno.dart';
 import 'package:vkreta/forgotpasssword.dart';
+import 'package:vkreta/helper/helper.dart';
+import 'package:vkreta/home.dart';
+import 'package:vkreta/models/homemodel.dart';
+import 'package:vkreta/providerModel/homedata.dart';
 import 'package:vkreta/selectscreen.dart';
 import 'package:vkreta/services/apiservice.dart';
 import 'package:vkreta/signup.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -25,6 +32,25 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       isLoading =value;
     });
+  }
+  getLogin()async{
+    String? email=await Helper.prefGetString("email");
+    String? password=await Helper.prefGetString("password");
+    if(email != null && password != null){
+      String? deviceId = await PlatformDeviceId.getDeviceId;
+      var response= ApiService().userLogin(email, password, deviceId!).then((value){
+        if(value.error == null){
+          Get.to(const Home());
+        }
+      }).catchError((e){
+
+      });
+    }
+  }
+  @override
+  void initState() {
+    getLogin();
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {
@@ -156,8 +182,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             .hasMatch(_email.text.trim())) {
                           if (_password.text != null) {
                             String? deviceId = await PlatformDeviceId.getDeviceId;
-                             var response= ApiService().userLogin(_email.text, _password.text, deviceId!).then((value){
+                             var response= ApiService().userLogin(_email.text, _password.text, deviceId!).then((value)async{
                                if(value.error == null){
+                                 await Helper.prefSetString("email", _email.text);
+                                 await Helper.prefSetString("password", _password.text);
                                  Navigator.of(context).pushReplacement(PageRouteBuilder(
                                      transitionDuration:const Duration(seconds: 1),
                                      transitionsBuilder: (BuildContext context,
@@ -229,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           'A new user?',
                           style: GoogleFonts.poppins(
-                              textStyle: TextStyle(color: Colors.black, fontSize: 14)),
+                              textStyle:const TextStyle(color: Colors.black, fontSize: 14)),
                         ),
                         SizedBox(
                           width:  width * 0.02,
@@ -237,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).pushReplacement(PageRouteBuilder(
-                                transitionDuration: Duration(seconds: 1),
+                                transitionDuration:const Duration(seconds: 1),
                                 transitionsBuilder: (BuildContext context,
                                     Animation<double> animation,
                                     Animation<double> secAnimation,
@@ -254,7 +282,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 pageBuilder: (BuildContext context,
                                     Animation<double> animation,
                                     Animation<double> secAnimation) {
-                                  return SignUp();
+                                  return const SignUp();
                                 }));
                           },
                           child: Text(

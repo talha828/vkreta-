@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class helper {
+class Helper {
   static String valueSharedPreferences = '';
 
   // Write DATA
@@ -22,7 +22,7 @@ class helper {
     return await sharedPreferences.setString(key, value);
   }
 
-  static Future prefGetString(key) async {
+  static Future<String?> prefGetString(key) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(key);
   }

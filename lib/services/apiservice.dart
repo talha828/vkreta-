@@ -12,6 +12,7 @@ import 'package:vkreta/models/carttotalModel.dart';
 import 'package:vkreta/models/countryModel.dart';
 import 'package:vkreta/models/customdetail.dart';
 import 'package:vkreta/models/deleteaddressModel.dart';
+import 'package:vkreta/models/homemodel.dart';
 import 'package:vkreta/models/listaddressModel.dart';
 import 'package:vkreta/models/orderinfordetailModel.dart';
 import 'package:vkreta/models/orderlistModel.dart';
@@ -177,7 +178,7 @@ class ApiService {
     return json.decode(response.body);
   }
 
-  Future getHome() async {
+  Future<HomeModel> getHome() async {
     String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     final data = Uri.parse("https://www.vkreta.com/index.php?route=api/home");
     final response = await http.get(
@@ -186,7 +187,8 @@ class ApiService {
     );
     //  print(response.statusCode);
     print(response.body);
-    return json.decode(response.body);
+    final homeModel = HomeModel.fromJson(jsonDecode(response.body));
+    return homeModel;
   }
 
   Future getSearchSugest(String text) async {

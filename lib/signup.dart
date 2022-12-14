@@ -6,6 +6,8 @@ import 'package:vkreta/entermobileno.dart';
 import 'package:vkreta/login.dart';
 import 'package:vkreta/services/apiservice.dart';
 
+import 'helper/helper.dart';
+
 class SignUp extends StatefulWidget {
   const SignUp({ Key? key }) : super(key: key);
 
@@ -214,7 +216,9 @@ class _SignUpState extends State<SignUp> {
                               if(_telephone.text.toString() != "" && _telephone.text.toString().length >12){
                                 if(_password.text.toString()!= "" &&_password.text.toString().length >5 ){
                                   if(_password.text == _confirmpassword.text ){
-                                      var response=ApiService().userRegister(_firstname.text, _lastname.text, _email.text, _telephone.text, _password.text, _confirmpassword.text, _value.toString()).then((value){
+                                      var response=ApiService().userRegister(_firstname.text, _lastname.text, _email.text, _telephone.text, _password.text, _confirmpassword.text, _value.toString()).then((value)async{
+                                        await Helper.prefSetString("email", _email.text);
+                                        await Helper.prefSetString("password", _password.text);
                                         Navigator.of(context).pushReplacement(PageRouteBuilder(
                                               transitionDuration:const Duration(seconds: 1),
                                               transitionsBuilder: (BuildContext context,
