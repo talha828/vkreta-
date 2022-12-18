@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:vkreta/allnotifications.dart';
 import 'package:vkreta/lowtohighprice.dart';
 import 'package:vkreta/models/homemodel.dart';
+import 'package:vkreta/modifyyouraddress.dart';
 import 'package:vkreta/notifications.dart';
 import 'package:vkreta/productdisplay.dart';
+import 'package:vkreta/response/search_products_response.dart';
 import 'package:vkreta/services/apiservice.dart';
 
 import 'package:vkreta/viewall.dart';
@@ -21,6 +24,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final TextEditingController _search = TextEditingController();
   Future<HomeModel> getHomeScreenData()async{
   HomeModel homeModel=await ApiService().getHome();
   return homeModel;
@@ -43,14 +47,14 @@ class _HomeState extends State<Home> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               top: 18,
             ),
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               // top: ResponsiveFlutter.of(context).moderateScale(5),
               bottom: 20,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
             ),
             child: widget!,
@@ -75,8 +79,8 @@ class _HomeState extends State<Home> {
               color: Colors.grey.withOpacity(0.1),
               width: MediaQuery.of(context).size.width,
               padding:const EdgeInsets.symmetric(vertical: 16),
-              child: Center(
-                child:const Text(
+              child:const Center(
+                child: Text(
                   "CHOOSE YOUR LOCATION",
                   style: TextStyle(
                     fontSize: 16,
@@ -85,30 +89,35 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            Container(
-              margin:const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
-              width: double.infinity,
-              padding:const EdgeInsets.all(14),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    "assets/ic_home.png",
-                    height: 18,
-                    width: 18,
-                  ),
-                  const SizedBox(width: 6),
-                  const Expanded(
-                    child: Text(
-                      "SELECT ADDRESS",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+            InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>const ModifyYourAddress()));
+              },
+              child: Container(
+                margin:const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                width: double.infinity,
+                padding:const EdgeInsets.all(14),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      "assets/ic_home.png",
+                      height: 18,
+                      width: 18,
+                    ),
+                    const SizedBox(width: 6),
+                    const Expanded(
+                      child: Text(
+                        "SELECT ADDRESS",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Container(
@@ -124,47 +133,47 @@ class _HomeState extends State<Home> {
                     height: 18,
                     width: 18,
                   ),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "PIN CODE",
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
+                        const SizedBox(height: 4),
+                        const Text(
                           "Enter a pincode",
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                         Row(
                           children: [
                             Expanded(
-                              child: Container(
+                              child: SizedBox(
                                 height: 44,
                                 child: TextField(
                                   controller: TextEditingController(),
-                                  decoration: InputDecoration(
+                                  decoration:const InputDecoration(
                                     border: OutlineInputBorder(),
                                     contentPadding: EdgeInsets.all(10),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Container(
                               height: 44,
                               width: 100,
                               color: Colors.blue,
-                              child: Center(
+                              child:const Center(
                                 child: Text(
                                   "LOGIN",
                                   style: TextStyle(
@@ -184,10 +193,10 @@ class _HomeState extends State<Home> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(bottom: 30, left: 20, right: 20),
+              margin:const EdgeInsets.only(bottom: 30, left: 20, right: 20),
               decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
               width: double.infinity,
-              padding: EdgeInsets.all(14),
+              padding:const EdgeInsets.all(14),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -196,8 +205,8 @@ class _HomeState extends State<Home> {
                     height: 18,
                     width: 18,
                   ),
-                  SizedBox(width: 6),
-                  Expanded(
+                  const SizedBox(width: 6),
+                  const Expanded(
                     child: Text(
                       "USE MY CURRENT LOCATION",
                       style: TextStyle(
@@ -246,23 +255,45 @@ class _HomeState extends State<Home> {
                         children: [
                           Expanded(
                             child: TextFormField(
+                              controller: _search,
+                              textInputAction: TextInputAction.search,
+                              onFieldSubmitted: (value) {
+                                showSearch(
+                                  query: _search.text,
+                                  context: context,
+                                  delegate: CustomSearchDelegate(search: _search.text.trim().toLowerCase()),
+                                );
+                              },
                               decoration: InputDecoration(
-                                  prefixIcon: Icon(
+                                prefixIcon: InkWell(
+                                  onTap: () {
+                                    showSearch(
+                                      query: _search.text,
+                                      context: context,
+                                      delegate: CustomSearchDelegate(search: _search.text.trim().toLowerCase()),
+                                    );
+                                  },
+                                  child: Icon(
                                     Icons.search,
                                     color: Colors.grey.shade600,
-                                    size: width * 0.07,
+                                    size: 25,
                                   ),
-                                  isDense: true,
-                                  filled: true,
-                                  fillColor: Colors.grey.shade100,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none),
-                                  hintText: 'Search Product',
-                                  hintStyle: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontSize: width * 0.04))),
+                                ),
+                                isDense: true,
+                                filled: true,
+                                fillColor: Colors.grey.shade100,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                hintText: 'Search Product',
+                                hintStyle: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
 
@@ -438,31 +469,10 @@ class _HomeState extends State<Home> {
                                     Animation<double> animation,
                                     Animation<double> secAnimation) {
                                   return ViewAll(
-                                    title:snapshot.data!.layout![index].title!,
+                                    title:snapshot.data!.layout![index].preset!,
                                   );
                                 }));
-                          }, onTap: (){
-                            Navigator.of(context).push(PageRouteBuilder(
-                                transitionDuration:const Duration(seconds: 1),
-                                transitionsBuilder: (BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secAnimation,
-                                    Widget child) {
-                                  animation = CurvedAnimation(
-                                      parent: animation, curve: Curves.linear);
-                                  return SharedAxisTransition(
-                                      child: child,
-                                      animation: animation,
-                                      secondaryAnimation: secAnimation,
-                                      transitionType:
-                                      SharedAxisTransitionType.horizontal);
-                                },
-                                pageBuilder: (BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secAnimation) {
-                                  return const ProductDisplay();
-                                }));
-                          }, product: snapshot.data!.layout![index].data!);
+                          },  product: snapshot.data!.layout![index].data!);
                         }, separatorBuilder: (context,index){
                       return SizedBox(height: width * 0.15,);
                     }, itemCount: snapshot.data!.layout!.length),
@@ -503,14 +513,12 @@ class ProductCart extends StatefulWidget {
     required this.width,
     required this.title,
     required this.viewAll,
-    required this.onTap,
     required this.product,
   }) : super(key: key);
 
   final double width;
   final String title;
   final Null Function() viewAll;
-  final Null Function() onTap;
   final List<Data>? product;
 
   @override
@@ -570,7 +578,28 @@ class _ProductCartState extends State<ProductCart> {
                 width: MediaQuery.of(context).size.width * 0.4,
                 child:
                 InkWell(
-                      onTap: widget.onTap,
+                      onTap: (){
+                        Navigator.of(context).push(PageRouteBuilder(
+                            transitionDuration:const Duration(seconds: 1),
+                            transitionsBuilder: (BuildContext context,
+                                Animation<double> animation,
+                                Animation<double> secAnimation,
+                                Widget child) {
+                              animation = CurvedAnimation(
+                                  parent: animation, curve: Curves.linear);
+                              return SharedAxisTransition(
+                                  child: child,
+                                  animation: animation,
+                                  secondaryAnimation: secAnimation,
+                                  transitionType:
+                                  SharedAxisTransitionType.horizontal);
+                            },
+                            pageBuilder: (BuildContext context,
+                                Animation<double> animation,
+                                Animation<double> secAnimation) {
+                              return  ProductDisplay(int.parse(widget.product![index].productId!));
+                            }));
+                      },
                       child: Container(
                         height: widget.width * 0.55,
                         width: widget.width * 0.4,
@@ -592,14 +621,15 @@ class _ProductCartState extends State<ProductCart> {
                                   height: 5,
                                 ),
                                 Container(
-                                  height: widget.width * 0.26,
+                                  height: widget.width * 0.32,
                                   width: widget.width * 0.4,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Padding(
                                     padding: EdgeInsets.all(widget.width * 0.02),
                                     child: Image.network(widget.product![index].thumb!.toString()=='null'?"https://dfdsf":widget.product![index].thumb!,
-                                    errorBuilder: (context,object,straeTree){
+                                        fit: BoxFit.cover,
+                                      errorBuilder: (context,object,straeTree){
                                       return Icon(Icons.image,color: Colors.grey,size: widget.width * 0.06,);
                                     },
                                     ),
@@ -615,15 +645,15 @@ class _ProductCartState extends State<ProductCart> {
                                     style: GoogleFonts.poppins(
                                         textStyle: TextStyle(
                                             color: Colors.grey.shade900,
-                                            fontSize: widget.width * 0.04)),
+                                            fontSize: widget.width * 0.03)),
                                   ),
                                 ),
                                 SizedBox(
-                                  height: widget.width * 0.02,
+                                  height: widget.width * 0.01,
                                 ),
                                 Padding(
                                   padding:
-                                  EdgeInsets.symmetric(horizontal: widget.width * 0.02),
+                                  EdgeInsets.symmetric(horizontal: widget.width * 0.01),
                                   child: Row(
                                     children: [
                                       Text(
@@ -632,7 +662,7 @@ class _ProductCartState extends State<ProductCart> {
                                             textStyle: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: widget.width * 0.04)),
+                                                fontSize: widget.width * 0.03)),
                                       ),
                                     ],
                                   ),
@@ -715,7 +745,7 @@ class _ProductCartState extends State<ProductCart> {
         ):Container(height: widget.width * 0.58,
          //width: widget.width * 0.3,
            alignment: Alignment.center,
-           child: Text("No result are found"),
+           child: const Text("No result are found"),
          )
       ],
     );
@@ -745,7 +775,7 @@ class CategoryButton extends StatelessWidget {
           width: width * 0.2,
           color: Colors.white,
           child: Column(children: [
-            Container(
+            SizedBox(
                 height: width * 0.18,
                 width: width * 0.22,
                 child: ClipRRect(
@@ -765,7 +795,7 @@ class CategoryButton extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
+                  textStyle:const TextStyle(
                       color: Colors.black,
                       fontSize: 10,
                       fontWeight: FontWeight.bold)),
@@ -790,4 +820,294 @@ class Product{
   String image;
   String sales;
   Product({required this.name,required this.prices,required this.orderQuantity,required this.image,required this.sales});
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  final String search;
+  CustomSearchDelegate({required this.search});
+  final GlobalKey<ScaffoldState> scaffoldKey1 = GlobalKey<ScaffoldState>();
+
+  void openDrawer() {
+    scaffoldKey1.currentState?.openDrawer();
+  }
+
+  void closeDrawer() {
+    Get.back();
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon:const Icon(Icons.filter_alt_outlined),
+        onPressed: () async {
+          SearchApiResponse response = await Provider.of<Model>(context, listen: false).response;
+          print(response.filter?.first.priceRange?.min);
+          print(response.filter?.first.priceRange?.max);
+
+          Get.defaultDialog(contentPadding:const EdgeInsets.symmetric(horizontal: 10, vertical: 10), title: "Filter", titleStyle: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold), content: Text('Please select Filters'), actions: [
+            ChangeNotifierProvider(
+              create: (context) => Model(),
+              child: Consumer<Model>(builder: (context, model, child) {
+                Provider.of<Model>(context, listen: false).valu = response.filter?.first.priceRange?.min?.toDouble() ?? 100;
+
+                return Column(
+                  children: [
+                    Text(
+                      'Price ${model.valu.toInt()}',
+                      style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    if (response.filter?.first.priceRange?.min != null)
+                      Row(
+                        children: [
+                          Text('${response.filter?.first.priceRange?.min}'),
+                          Slider(
+                              label: model.valu.toString(),
+                              min: response.filter!.first.priceRange!.min!.toDouble(),
+                              max: response.filter!.first.priceRange!.max!.toDouble(),
+                              value: model.valu,
+                              onChanged: (value) {
+                                model.updateValue(value);
+                              }),
+                          Text('${response.filter!.first.priceRange!.max}'),
+                        ],
+                      ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    //Text('${model.valu.toInt()}'),
+                  ],
+                );
+              }),
+            ),
+          ]);
+        },
+      ),
+      //open sample dailog
+    ];
+  }
+
+  //create a buildtap
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon:const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return FutureBuilder(
+      future: ApiService().searchApiCalled(item: search, pageNO: '1', lmit: '30'),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          Provider.of<Model>(context, listen: false).snapshotTop = snapshot;
+          Provider.of<Model>(context, listen: false).response = snapshot.data;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Divider(
+                      height: 1,
+                      color: Colors.grey.shade400,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, childAspectRatio: 0.85, crossAxisSpacing: 10, mainAxisSpacing: 10,),
+                        shrinkWrap: true,
+                        itemCount: Provider.of<Model>(context, listen: false).snapshotTop!.data.products.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext ctx, index) {
+                          return searchProductCardModel(context, Provider.of<Model>(context, listen: false).snapshotTop!.data.products[index]);
+                        }),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    // ListView.builder(
+    //   itemCount: matchQuery.length,
+    //   itemBuilder: (context, index) {
+    //     return matchQuery[index];
+    //   },
+    // );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return FutureBuilder(
+      future: ApiService().sugestSearchApiCalled(query),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Divider(
+                      height: 1,
+                      color: Colors.grey.shade400,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, childAspectRatio: 0.85, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.response.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext ctx, index) {
+                          return searchProductCardModel(context, snapshot.data.response[index]);
+                        }),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+//deflult
+
+}
+Widget searchProductCardModel(context, product) {
+  return InkWell(
+    onTap: () {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          transitionDuration:const Duration(seconds: 1),
+          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+            animation = CurvedAnimation(
+              parent: animation,
+              curve: Curves.linear,
+            );
+            return SharedAxisTransition(
+              child: child,
+              animation: animation,
+              secondaryAnimation: secAnimation,
+              transitionType: SharedAxisTransitionType.horizontal,
+            );
+          },
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+            return ProductDisplay(int.parse(product.productId.toString()));
+          },
+        ),
+      );
+    },
+    child: Container(
+      margin:const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset:const Offset(1, 3),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              const SizedBox(height: 5),
+              Container(
+                width: 130,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: product.thumb != null ? Image.network(product.thumb) : Image.asset('assets/grocery.png'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  product.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Text(
+                      product.price ?? '',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 4),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class Model extends ChangeNotifier {
+  double max = 0;
+  double valu = 0;
+
+  updateValue(value) {
+    valu = value;
+    notifyListeners();
+  }
+
+  SearchApiResponse response = SearchApiResponse();
+  AsyncSnapshot<dynamic>? snapshotTop;
+  updateSnapshot(snapshot) {
+    snapshotTop = snapshot;
+    notifyListeners();
+  }
 }

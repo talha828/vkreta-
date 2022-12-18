@@ -24,58 +24,65 @@ class _SelectScreenState extends State<SelectScreen> {
     Cart(),
     Account()
   ];
+
+  Future<bool>onWillPop()async{
+    return false;
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-     bottomNavigationBar: BottomNavigationBar(
-       elevation: 0,
-       onTap: (index){
-         setState(() {
-           currentindex=index;
-         });
-       },
-       type: BottomNavigationBarType.fixed,
-       currentIndex: currentindex,
-     unselectedLabelStyle: GoogleFonts.poppins(
-       textStyle:TextStyle(
-         color: Colors.grey.shade700,
-         fontWeight: FontWeight.bold
-       )
-     ),
-       unselectedFontSize: 9,
-       selectedLabelStyle: GoogleFonts.poppins(
-         textStyle: TextStyle(
-           color: Colors.blue.shade900,fontWeight: FontWeight.bold
+    return WillPopScope(
+      onWillPop:onWillPop ,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+       bottomNavigationBar: BottomNavigationBar(
+         elevation: 0,
+         onTap: (index){
+           setState(() {
+             currentindex=index;
+           });
+         },
+         type: BottomNavigationBarType.fixed,
+         currentIndex: currentindex,
+       unselectedLabelStyle: GoogleFonts.poppins(
+         textStyle:TextStyle(
+           color: Colors.grey.shade700,
+           fontWeight: FontWeight.bold
          )
        ),
-       unselectedItemColor: Colors.grey.shade700,
-       selectedFontSize: 10,
-       selectedItemColor: Colors.blue.shade900,
-       iconSize: 25,
-       items: const[
-         BottomNavigationBarItem(
-         icon: Icon(Icons.home,),
-         label: 'Home',
-         backgroundColor: Colors.white
+         unselectedFontSize: 9,
+         selectedLabelStyle: GoogleFonts.poppins(
+           textStyle: TextStyle(
+             color: Colors.blue.shade900,fontWeight: FontWeight.bold
+           )
+         ),
+         unselectedItemColor: Colors.grey.shade700,
+         selectedFontSize: 10,
+         selectedItemColor: Colors.blue.shade900,
+         iconSize: 25,
+         items: const[
+           BottomNavigationBarItem(
+           icon: Icon(Icons.home,),
+           label: 'Home',
+           backgroundColor: Colors.white
 ),
  BottomNavigationBarItem(
-         icon: Icon(Icons.favorite),
-         label: 'WishList',
-         backgroundColor: Colors.white
+           icon: Icon(Icons.favorite),
+           label: 'WishList',
+           backgroundColor: Colors.white
 ),
  BottomNavigationBarItem(
-         icon: Icon(Icons.shopping_cart),
-         label: 'Cart',
-         backgroundColor: Colors.white
+           icon: Icon(Icons.shopping_cart),
+           label: 'Cart',
+           backgroundColor: Colors.white
 ),
  BottomNavigationBarItem(
-         icon: Icon(Icons.person_outline,),
-         label: 'My Account',
-         backgroundColor: Colors.white
+           icon: Icon(Icons.person_outline,),
+           label: 'My Account',
+           backgroundColor: Colors.white
 ),
   ]),
   body: screen[currentindex],
-      );
+        ),
+    );
   }
 }

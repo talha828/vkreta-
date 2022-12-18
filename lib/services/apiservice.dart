@@ -108,6 +108,25 @@ class ApiService {
     return _model;
     // return json.decode(response.body);
   }
+  Future<List<Data>> viewAll(String preset, String page) async {
+    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/home/products");
+    final response = await http.post(loginUrl, headers: {
+      'authorization': basicAuth
+    }, body: {
+      'preset': preset,
+      'page': page,
+    });
+    // print(response.statusCode.toString());
+    var object=jsonDecode(response.body);
+
+     List<Data>data=[];
+     for (var i in object){
+       data.add(Data.fromJson(i));
+     }
+    return data;
+    // return json.decode(response.body);
+  }
 
   Future forgotPssword(String email,) async {
     String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
@@ -294,7 +313,7 @@ class ApiService {
 
   Future<ProductDetailModel> getProductDetail(int product_id) async {
     String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/productdetail&product_id=${product_id}");
+    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/productdetail&product_id=${product_id.toString()}");
     final response = await http.post(wishlist, headers: {'authorization': basicAuth}, body: {});
 
     print("wishlist ---------->> $wishlist");

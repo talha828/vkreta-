@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       String? deviceId = await PlatformDeviceId.getDeviceId;
       var response= ApiService().userLogin(email, password, deviceId!).then((value){
         if(value.error == null){
-          Get.to(const Home());
+          Get.to(const SelectScreen());
         }
       }).catchError((e){
 

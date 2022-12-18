@@ -52,7 +52,7 @@ class _ProductCardState extends State<ProductCard> {
               return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
             },
             pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
-              return ProductDisplay(
+              return ProductDisplay(0
                 //TODO Talha Edit this
                   //int.parse(widget.product['product_id'])
               );
@@ -161,7 +161,7 @@ Widget productCardModel(context, product) {
           },
           pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
             //TODO:// Edit 02
-            return ProductDisplay(
+            return ProductDisplay(0
                 //int.parse(product.productId.toString())
                 );
           }));

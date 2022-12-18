@@ -70,7 +70,7 @@ class _CartState extends State<Cart> {
                                   pageBuilder: (BuildContext context,
                                       Animation<double> animation,
                                       Animation<double> secAnimation) {
-                                    return ProductDisplay();
+                                    return ProductDisplay(0);
                                   }));
                             },
                             child: Container(

@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:vkreta/home.dart';
 import 'package:vkreta/login.dart';
 import 'package:vkreta/providerModel/homedata.dart';
+
+import 'models/bages_model.dart';
 void main(List<String> args) {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<HomeData>(create: (_) =>HomeData()),
+      ChangeNotifierProvider<BadgesModel>(create: (_) => BadgesModel()),
+      ChangeNotifierProvider<Model>(create: (_) => Model()),
     ],
     child: GetMaterialApp(
       debugShowCheckedModeBanner: false,

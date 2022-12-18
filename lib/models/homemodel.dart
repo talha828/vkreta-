@@ -66,6 +66,7 @@ class Layout {
   String? title;
   String? layout;
   String? sort;
+  String? preset;
   String? column;
   List<Data>? data;
 
@@ -75,6 +76,7 @@ class Layout {
     title = json['title'];
     layout = json['layout'];
     sort = json['sort'];
+    preset = json['preset'];
     column = json['column'];
     if (json['data'] != null) {
       data = <Data>[];

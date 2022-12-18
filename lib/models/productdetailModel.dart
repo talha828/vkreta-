@@ -58,12 +58,12 @@ class ProductDetailModel {
     this.returnPolicy,
   });
 
-  int? productId;
+  String? productId;
   String? headingTitle;
   String? textMinimum;
   String? textLogin;
   String? tabReview;
-  dynamic reviewsTotals;
+  String? reviewsTotals;
   String? manufacturer;
   String? manufacturers;
   String? model;
@@ -77,21 +77,21 @@ class ProductDetailModel {
   List<ImageData>? images;
   String? price;
   String? special;
-  List<dynamic>? options;
-  dynamic? minimum;
+  List<dynamic>? options =[];
+  String? minimum;
   String? reviewStatus;
   bool? reviewGuest;
   String? customerName;
   String? reviews;
-  int? rating;
+  String? rating;
   String? captcha;
   String? share;
-  List<dynamic>? attributeGroups;
-  List<dynamic>? products;
+  List<dynamic>? attributeGroups=[];
+  List<dynamic>? products=[];
   List<Tag>? tags;
-  List<dynamic>? wishlist;
+  List<dynamic>? wishlist=[];
   String? buttonDeliver;
-  dynamic ptsQuickStatus;
+  String? ptsQuickStatus;
   String? sellerReviewStatus;
   String? modulePurpletreeMultivendorHideSellerDetail;
   SellerDetail? sellerDetail;
@@ -99,61 +99,70 @@ class ProductDetailModel {
 
   String? storeLiveChatEnable;
   String? storeLiveChatCode;
-  int? templateProductStatus;
-  List<dynamic>? recurrings;
-  List<ProductsBottomTab>? productsBottomTab;
+  String? templateProductStatus;
+  List<dynamic>? recurrings=[];
+  List<ProductsBottomTab>? productsBottomTab=[];
   String? disclaimer;
-  List<SpecialSection>? specialSection;
+  List<SpecialSection>? specialSection=[];
   String? returnPolicy;
 
-  factory ProductDetailModel.fromJson(Map<String, dynamic> json) => ProductDetailModel(
-        productId: json["product_id"],
-        headingTitle: json["heading_title"],
-        textMinimum: json["text_minimum"],
-        textLogin: json["text_login"],
-        tabReview: json["tab_review"],
-        reviewsTotals: json["reviews_totals"],
-        manufacturer: json["manufacturer"],
-        manufacturers: json["manufacturers"],
-        model: json["model"],
-        reward: json["reward"],
-        quantity: json["quantity"],
-        points: json["points"],
-        description: json["description"],
-        stock: json["stock"],
-        popup: json["popup"],
-        thumb: json["thumb"],
-        images: List<ImageData>.from(json["images"].map((x) => ImageData.fromJson(x))),
-        price: json["price"],
-        special: json["special"],
-        options: List<dynamic>.from(json["options"].map((x) => x)),
-        minimum: json["minimum"],
-        reviewStatus: json["review_status"],
-        reviewGuest: json["review_guest"],
-        customerName: json["customer_name"],
-        reviews: json["reviews"],
-        rating: json["rating"],
-        captcha: json["captcha"],
-        share: json["share"],
-        attributeGroups: List<dynamic>.from(json["attribute_groups"].map((x) => x)),
-        products: List<dynamic>.from(json["products"].map((x) => x)),
-        tags: List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
-        wishlist: List<dynamic>.from(json["wishlist"].map((x) => x)),
-        buttonDeliver: json["button_deliver"],
-        ptsQuickStatus: json["pts_quick_status"],
-        sellerReviewStatus: json["seller_review_status"],
-        modulePurpletreeMultivendorHideSellerDetail: json["module_purpletree_multivendor_hide_seller_detail"],
-        sellerDetail: SellerDetail.fromJson(json["seller_detail"]),
-        modulePurpletreeMultivendorAllowLiveChat: json["module_purpletree_multivendor_allow_live_chat"],
-        storeLiveChatEnable: json["store_live_chat_enable"],
-        storeLiveChatCode: json["store_live_chat_code"],
-        templateProductStatus: json["template_product_status"],
-        recurrings: List<dynamic>.from(json["recurrings"].map((x) => x)),
-        productsBottomTab: List<ProductsBottomTab>.from(json["products_bottom_tab"].map((x) => ProductsBottomTab.fromJson(x))),
-        disclaimer: json["disclaimer"],
-        specialSection: List<SpecialSection>.from(json["special-section"].map((x) => SpecialSection.fromJson(x))),
-        returnPolicy: json["return_policy"],
-      );
+   factory ProductDetailModel.fromJson(Map<String, dynamic> json) =>ProductDetailModel(
+      productId:
+      json["product_id"].toString()
+    ,
+    headingTitle: json["heading_title"],
+    textMinimum: json["text_minimum"],
+    textLogin: json["text_login"],
+    tabReview: json["tab_review"],
+    reviewsTotals: json["reviews_totals"].toString(),
+    manufacturer:json["manufacturer"],
+    manufacturers: json["manufacturers"],
+    model: json["model"],
+    reward: json["reward"],
+    quantity: json["quantity"],
+    points: json["points"],
+    description: json["description"],
+    stock: json["stock"],
+    popup: json["popup"],
+    thumb: json["thumb"] ?? "https://",
+    images: List<ImageData>.from(
+    json["images"].map((x) => ImageData.fromJson(x))),
+    price: json["price"],
+    special: json["special"],
+    options: List<dynamic>.from(json["options"].map((x) => x)),
+    minimum: json["minimum"].toString(),
+    reviewStatus: json["review_status"],
+    reviewGuest: json["review_guest"],
+    customerName: json["customer_name"],
+    reviews: json["reviews"],
+    rating: json["rating"]== null ? "0":json["rating"].toString(),
+    captcha: json["captcha"],
+    share: json["share"],
+    attributeGroups:
+    List<dynamic>.from(json["attribute_groups"].map((x) => x)),
+    products: List<dynamic>.from(json["products"].map((x) => x)),
+    tags: List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
+    wishlist: List<dynamic>.from(json["wishlist"].map((x) => x)),
+    buttonDeliver: json["button_deliver"],
+    ptsQuickStatus: json["pts_quick_status"].toString(),
+    sellerReviewStatus: json["seller_review_status"],
+    modulePurpletreeMultivendorHideSellerDetail:
+    json["module_purpletree_multivendor_hide_seller_detail"],
+    sellerDetail: SellerDetail.fromJson(json["seller_detail"]),
+    modulePurpletreeMultivendorAllowLiveChat:
+    json["module_purpletree_multivendor_allow_live_chat"],
+    storeLiveChatEnable:  json["store_live_chat_enable"]== null ? "0":json["store_live_chat_enable"].toString(),
+    storeLiveChatCode: json["store_live_chat_code"] == ""? "0":json["store_live_chat_code"],
+    templateProductStatus: json["template_product_status"]== null ? "0":json["template_product_status"].toString(),
+    recurrings: List<dynamic>.from(json["recurrings"].map((x) => x)),
+    productsBottomTab: List<ProductsBottomTab>.from(
+    json["products_bottom_tab"]
+        .map((x) => ProductsBottomTab.fromJson(x))),
+    disclaimer: json["disclaimer"],
+    specialSection: List<SpecialSection>.from(
+    json["special-section"].map((x) => SpecialSection.fromJson(x))),
+    returnPolicy: json["return_policy"],
+   );
 
   Map<String, dynamic> toJson() => {
         "product_id": productId,
@@ -232,7 +241,7 @@ class ProductsBottomTab {
   });
 
   String? title;
-  List<Product>? products;
+  List<Product>? products=[];
 
   factory ProductsBottomTab.fromJson(Map<String, dynamic> json) => ProductsBottomTab(
         title: json["title"],
@@ -266,10 +275,10 @@ class Product {
   String? name;
   String? description;
   String? price;
-  dynamic special;
+  String? special;
   bool? tax;
-  int? minimum;
-  int? rating;
+  String? minimum;
+  String? rating;
   String? href;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -279,10 +288,10 @@ class Product {
         name: json["name"],
         description: json["description"],
         price: json["price"],
-        special: json["special"],
+        special: json["special"].toString(),
         tax: json["tax"],
-        minimum: json["minimum"],
-        rating: json["rating"],
+        minimum: json["minimum"].toString(),
+        rating: json["rating"].toString(),
         href: json["href"],
       );
 
@@ -320,7 +329,7 @@ class SellerDetail {
   String? sellerHref;
   String? sellerReviewLink;
   String? sellerContactLink;
-  int? otherSellerCount;
+  String? otherSellerCount;
 
   factory SellerDetail.fromJson(Map<String, dynamic> json) => SellerDetail(
         sellerName: json["seller_name"],
@@ -330,7 +339,7 @@ class SellerDetail {
         sellerHref: json["seller_href"],
         sellerReviewLink: json["seller_review_link"],
         sellerContactLink: json["seller_contact_link"],
-        otherSellerCount: json["other_seller_count"],
+        otherSellerCount: json["other_seller_count"].toString(),
       );
 
   Map<String, dynamic> toJson() => {

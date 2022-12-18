@@ -1,19 +1,78 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vkreta/services/apiservice.dart';
+
+import 'models/listaddressModel.dart';
 
 class EditAddress extends StatefulWidget {
-  const EditAddress({Key? key}) : super(key: key);
+  EditAddress({Key? key, required this.default_, required this.object})
+      : super(key: key);
+  int default_;
+  ListAddressModel object;
 
   @override
   State<EditAddress> createState() => _EditAddressState();
 }
 
 class _EditAddressState extends State<EditAddress> {
+  TextEditingController _firstname = TextEditingController();
+  TextEditingController _lastname = TextEditingController();
+  TextEditingController _company = TextEditingController();
+  TextEditingController _address1 = TextEditingController();
+  TextEditingController _address2 = TextEditingController();
+  TextEditingController _city = TextEditingController();
+  TextEditingController _postcode = TextEditingController();
+  TextEditingController _country = TextEditingController();
+  TextEditingController _zone = TextEditingController();
+
+  setvalues() {
+    _firstname.text = widget.object.firstname ?? '';
+    _lastname.text = widget.object.lastname ?? '';
+    _company.text = widget.object.company ?? '';
+    _address1.text = widget.object.address1 ?? '';
+    _address2.text = widget.object.address2 ?? '';
+    _city.text = widget.object.city!;
+    _postcode.text = widget.object.postcode ?? '';
+    _country.text = widget.object.country ?? '';
+    _zone.text = widget.object.zone ?? '';
+  }
+
+  var dropdownvalue;
+  int? customer_id;
+  int country_id = 99;
+  int zone_id = 1493;
+  String country_name = 'India';
+  String zone_name = 'Maharashtra';
+  dynamic country;
+  dynamic zone;
+  SharedPreferences? sharedPrefs;
+
+  @override
+  initState() {
+    super.initState();
+    getSharedPref();
+    setvalues();
+  }
+
+  Future<void> getSharedPref() async {
+    SharedPreferences.getInstance().then((prefs) {
+      // setState(() => sharedPrefs = prefs);
+      sharedPrefs = prefs;
+      Int? _customer_id = sharedPrefs?.getInt("customer_id") as Int?;
+      setState(() {
+        customer_id = _customer_id.toString() as int?;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-       appBar: AppBar(
+      appBar: AppBar(
         leading: IconButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -30,798 +89,343 @@ class _EditAddressState extends State<EditAddress> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20,),
-             Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'First Name',
-          labelText: 'First Name',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 10,),
-      
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Last Name',
-          labelText: 'Last Name',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 10,),
-      
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Company',
-          labelText: 'Company',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 10,),
-      
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Address 1',
-          labelText: 'Address 1',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 10,),
-      
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Address 2',
-          labelText: 'Address 2',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 10,),
-      
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'City',
-          labelText: 'City',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 10,),
-      
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Post Code',
-          labelText: 'Post Code',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 10,),
-      
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: 'Country',
-          labelText: 'Country',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 10,),
-      
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-
-        decoration: InputDecoration(
-           suffixIcon:PopupMenuButton(
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Colors.black,
-                                size: 30,
-                              ),
-                              itemBuilder: (context) => [
-                                PopupMenuItem(
-                                    child: Column(
-                                  children: [
-                                    SizedBox(height: 10,),
-                                    GestureDetector(
-                                     
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            "Andaman and Nicobar Islands",
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                                    color: Colors.grey.shade900,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                     SizedBox(
-                                      height: 10,
-                                    ),
-                                    
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            "Andhra Pardesh",
-                                            style: GoogleFonts.poppins(
-                                                textStyle: TextStyle(
-                                          color: Colors.grey.shade900,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                   SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Arunachal Pradesh",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Assam",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Bihar",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Chandigarh",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Chhattisgarh",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Dadra and Nagra Haveli and Daman and Diu",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Daman and Diu",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Delhi",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Goa",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Gujrat",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Haryana",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Himachal Pradesh",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Jammu and Kashmir",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Jharkhand",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Karnataka",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Kerala",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Ladakh",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Laksgadweep",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "MadhyaPradesh",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Maharashtra",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Manipur",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Meghalaya",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Mizoram",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Nagaland",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Odisha",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Puducherry",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Punjab",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Rajasthan",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Sikkim",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Tamil Naddu",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Telenghana",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Tripura",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "Uttar Pradesh",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                      SizedBox(height: 10,),
-                                  
-                                    GestureDetector(
-                                      
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                                "West Bengal",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.grey.shade900,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                   
-                                   SizedBox(height: 10,),
-                                  ],
-                                    ))]),
-          hintText: 'Select State',
-          labelText: 'Region/State',
-          hintStyle: GoogleFonts.poppins(
-            textStyle:TextStyle(
-              color: Colors.grey.shade500,fontSize: 15
-            )
-          )
-        ),
-      ),
-    ),
-    SizedBox(height: 50,),
-     Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
-            height: 45,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                color: Colors.blue.shade900,
-                borderRadius: BorderRadius.circular(4)),
-            child: Center(
-              child: Text(
-                'Save',
-                style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14)),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextFormField(
+                controller: _firstname,
+                decoration: InputDecoration(
+                    hintText: 'First Name',
+                    labelText: 'First Name',
+                    hintStyle: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 15))),
               ),
             ),
-          ),
-        )
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextFormField(
+                controller: _lastname,
+                decoration: InputDecoration(
+                    hintText: 'Last Name',
+                    labelText: 'Last Name',
+                    hintStyle: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 15))),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextFormField(
+                controller: _company,
+                decoration: InputDecoration(
+                    hintText: 'Mobile Number',
+                    labelText: 'Mobile Number',
+                    hintStyle: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 15))),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextFormField(
+                controller: _address1,
+                decoration: InputDecoration(
+                    hintText: 'Pin Code',
+                    labelText: 'Pin Code',
+                    hintStyle: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 15))),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextFormField(
+                controller: _address2,
+                decoration: InputDecoration(
+                    hintText: 'Landmark',
+                    labelText: 'Landmark',
+                    hintStyle: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 15))),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextFormField(
+                controller: _city,
+                decoration: InputDecoration(
+                    hintText: 'City',
+                    labelText: 'City',
+                    hintStyle: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 15))),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 10),
+            //   child: TextFormField(
+            //     controller: _postcode,
+            //     decoration: InputDecoration(
+            //         hintText: 'Post Code',
+            //         labelText: 'Post Code',
+            //         hintStyle: GoogleFonts.poppins(
+            //             textStyle: TextStyle(
+            //                 color: Colors.grey.shade500, fontSize: 15))),
+            //   ),
+            // ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: FutureBuilder(
+                  future: ApiService().getCountry(),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      return TextFormField(
+                        controller: _country,
+                        decoration: InputDecoration(
+                            suffixIcon: PopupMenuButton(
+                                initialValue: 99,
+                                onSelected: (val) {
+                                  print(val.toString());
+                                  country_id = int.parse(val.toString());
+                                  dynamic targetCountry =
+                                  snapshot.data.countries.firstWhere(
+                                          (e) => e.countryId == val.toString());
+                                  country_name = targetCountry.name;
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
+                                itemBuilder: (context) => [
+                                  for (int i = 0;
+                                  i < snapshot.data.countries.length;
+                                  i++)
+                                    PopupMenuItem(
+                                        onTap: () {
+                                          //print('1');
+                                        },
+                                        value: snapshot
+                                            .data.countries[i].countryId,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              snapshot
+                                                  .data.countries[i].name,
+                                              style: GoogleFonts.poppins(
+                                                  textStyle: TextStyle(
+                                                      color: Colors
+                                                          .grey.shade900,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                      FontWeight.bold)),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                          ],
+                                        ))
+                                ]),
+                            hintText: country_name.toString(),
+                            labelText: country_name.toString(),
+                            hintStyle: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 15))),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                )),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: FutureBuilder(
+                  future: ApiService().getZone(country_id),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      return TextFormField(
+                        controller: _zone,
+                        decoration: InputDecoration(
+                            suffixIcon: PopupMenuButton(
+                                initialValue: 99,
+                                onSelected: (val) {
+                                  print(val.toString());
+                                  zone_id = int.parse(val.toString());
+                                  dynamic targetzone = snapshot.data.zone
+                                      .firstWhere(
+                                          (e) => e.zoneId == val.toString());
+                                  zone_name = targetzone.name;
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
+                                itemBuilder: (context) => [
+                                  for (int i = 0;
+                                  i < snapshot.data.zone.length;
+                                  i++)
+                                    PopupMenuItem(
+                                        onTap: () {
+                                          //print('1');
+                                        },
+                                        value: snapshot.data.zone[i].zoneId,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              snapshot.data.zone[i].name,
+                                              style: GoogleFonts.poppins(
+                                                  textStyle: TextStyle(
+                                                      color: Colors
+                                                          .grey.shade900,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                      FontWeight.bold)),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                          ],
+                                        ))
+                                ]),
+                            hintText: zone_name.toString(),
+                            labelText: zone_name.toString(),
+                            hintStyle: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 15))),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                )),
+            SizedBox(
+              height: 50,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                height: 45,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: Colors.blue.shade900,
+                    borderRadius: BorderRadius.circular(4)),
+                child: InkWell(
+                  onTap: () async {
+                    if (_firstname.text == '') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            "First Name must be between 1 and 32 characters!"),
+                        backgroundColor: Colors.red,
+                      ));
+                      // error password can not b empty
+                    } else if (_lastname.text == '') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            "Last Name must be between 1 and 32 characters"),
+                        backgroundColor: Colors.red,
+                      ));
+                    } else if (_address1.text == '') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            "Address must be between 3 and 128 characters!"),
+                        backgroundColor: Colors.red,
+                      ));
+                    } else if (_address2.text == '') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            "Address2 must be between 3 and 128 characters!"),
+                        backgroundColor: Colors.red,
+                      ));
+                    } else if (_city.text == '') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content:
+                        Text("City must be between 2 and 128 characters!"),
+                        backgroundColor: Colors.red,
+                      ));
+                    } else if (country_id == '') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Please select a country"),
+                        backgroundColor: Colors.red,
+                      ));
+                    } else if (zone_id == '') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Please select a region / state!'),
+                        backgroundColor: Colors.red,
+                      ));
+                    } else {
+                      final response = await ApiService().editAddress(
+                        _firstname.text,
+                        _lastname.text,
+                        _company.text,
+                        _address1.text,
+                        _address2.text,
+                        _city.text,
+                        _postcode.text,
+                        country_id,
+                        zone_id,
+                        widget.default_,
+                      );
+                      if (response['success'] != '') {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Address updated successfully"),
+                          backgroundColor: Colors.green,
+                        ));
+                        // show msg from server
+                      }
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      'Update',
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14)),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

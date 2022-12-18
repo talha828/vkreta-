@@ -2,7 +2,11 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vkreta/models/homemodel.dart';
 import 'package:vkreta/productdisplay.dart';
+import 'package:vkreta/services/apiservice.dart';
+
+import 'home.dart';
 
 class ViewAll extends StatefulWidget {
   String title;
@@ -15,9 +19,11 @@ required this.title,
 }
 
 class _ViewAllState extends State<ViewAll> {
+  var onTap=(){};
   @override
   Widget build(BuildContext context) {
     var width=MediaQuery.of(context).size.width;
+    var height=MediaQuery.of(context).size.height;
     return Scaffold(
      appBar: AppBar(
        toolbarHeight:width * 0.2,
@@ -253,7 +259,7 @@ class _ViewAllState extends State<ViewAll> {
                              style: GoogleFonts.poppins(
                                textStyle:TextStyle(
                                  color:Colors.black,
-                                 fontSize:  width * 0.02,
+                                 fontSize:  width * 0.035,
                                )
                              ),),
             ],
@@ -279,213 +285,266 @@ class _ViewAllState extends State<ViewAll> {
             )),
      ),
      backgroundColor: Colors.white,
-     body: SingleChildScrollView(
-       child: Padding(
-         padding: const EdgeInsets.symmetric(horizontal: 5),
-         child: Column(
-           children: [
-             Container(
-                    height:  width * 0.2,
-                    decoration:const BoxDecoration(
-                      color: Colors.white,
-                      // boxShadow: [BoxShadow(
-                      //   color: Colors.grey.shade100,spreadRadius: 5,
-                      //   offset: Offset(0, 5)
-                      // )]
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.grey.shade600,
-                                size: 25,
-                              ),
-                              isDense: true,
-                              filled: true,
-                              fillColor: Colors.grey.shade100,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none),
-                              hintText: 'Search Product',
-                              hintStyle: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.grey.shade600, fontSize:  width * 0.04))),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height:  width * 0.02,),
-                  Divider(
-                    height: 1,
-                    color: Colors.grey.shade400,
-                  ),
-                   SizedBox(height:  width * 0.02,),
-           SizedBox(height:  width * 0.02,),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(PageRouteBuilder(
-                    transitionDuration:const Duration(seconds: 1),
-                    transitionsBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secAnimation,
-                        Widget child) {
-                      animation = CurvedAnimation(
-                          parent: animation, curve: Curves.linear);
-                      return SharedAxisTransition(
-                          child: child,
-                          animation: animation,
-                          secondaryAnimation: secAnimation,
-                          transitionType:
-                              SharedAxisTransitionType.horizontal);
-                    },
-                    pageBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secAnimation) {
-                      return const ProductDisplay();
-                    }));
-              },
-              child: Container(
-                height:  width * 0.53,
-                width:  width * 0.4,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(7),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.shade200,
-                          spreadRadius: 1,
-                          blurRadius: 2,
-                          offset:const Offset(1, 3))
-                    ]),
-                child: Stack(
-                  children: [Column(
-                    children: [
-                      SizedBox(
-                        height:  width * 0.02,
-                      ),
-                      Container(
-                        height:  width * 0.25,
-                        width: width * 0.4,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Padding(
-                          padding:  EdgeInsets.all( width * 0.02,),
-                          child: Image.asset('assets/shirt.png'),
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                             EdgeInsets.symmetric(horizontal:  width * 0.02,),
-                        child: Text(
-                          'Here is the title of your product',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade900,
-                                  fontSize: width * 0.04)),
-                        ),
-                      ),
-                      SizedBox(
-                        height: width * 0.015,
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal:  width * 0.02,),
-                        child: Row(
-                          children: [
-                            Text(
-                              '₹ 100',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize:  width * 0.038)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Padding(
-                        padding:
-                             EdgeInsets.symmetric(horizontal:  width * 0.02,),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              color: Colors.orange,
-                              size: 15,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.orange,
-                              size: 15,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.orange,
-                              size: 15,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.orange,
-                              size: 15,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.orange,
-                              size: 15,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              '(150)',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                      color: Colors.grey.shade500,
-                                      fontSize:  width * 0.03)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                   Padding(
-                   padding: EdgeInsets.all( width * 0.02,),
-                   child: Row(children: [
-                     Container(
-            height: 25,
-            width: 40,
-            decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(20))),
-            child: Center(
-              child: Text(
-                '-60%',
-                style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                        color: Colors.white, fontSize: 10)),
-              ),
-            ))
-                   ]),
+     body:FutureBuilder<List<Data>>(
+         future: ApiService().viewAll("bestseller", 1.toString()),
+         builder: (context,snapshot){
+           if(ConnectionState.waiting==snapshot.connectionState){
+             return Container(
+                 height: height,
+                 width: width,
+                 alignment: Alignment.center,
+                 child:const CircularProgressIndicator());
+           }
+       return SingleChildScrollView(
+         child: Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 5),
+           child: Column(
+             children: [
+               Container(
+                 height:  width * 0.2,
+                 decoration:const BoxDecoration(
+                   color: Colors.white,
+                   // boxShadow: [BoxShadow(
+                   //   color: Colors.grey.shade100,spreadRadius: 5,
+                   //   offset: Offset(0, 5)
+                   // )]
                  ),
-                  ]
+                 child: Center(
+                   child: Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 0),
+                     child: TextFormField(
+                       decoration: InputDecoration(
+                           prefixIcon: Icon(
+                             Icons.search,
+                             color: Colors.grey.shade600,
+                             size: 25,
+                           ),
+                           isDense: true,
+                           filled: true,
+                           fillColor: Colors.grey.shade100,
+                           border: OutlineInputBorder(
+                               borderRadius: BorderRadius.circular(10),
+                               borderSide: BorderSide.none),
+                           hintText: 'Search Product',
+                           hintStyle: GoogleFonts.poppins(
+                               textStyle: TextStyle(
+                                   color: Colors.grey.shade600, fontSize:  width * 0.04))),
+                     ),
+                   ),
+                 ),
+               ),
+               SizedBox(height:  width * 0.02,),
+               Divider(
+                 height: 1,
+                 color: Colors.grey.shade400,
+               ),
+               SizedBox(height:  width * 0.02,),
+               SizedBox(height:  width * 0.02,),
+               //ViewAllCard(onTap: onTap, width: width, product: product),
+               GridView.builder(
+                   physics:const NeverScrollableScrollPhysics(),
+                   shrinkWrap: true,
+                   itemCount: snapshot.data!.length,
+                   addRepaintBoundaries: false,
+                   addAutomaticKeepAlives: false,
+                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
+                       childAspectRatio: 0.85,
+                       mainAxisSpacing: width * 0.04,
+                       crossAxisSpacing: width * 0.04
+                   ), itemBuilder: (context,index){
+                 return ViewAllCard(onTap: (){
+                   Navigator.of(context).push(PageRouteBuilder(
+                       transitionDuration:const Duration(seconds: 1),
+                       transitionsBuilder: (BuildContext context,
+                           Animation<double> animation,
+                           Animation<double> secAnimation,
+                           Widget child) {
+                         animation = CurvedAnimation(
+                             parent: animation, curve: Curves.linear);
+                         return SharedAxisTransition(
+                             child: child,
+                             animation: animation,
+                             secondaryAnimation: secAnimation,
+                             transitionType:
+                             SharedAxisTransitionType.horizontal);
+                       },
+                       pageBuilder: (BuildContext context,
+                           Animation<double> animation,
+                           Animation<double> secAnimation) {
+                         return ProductDisplay(0);
+                       }));
+                 }, width: width, product: snapshot.data![index]);
+               })
+             ],
+           ),
+         ),
+       );
+     })
+   );
+  }
+  List<Product>product=[
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
+  ];
+}
+
+class ViewAllCard extends StatelessWidget {
+  const ViewAllCard({
+    Key? key,
+    required this.onTap,
+    required this.width,
+    required this.product,
+  }) : super(key: key);
+
+  final Null Function() onTap;
+  final double width;
+  final Data product;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height:  width * 0.53,
+        width:  width * 0.4,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(7),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  spreadRadius: 1,
+                  blurRadius: 2,
+                  offset:const Offset(1, 3))
+            ]),
+        child: Stack(
+          children: [Column(
+            children: [
+              SizedBox(
+                height:  width * 0.02,
+              ),
+              Container(
+                height:  width * 0.25,
+                width: width * 0.4,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding:  EdgeInsets.all( width * 0.02,),
+                  child: Image.network(product.thumb!),
                 ),
               ),
-            ),
-                      
-           ],
-         ),
-       ),
-     ),
-   );
-    
+              Padding(
+                padding:
+                     EdgeInsets.symmetric(horizontal:  width * 0.02,),
+                child: Text(
+                  product.name!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                          color: Colors.grey.shade900,
+                          fontSize: width * 0.04)),
+                ),
+              ),
+              SizedBox(
+                height: width * 0.015,
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal:  width * 0.02,),
+                child: Row(
+                  children: [
+                    Text(
+                      product.price!,
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize:  width * 0.038)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Padding(
+                padding:
+                     EdgeInsets.symmetric(horizontal:  width * 0.02,),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.star,
+                      color: Colors.orange,
+                      size: 15,
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.orange,
+                      size: 15,
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.orange,
+                      size: 15,
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.orange,
+                      size: 15,
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.orange,
+                      size: 15,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '(${product.quantity})',
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize:  width * 0.03)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+    //Sales display
+    //        Padding(
+    //        padding: EdgeInsets.all( width * 0.02,),
+    //        child: Row(children: [
+    //          Container(
+    // height: 25,
+    // width: 40,
+    // decoration:const  BoxDecoration(
+    //     color: Colors.red,
+    //     borderRadius: BorderRadius.only(
+    //         bottomRight: Radius.circular(20))),
+    // child: Center(
+    //   child: Text(
+    //     '-60%',
+    //     style: GoogleFonts.poppins(
+    //         textStyle:const TextStyle(
+    //             color: Colors.white, fontSize: 10)),
+    //   ),
+    // ))
+    //        ]),
+    //      ),
+          ]
+        ),
+      ),
+    );
   }
 }

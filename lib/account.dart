@@ -138,7 +138,7 @@ class _AccountState extends State<Account> {
                         pageBuilder: (BuildContext context,
                             Animation<double> animation,
                             Animation<double> secAnimation) {
-                          return ChangePassword();
+                          return const ChangePassword();
                         }));
         },
         trailing: Icon(
@@ -180,7 +180,7 @@ class _AccountState extends State<Account> {
                         pageBuilder: (BuildContext context,
                             Animation<double> animation,
                             Animation<double> secAnimation) {
-                          return ModifyYourAddress();
+                          return const ModifyYourAddress();
                         }));
          },
         trailing: Icon(
