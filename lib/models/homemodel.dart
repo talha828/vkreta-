@@ -1,82 +1,67 @@
-import 'package:vkreta/models/sliderModel.dart';
+class HomeScreenModel {
+  List<Silder>? silder;
+  List<ProductCaterory>? products;
+  List<Banner>? banner;
 
-class HomeModel {
-  String? logoLink;
-  String? whatsappNumber;
-  List<TopCategories>? topCategories;
-  List<Layout>? layout;
-  SliderModel? slider;
+  HomeScreenModel({this.silder, this.products, this.banner});
 
-  HomeModel(
-      {this.logoLink, this.whatsappNumber, this.topCategories, this.layout,this.slider});
-
-  HomeModel.fromJson(Map<String, dynamic> json) {
-    logoLink = json['logo_link'];
-    whatsappNumber = json['whatsapp_number'];
-    if (json['top_categories'] != null) {
-      topCategories = <TopCategories>[];
-      json['top_categories'].forEach((v) {
-        topCategories!.add(new TopCategories.fromJson(v));
+  HomeScreenModel.fromJson(Map<String, dynamic> json) {
+    if (json['silder'] != null) {
+      silder = <Silder>[];
+      json['silder'].forEach((v) {
+        silder!.add(new Silder.fromJson(v));
       });
     }
-    if (json['layout'] != null) {
-      layout = <Layout>[];
-        slider= SliderModel.fromJson(json['layout'][0]);
-       int i=0;
-       for(var j in json['layout']){
-         if(i>0 && i<5){
-           layout!.add(new Layout.fromJson(j));
-         }
-         i++;
-         print(i);
-       }
-
-      //   json['layout'].forEach((v) {
-      //
-      // });
+    if (json['products'] != null) {
+      products = <ProductCaterory>[];
+      json['products'].forEach((v) {
+        products!.add(new ProductCaterory.fromJson(v));
+      });
     }
-  }
-
-
-}
-
-class TopCategories {
-  String? categoryId;
-  String? name;
-  String? image;
-
-  TopCategories({this.categoryId, this.name, this.image});
-
-  TopCategories.fromJson(Map<String, dynamic> json) {
-    categoryId = json['category_id'];
-    name = json['name'];
-    image = json['image'].toString();
+    if (json['banner'] != null) {
+      banner = <Banner>[];
+      json['banner'].forEach((v) {
+        banner!.add(new Banner.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['category_id'] = this.categoryId;
-    data['name'] = this.name;
-    data['image'] = this.image;
+    if (this.silder != null) {
+      data['silder'] = this.silder!.map((v) => v.toJson()).toList();
+    }
+    if (this.products != null) {
+      data['products'] = this.products!.map((v) => v.toJson()).toList();
+    }
+    if (this.banner != null) {
+      data['banner'] = this.banner!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
 
-class Layout {
+class Silder {
   String? title;
+  String? preset;
   String? layout;
   String? sort;
-  String? preset;
   String? column;
   List<Data>? data;
 
-  Layout({this.title, this.layout, this.sort, this.column, this.data});
+  Silder(
+      {this.title,
+        this.preset,
+        this.layout,
+        this.sort,
+        this.column,
+        this.data});
 
-  Layout.fromJson(Map<String, dynamic> json) {
+  Silder.fromJson(Map<String, dynamic> json) {
     title = json['title'];
+    preset = json['preset'];
     layout = json['layout'];
     sort = json['sort'];
-    preset = json['preset'];
     column = json['column'];
     if (json['data'] != null) {
       data = <Data>[];
@@ -89,6 +74,51 @@ class Layout {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;
+    data['preset'] = this.preset;
+    data['layout'] = this.layout;
+    data['sort'] = this.sort;
+    data['column'] = this.column;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Banner {
+  String? title;
+  String? preset;
+  String? layout;
+  String? sort;
+  String? column;
+  List<Data>? data;
+
+  Banner(
+      {this.title,
+        this.preset,
+        this.layout,
+        this.sort,
+        this.column,
+        this.data});
+
+  Banner.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    preset = json['preset'];
+    layout = json['layout'];
+    sort = json['sort'];
+    column = json['column'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = this.title;
+    data['preset'] = this.preset;
     data['layout'] = this.layout;
     data['sort'] = this.sort;
     data['column'] = this.column;
@@ -101,11 +131,78 @@ class Layout {
 
 class Data {
   String? name;
+  String? image;
+  String? linkType;
+  String? link;
+
+  Data({this.name, this.image, this.linkType, this.link});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    image = json['image'];
+    linkType = json['link_type'];
+    link = json['link'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['link_type'] = this.linkType;
+    data['link'] = this.link;
+    return data;
+  }
+}
+class ProductCaterory {
+  String? title;
+  String? preset;
+  String? layout;
+  String? sort;
+  String? column;
+  List<ProductInfo>? data;
+
+  ProductCaterory(
+      {this.title,
+        this.preset,
+        this.layout,
+        this.sort,
+        this.column,
+        this.data});
+
+  ProductCaterory.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    preset = json['preset'];
+    layout = json['layout'];
+    sort = json['sort'];
+    column = json['column'];
+    if (json['data'] != null) {
+      data = <ProductInfo>[];
+      json['data'].forEach((v) {
+        data!.add(new ProductInfo.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = this.title;
+    data['preset'] = this.preset;
+    data['layout'] = this.layout;
+    data['sort'] = this.sort;
+    data['column'] = this.column;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+class ProductInfo {
   String? productId;
+  String? name;
   String? quantity;
   String? stockStatus;
   String? thumb;
-  String? secondThumb;
+  bool? secondThumb;
   bool? priceValue;
   String? description;
   String? price;
@@ -116,9 +213,9 @@ class Data {
   Null? dateEnd;
   String? href;
 
-  Data(
-      {this.name,
-        this.productId,
+  ProductInfo(
+      {this.productId,
+        this.name,
         this.quantity,
         this.stockStatus,
         this.thumb,
@@ -133,32 +230,28 @@ class Data {
         this.dateEnd,
         this.href});
 
-  Data.fromJson(Map<String, dynamic> json) {
-   try{
-     name = json['name'];
-     productId = json['product_id'];
-     quantity = json['quantity'];
-     stockStatus = json['stock_status'];
-     thumb = json['thumb'];
-     secondThumb = json['second_thumb'].toString();
-     priceValue = json['price_value'];
-     description = json['description'];
-     price = json['price'];
-     special = json['special'];
-     tax = json['tax'];
-     minimum = json['minimum'].toString();
-     rating = json['rating'];
-     dateEnd = json['date_end'];
-     href = json['href'];
-   }catch(e){
-     print(e.toString());
-   }
+  ProductInfo.fromJson(Map<String, dynamic> json) {
+    productId = json['product_id'];
+    name = json['name'];
+    quantity = json['quantity'];
+    stockStatus = json['stock_status'];
+    thumb = json['thumb'];
+    secondThumb = json['second_thumb'];
+    priceValue = json['price_value'];
+    description = json['description'];
+    price = json['price'];
+    special = json['special'];
+    tax = json['tax'];
+    minimum = json['minimum'].toString();
+    rating = json['rating'];
+    dateEnd = json['date_end'];
+    href = json['href'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
     data['product_id'] = this.productId;
+    data['name'] = this.name;
     data['quantity'] = this.quantity;
     data['stock_status'] = this.stockStatus;
     data['thumb'] = this.thumb;

@@ -12,6 +12,7 @@ import 'package:vkreta/modifyyouraddress.dart';
 import 'package:vkreta/notifications.dart';
 import 'package:vkreta/productdisplay.dart';
 import 'package:vkreta/response/search_products_response.dart';
+
 import 'package:vkreta/services/apiservice.dart';
 
 import 'package:vkreta/viewall.dart';
@@ -25,8 +26,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final TextEditingController _search = TextEditingController();
-  Future<HomeModel> getHomeScreenData()async{
-  HomeModel homeModel=await ApiService().getHome();
+  Future<HomeScreenModel> getHomeScreenData()async{
+  HomeScreenModel homeModel=await ApiService().getHome();
   return homeModel;
   }
   Widget commonBottomSheets({
@@ -231,7 +232,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child:FutureBuilder<HomeModel>(
+          child:FutureBuilder<HomeScreenModel>(
             future: getHomeScreenData(),
             builder: (context,snapshot){
               if(ConnectionState.waiting==snapshot.connectionState){
@@ -360,40 +361,43 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: width * 0.32,
-                    child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context,index){
-                          return CategoryButton(
-                              onTap: (){
-                            Navigator.of(context).push(PageRouteBuilder(
-                                transitionDuration:const Duration(seconds: 1),
-                                transitionsBuilder: (BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secAnimation,
-                                    Widget child) {
-                                  animation = CurvedAnimation(
-                                      parent: animation, curve: Curves.linear);
-                                  return SharedAxisTransition(
-                                      child: child,
-                                      animation: animation,
-                                      secondaryAnimation: secAnimation,
-                                      transitionType:
-                                      SharedAxisTransitionType.horizontal);
-                                },
-                                pageBuilder: (BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secAnimation) {
-                                  return ViewAll(
-                                    title: snapshot.data!.topCategories![index].name!,
-                                  );
-                                }));
-                          }, width: width, list: snapshot.data!.topCategories![index]);
-                        }, separatorBuilder: (context,index){
-                      return SizedBox(width: width * 0.04,);
-                    }, itemCount: snapshot.data!.topCategories!.length),
-                  ),
+
+                  //Top Category
+
+                  // SizedBox(
+                  //   height: width * 0.32,
+                  //   child: ListView.separated(
+                  //       scrollDirection: Axis.horizontal,
+                  //       itemBuilder: (context,index){
+                  //         return CategoryButton(
+                  //             onTap: (){
+                  //           Navigator.of(context).push(PageRouteBuilder(
+                  //               transitionDuration:const Duration(seconds: 1),
+                  //               transitionsBuilder: (BuildContext context,
+                  //                   Animation<double> animation,
+                  //                   Animation<double> secAnimation,
+                  //                   Widget child) {
+                  //                 animation = CurvedAnimation(
+                  //                     parent: animation, curve: Curves.linear);
+                  //                 return SharedAxisTransition(
+                  //                     child: child,
+                  //                     animation: animation,
+                  //                     secondaryAnimation: secAnimation,
+                  //                     transitionType:
+                  //                     SharedAxisTransitionType.horizontal);
+                  //               },
+                  //               pageBuilder: (BuildContext context,
+                  //                   Animation<double> animation,
+                  //                   Animation<double> secAnimation) {
+                  //                 return ViewAll(
+                  //                   title: snapshot.data!.topCategories![index].name!,
+                  //                 );
+                  //               }));
+                  //         }, width: width, list: snapshot.data!.topCategories![index]);
+                  //       }, separatorBuilder: (context,index){
+                  //     return SizedBox(width: width * 0.04,);
+                  //   }, itemCount: snapshot.data!.topCategories!.length),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Divider(
@@ -401,46 +405,53 @@ class _HomeState extends State<Home> {
                       color: Colors.grey.shade500,
                     ),
                   ),
-                  CarouselSlider(
-                      items:snapshot.data!.slider!.data!.map((e) => Container(
-                        margin: EdgeInsets.symmetric(vertical: width * 0.02),
-                        width: width * 0.9,
-                        height: width * 0.2,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7),
-                            boxShadow:const [
-                              BoxShadow(
-                                  color: Colors.black38,
-                                  offset: Offset(-2,3),
-                                  blurRadius: 7
-                              )
-                            ]
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
-                          errorBuilder: (context,object,streacTree){
-                            return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
-                          },
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context,index){
+                    return CarouselSlider(
+                        items:snapshot.data!.silder![index].data!.map((e) => Container(
+                          margin: EdgeInsets.symmetric(vertical: width * 0.02),
+                          width: width * 0.9,
+                          height: width * 0.2,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(7),
+                              boxShadow:const [
+                                BoxShadow(
+                                    color: Colors.black38,
+                                    offset: Offset(-2,3),
+                                    blurRadius: 7
+                                )
+                              ]
                           ),
-                        ),)).toList(),
-                      options: CarouselOptions(
-                        height: width * 0.45,
-                        aspectRatio: 9/14,
-                        viewportFraction: 1,
-                        initialPage: 0,
-                        enableInfiniteScroll: true,
-                        reverse: false,
-                        autoPlay: true,
-                        autoPlayInterval:const Duration(seconds: 3),
-                        autoPlayAnimationDuration:const Duration(milliseconds: 800),
-                        autoPlayCurve: Curves.fastOutSlowIn,
-                        enlargeCenterPage: true,
-                        onPageChanged: (ss,aa){},
-                        scrollDirection: Axis.horizontal,
-                      )
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(7),
+                            child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
+                              errorBuilder: (context,object,streacTree){
+                                return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
+                              },
+                            ),
+                          ),)).toList(),
+                        options: CarouselOptions(
+                          height: width * 0.45,
+                          aspectRatio: 9/14,
+                          viewportFraction: 1,
+                          initialPage: 0,
+                          enableInfiniteScroll: true,
+                          reverse: false,
+                          autoPlay: true,
+                          autoPlayInterval:const Duration(seconds: 3),
+                          autoPlayAnimationDuration:const Duration(milliseconds: 800),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          enlargeCenterPage: true,
+                          onPageChanged: (ss,aa){},
+                          scrollDirection: Axis.horizontal,
+                        )
+                    );
+                  },
+                    itemCount: snapshot.data!.silder!.length,
                   ),
+
                   SizedBox(
                     height: width * 0.06,
                   ),
@@ -449,7 +460,7 @@ class _HomeState extends State<Home> {
                         physics:const  NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (context,index){
-                          return ProductCart(width: width, title: snapshot.data!.layout![index].title!, viewAll: (){
+                          return ProductCart(width: width, title: snapshot.data!.products![index].title!, viewAll: (){
                             Navigator.of(context).push(PageRouteBuilder(
                                 transitionDuration:const Duration(seconds: 1),
                                 transitionsBuilder: (BuildContext context,
@@ -469,13 +480,13 @@ class _HomeState extends State<Home> {
                                     Animation<double> animation,
                                     Animation<double> secAnimation) {
                                   return ViewAll(
-                                    title:snapshot.data!.layout![index].preset!,
+                                    title:snapshot.data!.products![index].preset!,
                                   );
                                 }));
-                          },  product: snapshot.data!.layout![index].data!);
+                          },  product: snapshot.data!.products![index].data!);
                         }, separatorBuilder: (context,index){
                       return SizedBox(height: width * 0.15,);
-                    }, itemCount: snapshot.data!.layout!.length),
+                    }, itemCount: snapshot.data!.products!.length),
                   )
                 ],
               );
@@ -493,17 +504,7 @@ class _HomeState extends State<Home> {
     Category(image: "assets/health.png",label: "Health"),
     Category(image: "assets/home.png",label: "Home"),
   ];
-  List<Product>product=[
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-    Product(name: "Here is the title of your product", prices: "100", orderQuantity: "150", image: "assets/shoes.png", sales: "-60%"),
-  ];
+
   String title="Flash sale";
 }
 
@@ -519,7 +520,7 @@ class ProductCart extends StatefulWidget {
   final double width;
   final String title;
   final Null Function() viewAll;
-  final List<Data>? product;
+  final List<ProductInfo> product;
 
   @override
   State<ProductCart> createState() => _ProductCartState();
@@ -627,7 +628,7 @@ class _ProductCartState extends State<ProductCart> {
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Padding(
                                     padding: EdgeInsets.all(widget.width * 0.02),
-                                    child: Image.network(widget.product![index].thumb!.toString()=='null'?"https://dfdsf":widget.product![index].thumb!,
+                                    child: Image.network(widget.product[index].thumb!.toString()=='null'?"https://dfdsf":widget.product![index].thumb!,
                                         fit: BoxFit.cover,
                                       errorBuilder: (context,object,straeTree){
                                       return Icon(Icons.image,color: Colors.grey,size: widget.width * 0.06,);
@@ -752,75 +753,75 @@ class _ProductCartState extends State<ProductCart> {
   }
 }
 
-class CategoryButton extends StatelessWidget {
-  const CategoryButton({
-    Key? key,
-    required this.onTap,
-    required this.width,
-    required this.list,
-  }) : super(key: key);
-
-  final Null Function() onTap;
-  final double width;
-  final TopCategories list;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(width * 0.02),
-      child: InkWell(
-        onTap:onTap,
-        child: Container(
-          height: width * 0.2,
-          width: width * 0.2,
-          color: Colors.white,
-          child: Column(children: [
-            SizedBox(
-                height: width * 0.18,
-                width: width * 0.22,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(7),
-                  child: Image.network(
-                    list.image.toString()=="null"?"https://kdfsdf":list.image!,fit: BoxFit.cover,
-                    errorBuilder: (context,object,stracktree){
-                      return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
-                    },
-                  ),
-                )),
-            SizedBox(
-              height: width * 0.015,
-            ),
-            Text(
-              list.name!,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.poppins(
-                  textStyle:const TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold)),
-            ),
-          ]),
-        ),
-      ),
-    );
-  }
-}
+// class CategoryButton extends StatelessWidget {
+//   const CategoryButton({
+//     Key? key,
+//     required this.onTap,
+//     required this.width,
+//     required this.list,
+//   }) : super(key: key);
+//
+//   final Null Function() onTap;
+//   final double width;
+//   final TopCategories list;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.all(width * 0.02),
+//       child: InkWell(
+//         onTap:onTap,
+//         child: Container(
+//           height: width * 0.2,
+//           width: width * 0.2,
+//           color: Colors.white,
+//           child: Column(children: [
+//             SizedBox(
+//                 height: width * 0.18,
+//                 width: width * 0.22,
+//                 child: ClipRRect(
+//                   borderRadius: BorderRadius.circular(7),
+//                   child: Image.network(
+//                     list.image.toString()=="null"?"https://kdfsdf":list.image!,fit: BoxFit.cover,
+//                     errorBuilder: (context,object,stracktree){
+//                       return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
+//                     },
+//                   ),
+//                 )),
+//             SizedBox(
+//               height: width * 0.015,
+//             ),
+//             Text(
+//               list.name!,
+//               maxLines: 2,
+//               overflow: TextOverflow.ellipsis,
+//               style: GoogleFonts.poppins(
+//                   textStyle:const TextStyle(
+//                       color: Colors.black,
+//                       fontSize: 10,
+//                       fontWeight: FontWeight.bold)),
+//             ),
+//           ]),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class Category{
   String image;
   String label;
   Category({required this.image, required this.label});
 }
-
-class Product{
-  String name;
-  String prices;
-  String orderQuantity;
-  String image;
-  String sales;
-  Product({required this.name,required this.prices,required this.orderQuantity,required this.image,required this.sales});
-}
+//
+// class Product{
+//   String name;
+//   String prices;
+//   String orderQuantity;
+//   String image;
+//   String sales;
+//   Product({required this.name,required this.prices,required this.orderQuantity,required this.image,required this.sales});
+// }
 
 class CustomSearchDelegate extends SearchDelegate {
   final String search;

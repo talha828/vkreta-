@@ -108,7 +108,7 @@ class ApiService {
     return _model;
     // return json.decode(response.body);
   }
-  Future<List<Data>> viewAll(String preset, String page) async {
+  Future<List<ProductInfo>> viewAll(String preset, String page) async {
     String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/home/products");
     final response = await http.post(loginUrl, headers: {
@@ -120,9 +120,9 @@ class ApiService {
     // print(response.statusCode.toString());
     var object=jsonDecode(response.body);
 
-     List<Data>data=[];
+     List<ProductInfo>data=[];
      for (var i in object){
-       data.add(Data.fromJson(i));
+       data.add(ProductInfo.fromJson(i));
      }
     return data;
     // return json.decode(response.body);
@@ -197,7 +197,7 @@ class ApiService {
     return json.decode(response.body);
   }
 
-  Future<HomeModel> getHome() async {
+  Future<HomeScreenModel> getHome() async {
     String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     final data = Uri.parse("https://www.vkreta.com/index.php?route=api/home");
     final response = await http.get(
@@ -206,7 +206,7 @@ class ApiService {
     );
     //  print(response.statusCode);
     print(response.body);
-    final homeModel = HomeModel.fromJson(jsonDecode(response.body));
+    final homeModel = HomeScreenModel.fromJson(jsonDecode(response.body));
     return homeModel;
   }
 

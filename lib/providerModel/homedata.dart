@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:vkreta/models/homemodel.dart';
 
 class HomeData extends ChangeNotifier{
-  HomeModel? homeData;
+  HomeScreenModel? homeData;
 
-  loadData(HomeModel data){
+  loadData(HomeScreenModel data){
     homeData=data;
     notifyListeners();
   }
