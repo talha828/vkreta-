@@ -129,7 +129,7 @@ class _WishListState extends State<WishList> {
                                                     color: Colors.white,
                                                     borderRadius:
                                                     BorderRadius.circular(
-                                                        20),
+                                                        7),
                                                     boxShadow: [
                                                       BoxShadow(
                                                           color: Colors
@@ -354,62 +354,65 @@ class _WishListState extends State<WishList> {
                                                                       .symmetric(
                                                                       horizontal:
                                                                       10),
-                                                                  child: Row(
-                                                                    children: [
-                                                                      for (int optionValues =
-                                                                      0;
-                                                                      optionValues <
-                                                                          snapshot.data.products[index].options[option].productOptionValue.length;
-                                                                      ++optionValues)
-                                                                        InkWell(
-                                                                          onTap:
-                                                                              () {
-                                                                            // print(selectedVariants);
-                                                                            String
-                                                                            product_option_id =
-                                                                                snapshot.data.products[index].options[option].productOptionId;
-                                                                            String
-                                                                            product_option_value_id =
-                                                                                snapshot.data.products[index].options[option].productOptionValue[optionValues].productOptionValueId;
-                                                                            if (selectedVariants.containsKey(product_option_id)) {
-                                                                              selectedVariants[product_option_id] = product_option_value_id;
-                                                                            } else {
-                                                                              selectedVariants.addAll({
-                                                                                product_option_id: product_option_value_id
-                                                                              });
-                                                                            }
-                                                                            setState(() {});
-                                                                          },
-                                                                          child:
-                                                                          Container(
-                                                                            // height: 35,
-                                                                            // width: 35,
-                                                                            padding: const EdgeInsets.fromLTRB(
-                                                                                10,
-                                                                                5,
-                                                                                10,
-                                                                                5),
-                                                                            margin:
-                                                                            const EdgeInsets.only(right: 5),
-                                                                            decoration:
-                                                                            BoxDecoration(
-                                                                              color: selectedVariants.containsKey(snapshot.data.products[index].options[option].productOptionId)
-                                                                                  ? selectedVariants[snapshot.data.products[index].options[option].productOptionId] == snapshot.data.products[index].options[option].productOptionValue[optionValues].productOptionValueId
-                                                                                  ? Colors.blue.shade900
-                                                                                  : Colors.black26
-                                                                                  : Colors.black26,
-                                                                              borderRadius: BorderRadiusDirectional.circular(7),
-                                                                            ),
+                                                                  child: SingleChildScrollView(
+                                                                    scrollDirection: Axis.horizontal,
+                                                                    child: Row(
+                                                                      children: [
+                                                                        for (int optionValues =
+                                                                        0;
+                                                                        optionValues <
+                                                                            snapshot.data.products[index].options[option].productOptionValue.length;
+                                                                        ++optionValues)
+                                                                          InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              // print(selectedVariants);
+                                                                              String
+                                                                              product_option_id =
+                                                                                  snapshot.data.products[index].options[option].productOptionId;
+                                                                              String
+                                                                              product_option_value_id =
+                                                                                  snapshot.data.products[index].options[option].productOptionValue[optionValues].productOptionValueId;
+                                                                              if (selectedVariants.containsKey(product_option_id)) {
+                                                                                selectedVariants[product_option_id] = product_option_value_id;
+                                                                              } else {
+                                                                                selectedVariants.addAll({
+                                                                                  product_option_id: product_option_value_id
+                                                                                });
+                                                                              }
+                                                                              setState(() {});
+                                                                            },
                                                                             child:
-                                                                            Center(
-                                                                              child: Text(
-                                                                                snapshot.data.products[index].options[option].productOptionValue[optionValues].name,
-                                                                                style: GoogleFonts.poppins(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                                                                            Container(
+                                                                              // height: 35,
+                                                                              // width: 35,
+                                                                              padding: const EdgeInsets.fromLTRB(
+                                                                                  10,
+                                                                                  5,
+                                                                                  10,
+                                                                                  5),
+                                                                              margin:
+                                                                              const EdgeInsets.only(right: 5),
+                                                                              decoration:
+                                                                              BoxDecoration(
+                                                                                color: selectedVariants.containsKey(snapshot.data.products[index].options[option].productOptionId)
+                                                                                    ? selectedVariants[snapshot.data.products[index].options[option].productOptionId] == snapshot.data.products[index].options[option].productOptionValue[optionValues].productOptionValueId
+                                                                                    ? Colors.blue.shade900
+                                                                                    : Colors.black26
+                                                                                    : Colors.black26,
+                                                                                borderRadius: BorderRadiusDirectional.circular(7),
+                                                                              ),
+                                                                              child:
+                                                                              Center(
+                                                                                child: Text(
+                                                                                  snapshot.data.products[index].options[option].productOptionValue[optionValues].name,
+                                                                                  style: GoogleFonts.poppins(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize:11)),
+                                                                                ),
                                                                               ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                    ],
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
@@ -434,7 +437,7 @@ class _WishListState extends State<WishList> {
                                                                     .white,
                                                                 borderRadius:
                                                                 BorderRadiusDirectional
-                                                                    .circular(1),
+                                                                    .circular(7),
                                                                 boxShadow: [
                                                                   BoxShadow(
                                                                       color: Colors
@@ -594,7 +597,7 @@ class _WishListState extends State<WishList> {
                                                                       .white,
                                                                   borderRadius:
                                                                   BorderRadius
-                                                                      .circular(10),
+                                                                      .circular(7),
                                                                   boxShadow: [
                                                                     BoxShadow(
                                                                         color: Colors

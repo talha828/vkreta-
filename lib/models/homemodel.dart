@@ -1,33 +1,40 @@
 class HomeScreenModel {
   List<Silder>? silder;
   List<ProductCaterory>? products;
-  List<Banner>? banner;
+  List<TopCategory>?topCategory;
+  List<BannerModel>? banner;
 
-  HomeScreenModel({this.silder, this.products, this.banner});
+  HomeScreenModel({this.silder, this.products, this.banner,this.topCategory});
 
   HomeScreenModel.fromJson(Map<String, dynamic> json) {
     if (json['silder'] != null) {
       silder = <Silder>[];
       json['silder'].forEach((v) {
-        silder!.add(new Silder.fromJson(v));
+        silder!.add(Silder.fromJson(v));
+      });
+    }
+    if (json['top_categories'] != null) {
+      topCategory = <TopCategory>[];
+      json['top_categories'].forEach((v) {
+        topCategory!.add(TopCategory.fromJson(v));
       });
     }
     if (json['products'] != null) {
       products = <ProductCaterory>[];
       json['products'].forEach((v) {
-        products!.add(new ProductCaterory.fromJson(v));
+        products!.add(ProductCaterory.fromJson(v));
       });
     }
     if (json['banner'] != null) {
-      banner = <Banner>[];
+      banner = <BannerModel>[];
       json['banner'].forEach((v) {
-        banner!.add(new Banner.fromJson(v));
+        banner!.add(BannerModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.silder != null) {
       data['silder'] = this.silder!.map((v) => v.toJson()).toList();
     }
@@ -85,7 +92,7 @@ class Silder {
   }
 }
 
-class Banner {
+class BannerModel {
   String? title;
   String? preset;
   String? layout;
@@ -93,7 +100,7 @@ class Banner {
   String? column;
   List<Data>? data;
 
-  Banner(
+  BannerModel(
       {this.title,
         this.preset,
         this.layout,
@@ -101,7 +108,7 @@ class Banner {
         this.column,
         this.data});
 
-  Banner.fromJson(Map<String, dynamic> json) {
+  BannerModel.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     preset = json['preset'];
     layout = json['layout'];
@@ -202,7 +209,7 @@ class ProductInfo {
   String? quantity;
   String? stockStatus;
   String? thumb;
-  bool? secondThumb;
+  String? secondThumb;
   bool? priceValue;
   String? description;
   String? price;
@@ -236,7 +243,7 @@ class ProductInfo {
     quantity = json['quantity'];
     stockStatus = json['stock_status'];
     thumb = json['thumb'];
-    secondThumb = json['second_thumb'];
+    secondThumb = json['second_thumb'].toString();
     priceValue = json['price_value'];
     description = json['description'];
     price = json['price'];
@@ -267,4 +274,92 @@ class ProductInfo {
     data['href'] = this.href;
     return data;
   }
+}
+class ViewAllModel {
+  String? productId;
+  String? name;
+  String? quantity;
+  String? stockStatus;
+  String? thumb;
+  String? secondThumb;
+  bool? priceValue;
+  String? price;
+  String? special;
+  String? minimum;
+  int? rating;
+  Null? dateEnd;
+  String? href;
+
+  ViewAllModel(
+      {this.productId,
+        this.name,
+        this.quantity,
+        this.stockStatus,
+        this.thumb,
+        this.secondThumb,
+        this.priceValue,
+        this.price,
+        this.special,
+        this.minimum,
+        this.rating,
+        this.dateEnd,
+        this.href});
+
+  ViewAllModel.fromJson(Map<String, dynamic> json) {
+    productId = json['product_id'];
+    name = json['name'];
+    quantity = json['quantity'];
+    stockStatus = json['stock_status'];
+    thumb = json['thumb'];
+    secondThumb = json['second_thumb'].toString();
+    priceValue = json['price_value'];
+    price = json['price'];
+    special = json['special'].toString();
+    minimum = json['minimum'].toString();
+    rating = json['rating'];
+    dateEnd = json['date_end'];
+    href = json['href'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['product_id'] = productId;
+    data['name'] = this.name;
+    data['quantity'] = this.quantity;
+    data['stock_status'] = this.stockStatus;
+    data['thumb'] = this.thumb;
+    data['second_thumb'] = this.secondThumb;
+    data['price_value'] = this.priceValue;
+    data['price'] = this.price;
+    data['special'] = this.special;
+    data['minimum'] = this.minimum;
+    data['rating'] = this.rating;
+    data['date_end'] = this.dateEnd;
+    data['href'] = this.href;
+    return data;
+  }
+}
+
+class TopCategory {
+  TopCategory({
+    this.categoryId,
+    this.name,
+    this.image,
+  });
+
+  String? categoryId;
+  String? name;
+  String? image;
+
+  factory TopCategory.fromJson(Map<String, dynamic> json) => TopCategory(
+    categoryId: json["category_id"],
+    name: json["name"],
+    image: json["image"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "category_id": categoryId,
+    "name": name,
+    "image": image,
+  };
 }

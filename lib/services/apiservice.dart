@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/interceptors/get_modifiers.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vkreta/getx_controllers/productInfo.dart';
 import 'package:vkreta/models/WishlistModel.dart';
 import 'package:vkreta/models/addorderModel.dart';
 import 'package:vkreta/models/addtowishlistModel.dart';
@@ -22,6 +25,7 @@ import 'package:vkreta/models/productsearchModel.dart';
 import 'package:vkreta/models/removecartitemModel.dart';
 import 'package:vkreta/models/removeproductmodel.dart';
 import 'package:vkreta/models/reviewModel.dart';
+import 'package:vkreta/models/searchModel.dart';
 import 'package:vkreta/models/sellerratingModel.dart';
 import 'package:vkreta/models/signupmodel.dart';
 import 'package:vkreta/models/updatecartquantityModel.dart';
@@ -108,23 +112,27 @@ class ApiService {
     return _model;
     // return json.decode(response.body);
   }
-  Future<List<ProductInfo>> viewAll(String preset, String page) async {
+  Future<List<ViewAllModel>> viewAll(String preset, String page) async {
+      final data= Get.put(ProductList());
     String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/home/products");
+    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/home/products&preset=$preset&page=$page");
     final response = await http.post(loginUrl, headers: {
       'authorization': basicAuth
-    }, body: {
-      'preset': preset,
-      'page': page,
-    });
-    // print(response.statusCode.toString());
+    },);
     var object=jsonDecode(response.body);
+    print(response.statusCode.toString());
 
-     List<ProductInfo>data=[];
-     for (var i in object){
-       data.add(ProductInfo.fromJson(i));
-     }
-    return data;
+    if(int.parse(page)==1){
+      data.product.clear();
+      for (var i in object){
+        data.product.add(ViewAllModel.fromJson(i));
+      }
+      }else{
+      for (var i in object){
+        data.product.add(ViewAllModel.fromJson(i));
+      }
+    }
+    return data.product;
     // return json.decode(response.body);
   }
 
@@ -740,24 +748,62 @@ class ApiService {
     return data;
   }
 
-  Future<ProductsearchModel> getProductSearch({required String route, required String search, required dynamic category_id, required int limit, required String? fmin, required String? fmax,}) async {
+  Future<SearchModel> getProductSearch({String? search}) async {
     String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
 
-    String url = "https://www.vkreta.com/index.php?route=${route.toString()}";
-    if (search != "") {
-      url += "&search=${search.toString()}";
+    String url = "https://www.vkreta.com/index.php?route=api/search&search=$search";
+    // if (search != "") {
+    //   url += "&search=${search.toString()}";
+    // }
+    // if (category_id != null) {
+    //   url += "&category_id=${category_id}";
+    // }
+    // if (limit! > 0) {
+    //   url += "&limit=${limit.toString()}";
+    // }
+    // if (fmin != "0") {
+    //   url += "&fmin=${fmin}";
+    // }
+    // if (fmax != "0") {
+    //   url += "&fmax=${fmax}";
+    // }
+
+    final data = Uri.parse(url);
+
+    final response = await http.get(
+      data,
+      headers: {'authorization': basicAuth},
+    );
+    print(url);
+    // print(response.statusCode);
+    //  print(response.body);
+    // index.php?route=api/"
+    // "productdetail/review&product_id=${product_id.toString()}&page=${page.toInt()}&limit=${limit.toInt()}");
+    // return json.decode(response.body);
+    var data2 = jsonDecode(response.body.toString());
+    print(data2);
+    // WishlistModel _model = wishlistModelFromJson(response.body);
+    // // print("response.body3");
+    // return _model;
+    print("response.asdasd");
+    SearchModel _model = SearchModel.fromJson(jsonDecode(response.body));
+    // // print(_model);
+    print("response.body3");
+    return _model;
+  }
+  Future<SearchModel> getFilterSearch({String? min,String? max,String? brand,String? discount,String? prices,String? rating}) async {
+    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+
+    String url = "https://www.vkreta.com/index.php?route=api/search";
+      url += "&fp=$min,$max";
+    if (brand != "bbb") {
+      url += "&fm=$brand";
     }
-    if (category_id != null) {
-      url += "&category_id=${category_id}";
+    if (discount!= "bbb") {
+      url += "&f4=$discount";
     }
-    if (limit > 0) {
-      url += "&limit=${limit.toString()}";
-    }
-    if (fmin != "0") {
-      url += "&fmin=${fmin}";
-    }
-    if (fmax != "0") {
-      url += "&fmax=${fmax}";
+    if (rating != "bbb") {
+      url += "&f5=$rating";
     }
 
     final data = Uri.parse(url);
@@ -778,7 +824,7 @@ class ApiService {
     // // print("response.body3");
     // return _model;
     print("response.asdasd");
-    ProductsearchModel _model = productsearchModelFromJson(response.body);
+    SearchModel _model = SearchModel.fromJson(jsonDecode(response.body));
     // // print(_model);
     print("response.body3");
     return _model;

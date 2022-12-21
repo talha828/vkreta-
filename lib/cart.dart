@@ -48,23 +48,23 @@ class _CartState extends State<Cart> {
                 SizedBox(
                   height: 10,
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(PageRouteBuilder(
-                        transitionDuration: Duration(seconds: 1),
-                        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
-                          animation = CurvedAnimation(parent: animation, curve: Curves.linear);
-                          return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
-                        },
-                        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
-                          return ProductDisplay(88);
-                        }));
-                  },
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        for (int index = 0; index < snapshot.data.products.length; index++)
-                          Container(
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      for (int index = 0; index < snapshot.data.products.length; index++)
+                        InkWell(
+                          onTap: (){
+                            Navigator.of(context).push(PageRouteBuilder(
+                                transitionDuration: Duration(seconds: 1),
+                                transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                                  animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                                  return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                                },
+                                pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                                  return ProductDisplay(snapshot.data.products[index].productId);
+                                }));
+                          },
+                          child: Container(
                             // height: 152,
                             padding: EdgeInsets.symmetric(vertical: 10),
                             width: MediaQuery.of(context).size.width,
@@ -234,8 +234,8 @@ class _CartState extends State<Cart> {
                               ],
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 10),

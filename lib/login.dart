@@ -204,9 +204,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                      pageBuilder: (BuildContext context,
                                          Animation<double> animation,
                                          Animation<double> secAnimation) {
-                                       return EnterMobileNo(
-                                         t: 'Login',
-                                       );
+                                       return SelectScreen();
+                                       //   EnterMobileNo(
+                                       //   t: 'Login',
+                                       // );
                                      }));
                                  setLoading(false);
                                }else{

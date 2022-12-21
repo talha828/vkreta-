@@ -5,17 +5,21 @@ import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vkreta/allnotifications.dart';
+import 'package:vkreta/getx_controllers/homepage.dart';
 import 'package:vkreta/lowtohighprice.dart';
 import 'package:vkreta/models/homemodel.dart';
 import 'package:vkreta/modifyyouraddress.dart';
 import 'package:vkreta/notifications.dart';
 import 'package:vkreta/productdisplay.dart';
 import 'package:vkreta/response/search_products_response.dart';
+import 'package:vkreta/search_screen.dart';
 
 import 'package:vkreta/services/apiservice.dart';
 
 import 'package:vkreta/viewall.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -26,10 +30,24 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final TextEditingController _search = TextEditingController();
+  final homeScreenModel= Get.put(HomePage());
+
   Future<HomeScreenModel> getHomeScreenData()async{
-  HomeScreenModel homeModel=await ApiService().getHome();
+   setLoading(true);
+  HomeScreenModel homeModel=await ApiService().getHome().then((value){
+  homeScreenModel.homeScreenModel.value=value;
+  setLoading(false);
+    return value;
+  });
   return homeModel;
   }
+
+  setLoading(bool value){
+    setState(() {
+      isLoading=false;
+    });
+  }
+  bool isLoading=false;
   Widget commonBottomSheets({
     BuildContext? context,
     Widget? widget,
@@ -224,82 +242,170 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+  launchWhatsApp(phone) async {
+    final link = WhatsAppUnilink(phoneNumber: phone, text: "Hey! I'm looking ?");
+    await launch('$link');
+  }
+  String phoneNumber = '';
+  @override
+  void initState() {
+    getHomeScreenData();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var width =MediaQuery.of(context).size.width;
     var height =MediaQuery.of(context).size.height;
+    HomeScreenModel snapshot = homeScreenModel.homeScreenModel.value;
     return Scaffold(
       backgroundColor: Colors.white,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.green,
+          onPressed: () {
+            launchWhatsApp(phoneNumber);
+          },
+          child: Icon(
+            Icons.whatsapp,
+            size: 35,
+          ),
+        ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child:FutureBuilder<HomeScreenModel>(
-            future: getHomeScreenData(),
-            builder: (context,snapshot){
-              if(ConnectionState.waiting==snapshot.connectionState){
-                return Container(
-                  height: height,
-                  width: width,
-                    alignment: Alignment.center,
-                    child:const CircularProgressIndicator());
-              }
-              return  Column(
-                children: [
-                  SizedBox(
-                    height: width * 0.04,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(width * 0.04),
-                    child: SizedBox(
-                      height: width * 0.12,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _search,
-                              textInputAction: TextInputAction.search,
-                              onFieldSubmitted: (value) {
-                                showSearch(
-                                  query: _search.text,
-                                  context: context,
-                                  delegate: CustomSearchDelegate(search: _search.text.trim().toLowerCase()),
-                                );
-                              },
-                              decoration: InputDecoration(
-                                prefixIcon: InkWell(
-                                  onTap: () {
-                                    showSearch(
-                                      query: _search.text,
-                                      context: context,
-                                      delegate: CustomSearchDelegate(search: _search.text.trim().toLowerCase()),
-                                    );
-                                  },
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.grey.shade600,
-                                    size: 25,
-                                  ),
-                                ),
-                                isDense: true,
-                                filled: true,
-                                fillColor: Colors.grey.shade100,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintText: 'Search Product',
-                                hintStyle: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: 14,
+          child: Stack(
+            children: [
+              Column(
+                    children: [
+                      SizedBox(
+                        height: width * 0.04,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(width * 0.04),
+                        child: SizedBox(
+                          height: width * 0.12,
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchScreen())),
+                                  child: TextFormField(
+                                    enabled: false,
+                                    controller: _search,
+                                    textInputAction: TextInputAction.search,
+                                    onFieldSubmitted: (value) {
+                                      showSearch(
+                                        query: _search.text,
+                                        context: context,
+                                        delegate: CustomSearchDelegate(search: _search.text.trim().toLowerCase()),
+                                      );
+                                    },
+                                    decoration: InputDecoration(
+                                      prefixIcon: InkWell(
+                                        onTap: () {
+                                          showSearch(
+                                            query: _search.text,
+                                            context: context,
+                                            delegate: CustomSearchDelegate(search: _search.text.trim().toLowerCase()),
+                                          );
+                                        },
+                                        child: Icon(
+                                          Icons.search,
+                                          color: Colors.grey.shade600,
+                                          size: 25,
+                                        ),
+                                      ),
+                                      isDense: true,
+                                      filled: true,
+                                      fillColor: Colors.grey.shade100,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      hintText: 'Search Product',
+                                      hintStyle: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
 
-                          IconButton(
-                              onPressed: () {
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                        transitionDuration:const Duration(seconds: 1),
+                                        transitionsBuilder: (BuildContext context,
+                                            Animation<double> animation,
+                                            Animation<double> secAnimation,
+                                            Widget child) {
+                                          animation = CurvedAnimation(
+                                              parent: animation, curve: Curves.linear);
+                                          return SharedAxisTransition(
+                                              child: child,
+                                              animation: animation,
+                                              secondaryAnimation: secAnimation,
+                                              transitionType:
+                                              SharedAxisTransitionType.horizontal);
+                                        },
+                                        pageBuilder: (BuildContext context,
+                                            Animation<double> animation,
+                                            Animation<double> secAnimation) {
+                                          return const AllNotifications();
+                                        }));
+                                  },
+                                  icon: Icon(
+                                    Icons.notifications,
+                                    color: Colors.black,
+                                    size: width * 0.06,
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal:width * 0.028),
+                        child: InkWell(
+                          onTap:(){
+                            openBottomSheet(context);
+                          },
+                          child: Container(
+                              height:width * 0.14,
+                              width:MediaQuery.of(context).size.width,
+                              decoration:BoxDecoration(
+                                  color:Colors.blue,
+                                  borderRadius:BorderRadius.circular(5)
+                              ),
+                              child:Row(
+                                  children:[
+                                    SizedBox(width:width * 0.02),
+                                    Icon(Icons.room,color:Colors.white,size:width * 0.05),
+                                    SizedBox(width:width * 0.04),
+                                    Text(
+                                      'Deliver to shanti - Uklana Mnadi 125436',
+                                      style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: width * 0.035,
+                                          )),
+                                    ),
+                                  ]
+                              )
+                          ),
+                        ),
+                      ),
+
+                      // Top Category
+
+                      SizedBox(
+                        height: width * 0.32,
+                        child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context,index){
+                              return CategoryButton(
+                                  onTap: (){
                                 Navigator.of(context).push(PageRouteBuilder(
                                     transitionDuration:const Duration(seconds: 1),
                                     transitionsBuilder: (BuildContext context,
@@ -318,179 +424,118 @@ class _HomeState extends State<Home> {
                                     pageBuilder: (BuildContext context,
                                         Animation<double> animation,
                                         Animation<double> secAnimation) {
-                                      return const AllNotifications();
+                                      return ViewAll(
+                                        title: snapshot!.topCategory![index].name!,
+                                      );
                                     }));
-                              },
-                              icon: Icon(
-                                Icons.notifications,
-                                color: Colors.black,
-                                size: width * 0.06,
-                              ))
-                        ],
+                              }, width: width, list: snapshot!.topCategory![index]);
+                            }, separatorBuilder: (context,index){
+                          return SizedBox(width: width * 0.04,);
+                        }, itemCount: snapshot!.topCategory!.length),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal:width * 0.028),
-                    child: InkWell(
-                      onTap:(){
-                        openBottomSheet(context);
-                      },
-                      child: Container(
-                          height:width * 0.14,
-                          width:MediaQuery.of(context).size.width,
-                          decoration:BoxDecoration(
-                              color:Colors.blue,
-                              borderRadius:BorderRadius.circular(5)
-                          ),
-                          child:Row(
-                              children:[
-                                SizedBox(width:width * 0.02),
-                                Icon(Icons.room,color:Colors.white,size:width * 0.05),
-                                SizedBox(width:width * 0.04),
-                                Text(
-                                  'Deliver to shanti - Uklana Mnadi 125436',
-                                  style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: width * 0.035,
-                                      )),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Divider(
+                          height: 1,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics:const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context,index){
+                        return CarouselSlider(
+                            items:snapshot!.silder![index].data!.map((e) => Container(
+                              margin: EdgeInsets.symmetric(vertical: width * 0.02),
+                              width: width * 0.9,
+                              height: width * 0.2,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(7),
+                                  boxShadow:const [
+                                    BoxShadow(
+                                        color: Colors.black38,
+                                        offset: Offset(-2,3),
+                                        blurRadius: 7
+                                    )
+                                  ]
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(7),
+                                child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
+                                  errorBuilder: (context,object,streacTree){
+                                    return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
+                                  },
                                 ),
-                              ]
-                          )
+                              ),)).toList(),
+                            options: CarouselOptions(
+                              height: width * 0.45,
+                              aspectRatio: 9/14,
+                              viewportFraction: 1,
+                              initialPage: 0,
+                              enableInfiniteScroll: true,
+                              reverse: false,
+                              autoPlay: true,
+                              autoPlayInterval:const Duration(seconds: 3),
+                              autoPlayAnimationDuration:const Duration(milliseconds: 800),
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enlargeCenterPage: true,
+                              onPageChanged: (ss,aa){},
+                              scrollDirection: Axis.horizontal,
+                            )
+                        );
+                      },
+                        itemCount: snapshot!.silder!.length,
                       ),
-                    ),
-                  ),
 
-                  //Top Category
-
-                  // SizedBox(
-                  //   height: width * 0.32,
-                  //   child: ListView.separated(
-                  //       scrollDirection: Axis.horizontal,
-                  //       itemBuilder: (context,index){
-                  //         return CategoryButton(
-                  //             onTap: (){
-                  //           Navigator.of(context).push(PageRouteBuilder(
-                  //               transitionDuration:const Duration(seconds: 1),
-                  //               transitionsBuilder: (BuildContext context,
-                  //                   Animation<double> animation,
-                  //                   Animation<double> secAnimation,
-                  //                   Widget child) {
-                  //                 animation = CurvedAnimation(
-                  //                     parent: animation, curve: Curves.linear);
-                  //                 return SharedAxisTransition(
-                  //                     child: child,
-                  //                     animation: animation,
-                  //                     secondaryAnimation: secAnimation,
-                  //                     transitionType:
-                  //                     SharedAxisTransitionType.horizontal);
-                  //               },
-                  //               pageBuilder: (BuildContext context,
-                  //                   Animation<double> animation,
-                  //                   Animation<double> secAnimation) {
-                  //                 return ViewAll(
-                  //                   title: snapshot.data!.topCategories![index].name!,
-                  //                 );
-                  //               }));
-                  //         }, width: width, list: snapshot.data!.topCategories![index]);
-                  //       }, separatorBuilder: (context,index){
-                  //     return SizedBox(width: width * 0.04,);
-                  //   }, itemCount: snapshot.data!.topCategories!.length),
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Divider(
-                      height: 1,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (context,index){
-                    return CarouselSlider(
-                        items:snapshot.data!.silder![index].data!.map((e) => Container(
-                          margin: EdgeInsets.symmetric(vertical: width * 0.02),
-                          width: width * 0.9,
-                          height: width * 0.2,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(7),
-                              boxShadow:const [
-                                BoxShadow(
-                                    color: Colors.black38,
-                                    offset: Offset(-2,3),
-                                    blurRadius: 7
-                                )
-                              ]
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(7),
-                            child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
-                              errorBuilder: (context,object,streacTree){
-                                return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
-                              },
-                            ),
-                          ),)).toList(),
-                        options: CarouselOptions(
-                          height: width * 0.45,
-                          aspectRatio: 9/14,
-                          viewportFraction: 1,
-                          initialPage: 0,
-                          enableInfiniteScroll: true,
-                          reverse: false,
-                          autoPlay: true,
-                          autoPlayInterval:const Duration(seconds: 3),
-                          autoPlayAnimationDuration:const Duration(milliseconds: 800),
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enlargeCenterPage: true,
-                          onPageChanged: (ss,aa){},
-                          scrollDirection: Axis.horizontal,
-                        )
-                    );
-                  },
-                    itemCount: snapshot.data!.silder!.length,
-                  ),
-
-                  SizedBox(
-                    height: width * 0.06,
-                  ),
-                  SingleChildScrollView(
-                    child: ListView.separated(
-                        physics:const  NeverScrollableScrollPhysics(),
+                      SizedBox(
+                        height: width * 0.06,
+                      ),
+                      SingleChildScrollView(
+                        child: ListView.separated(
+                            physics:const  NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context,index){
+                              return ProductCart(width: width, title: snapshot!.products![index].title!, viewAll: (){
+                                Navigator.of(context).push(PageRouteBuilder(
+                                    transitionDuration:const Duration(seconds: 1),
+                                    transitionsBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secAnimation,
+                                        Widget child) {
+                                      animation = CurvedAnimation(
+                                          parent: animation, curve: Curves.linear);
+                                      return SharedAxisTransition(
+                                          child: child,
+                                          animation: animation,
+                                          secondaryAnimation: secAnimation,
+                                          transitionType:
+                                          SharedAxisTransitionType.horizontal);
+                                    },
+                                    pageBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secAnimation) {
+                                      return ViewAll(
+                                        title:snapshot!.products![index].preset!,
+                                      );
+                                    }));
+                              },  product: snapshot!.products![index].data!);
+                            }, separatorBuilder: (context,index){
+                          return SizedBox(height: width * 0.15,);
+                        }, itemCount: snapshot!.products!.length),
+                      ),
+                      SizedBox(height: width * 0.02,),
+                      ListView.builder(
+                        physics:const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (context,index){
-                          return ProductCart(width: width, title: snapshot.data!.products![index].title!, viewAll: (){
-                            Navigator.of(context).push(PageRouteBuilder(
-                                transitionDuration:const Duration(seconds: 1),
-                                transitionsBuilder: (BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secAnimation,
-                                    Widget child) {
-                                  animation = CurvedAnimation(
-                                      parent: animation, curve: Curves.linear);
-                                  return SharedAxisTransition(
-                                      child: child,
-                                      animation: animation,
-                                      secondaryAnimation: secAnimation,
-                                      transitionType:
-                                      SharedAxisTransitionType.horizontal);
-                                },
-                                pageBuilder: (BuildContext context,
-                                    Animation<double> animation,
-                                    Animation<double> secAnimation) {
-                                  return ViewAll(
-                                    title:snapshot.data!.products![index].preset!,
-                                  );
-                                }));
-                          },  product: snapshot.data!.products![index].data!);
-                        }, separatorBuilder: (context,index){
-                      return SizedBox(height: width * 0.15,);
-                    }, itemCount: snapshot.data!.products!.length),
-                  )
-                ],
-              );
-            },
+                        return BannerWidget(width: width, snapshot: snapshot.banner![index]);
+                      },itemCount: snapshot.banner!.length,
+                      )
+                    ],
+                  ),
+              isLoading?Positioned.fill(child: Container(child:const Center(child: CircularProgressIndicator(),),)):Container()
+            ],
           )
         ),
               )
@@ -508,6 +553,48 @@ class _HomeState extends State<Home> {
   String title="Flash sale";
 }
 
+class BannerWidget extends StatelessWidget {
+  const BannerWidget({
+    Key? key,
+    required this.width,
+    required this.snapshot,
+  }) : super(key: key);
+
+  final double width;
+  final BannerModel snapshot;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(width * 0.04),
+            child: Text(snapshot.title!,textAlign: TextAlign.start,style: TextStyle(fontSize:width * 0.06,fontWeight: FontWeight.w900 ),),
+          ),
+            GridView.count(
+              shrinkWrap: true,
+              childAspectRatio: 1.1,
+              physics:const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              children: snapshot.data!.map((e) => Container(
+                child: Column(
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(7),
+                        child: Image.network(e.image!,width: width * 0.4,height: width * 0.4,fit: BoxFit.cover,)),
+                    Text(e.name!,style: TextStyle(fontSize: width * 0.04),)
+                  ],
+                ),
+              )).toList(),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class ProductCart extends StatefulWidget {
   const ProductCart({
     Key? key,
@@ -520,7 +607,7 @@ class ProductCart extends StatefulWidget {
   final double width;
   final String title;
   final Null Function() viewAll;
-  final List<ProductInfo> product;
+  final List<ProductInfo>? product;
 
   @override
   State<ProductCart> createState() => _ProductCartState();
@@ -628,7 +715,7 @@ class _ProductCartState extends State<ProductCart> {
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Padding(
                                     padding: EdgeInsets.all(widget.width * 0.02),
-                                    child: Image.network(widget.product[index].thumb!.toString()=='null'?"https://dfdsf":widget.product![index].thumb!,
+                                    child: Image.network(widget.product![index].thumb!.toString()=='null'?"https://dfdsf":widget.product![index].thumb!,
                                         fit: BoxFit.cover,
                                       errorBuilder: (context,object,straeTree){
                                       return Icon(Icons.image,color: Colors.grey,size: widget.width * 0.06,);
@@ -753,60 +840,60 @@ class _ProductCartState extends State<ProductCart> {
   }
 }
 
-// class CategoryButton extends StatelessWidget {
-//   const CategoryButton({
-//     Key? key,
-//     required this.onTap,
-//     required this.width,
-//     required this.list,
-//   }) : super(key: key);
-//
-//   final Null Function() onTap;
-//   final double width;
-//   final TopCategories list;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: EdgeInsets.all(width * 0.02),
-//       child: InkWell(
-//         onTap:onTap,
-//         child: Container(
-//           height: width * 0.2,
-//           width: width * 0.2,
-//           color: Colors.white,
-//           child: Column(children: [
-//             SizedBox(
-//                 height: width * 0.18,
-//                 width: width * 0.22,
-//                 child: ClipRRect(
-//                   borderRadius: BorderRadius.circular(7),
-//                   child: Image.network(
-//                     list.image.toString()=="null"?"https://kdfsdf":list.image!,fit: BoxFit.cover,
-//                     errorBuilder: (context,object,stracktree){
-//                       return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
-//                     },
-//                   ),
-//                 )),
-//             SizedBox(
-//               height: width * 0.015,
-//             ),
-//             Text(
-//               list.name!,
-//               maxLines: 2,
-//               overflow: TextOverflow.ellipsis,
-//               style: GoogleFonts.poppins(
-//                   textStyle:const TextStyle(
-//                       color: Colors.black,
-//                       fontSize: 10,
-//                       fontWeight: FontWeight.bold)),
-//             ),
-//           ]),
-//         ),
-//       ),
-//     );
-//   }
-// }
+class CategoryButton extends StatelessWidget {
+  const CategoryButton({
+    Key? key,
+    required this.onTap,
+    required this.width,
+    required this.list,
+  }) : super(key: key);
+
+  final Null Function() onTap;
+  final double width;
+  final TopCategory list;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(width * 0.02),
+      child: InkWell(
+        onTap:onTap,
+        child: Container(
+          height: width * 0.2,
+          width: width * 0.2,
+          color: Colors.white,
+          child: Column(children: [
+            SizedBox(
+                height: width * 0.18,
+                width: width * 0.22,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(7),
+                  child: Image.network(
+                    list.image.toString()=="null"?"https://kdfsdf":list.image!,fit: BoxFit.cover,
+                    errorBuilder: (context,object,stracktree){
+                      return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
+                    },
+                  ),
+                )),
+            SizedBox(
+              height: width * 0.015,
+            ),
+            Text(
+              list.name!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(
+                  textStyle:const TextStyle(
+                      color: Colors.black,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold)),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
 
 class Category{
   String image;

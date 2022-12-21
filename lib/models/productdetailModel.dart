@@ -4,6 +4,9 @@
 
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'package:vkreta/models/WishlistModel.dart';
+
 ProductDetailModel productDetailModelFromJson(String str) => ProductDetailModel.fromJson(json.decode(str));
 
 String productDetailModelToJson(ProductDetailModel data) => json.encode(data.toJson());
@@ -77,7 +80,7 @@ class ProductDetailModel {
   List<ImageData>? images;
   String? price;
   String? special;
-  List<dynamic>? options =[];
+  List<Option>? options =[];
   String? minimum;
   String? reviewStatus;
   bool? reviewGuest;
@@ -129,7 +132,8 @@ class ProductDetailModel {
     json["images"].map((x) => ImageData.fromJson(x))),
     price: json["price"],
     special: json["special"],
-    options: List<dynamic>.from(json["options"].map((x) => x)),
+    options:json["options"].isEmpty ?[]:
+    json["options"].map<Option>((x) => Option.fromJson(x)).toList(),
     minimum: json["minimum"].toString(),
     reviewStatus: json["review_status"],
     reviewGuest: json["review_guest"],
@@ -138,11 +142,14 @@ class ProductDetailModel {
     rating: json["rating"]== null ? "0":json["rating"].toString(),
     captcha: json["captcha"],
     share: json["share"],
-    attributeGroups:
+    attributeGroups:json["attribute_groups"].isEmpty ?[]:
     List<dynamic>.from(json["attribute_groups"].map((x) => x)),
-    products: List<dynamic>.from(json["products"].map((x) => x)),
-    tags: List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
-    wishlist: List<dynamic>.from(json["wishlist"].map((x) => x)),
+    products:json["products"].isEmpty ?[]:
+    List<dynamic>.from(json["products"].map((x) => x)),
+    tags:json["tags"].isEmpty ?[]:
+    List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
+    wishlist:json["wishlist"].isEmpty ?[]:
+    List<dynamic>.from(json["wishlist"].map((x) => x)),
     buttonDeliver: json["button_deliver"],
     ptsQuickStatus: json["pts_quick_status"].toString(),
     sellerReviewStatus: json["seller_review_status"],
@@ -154,12 +161,15 @@ class ProductDetailModel {
     storeLiveChatEnable:  json["store_live_chat_enable"]== null ? "0":json["store_live_chat_enable"].toString(),
     storeLiveChatCode: json["store_live_chat_code"] == ""? "0":json["store_live_chat_code"],
     templateProductStatus: json["template_product_status"]== null ? "0":json["template_product_status"].toString(),
-    recurrings: List<dynamic>.from(json["recurrings"].map((x) => x)),
-    productsBottomTab: List<ProductsBottomTab>.from(
+    recurrings:json["recurrings"].isEmpty ?[]:
+    List<dynamic>.from(json["recurrings"].map((x) => x)),
+    productsBottomTab: json["products_bottom_tab"].isEmpty ?[]:
+    List<ProductsBottomTab>.from(
     json["products_bottom_tab"]
         .map((x) => ProductsBottomTab.fromJson(x))),
     disclaimer: json["disclaimer"],
-    specialSection: List<SpecialSection>.from(
+    specialSection:json["special-section"].isEmpty ?[]:
+    List<SpecialSection>.from(
     json["special-section"].map((x) => SpecialSection.fromJson(x))),
     returnPolicy: json["return_policy"],
    );
@@ -184,7 +194,7 @@ class ProductDetailModel {
         "images": List<dynamic>.from(images!.map((x) => x.toJson())),
         "price": price,
         "special": special,
-        "options": List<dynamic>.from(options!.map((x) => x)),
+        "options": List<Option>.from(options!.map((x) => x)),
         "minimum": minimum,
         "review_status": reviewStatus,
         "review_guest": reviewGuest,
@@ -397,3 +407,106 @@ class Tag {
         "href": href,
       };
 }
+class Option {
+  String? productOptionId;
+  List<ProductOptionValue>? productOptionValue;
+  String? optionId;
+  String? parentOptionId;
+  String? name;
+  String? type;
+  String? value;
+  String? required;
+
+  Option(
+      {this.productOptionId,
+        this.productOptionValue,
+        this.optionId,
+        this.parentOptionId,
+        this.name,
+        this.type,
+        this.value,
+        this.required});
+
+  Option.fromJson(Map<String, dynamic> json) {
+    productOptionId = json['product_option_id'];
+    if (json['product_option_value'] != null) {
+      productOptionValue = <ProductOptionValue>[];
+      json['product_option_value'].forEach((v) {
+        productOptionValue!.add(new ProductOptionValue.fromJson(v));
+      });
+    }
+    optionId = json['option_id'];
+    parentOptionId = json['parent_option_id'];
+    name = json['name'];
+    type = json['type'];
+    value = json['value'];
+    required = json['required'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['product_option_id'] = this.productOptionId;
+    if (this.productOptionValue != null) {
+      data['product_option_value'] =
+          this.productOptionValue!.map((v) => v.toJson()).toList();
+    }
+    data['option_id'] = this.optionId;
+    data['parent_option_id'] = this.parentOptionId;
+    data['name'] = this.name;
+    data['type'] = this.type;
+    data['value'] = this.value;
+    data['required'] = this.required;
+    return data;
+  }
+}
+
+
+class ProductOptionValue {
+  String? productId;
+  String? productOptionValueId;
+  String? optionValueId;
+  String? name;
+  String? image;
+  String? price;
+  String? optionthumb;
+  int? disabled;
+  int? active;
+
+  ProductOptionValue(
+      {this.productId,
+        this.productOptionValueId,
+        this.optionValueId,
+        this.name,
+        this.image,
+        this.price,
+        this.optionthumb,
+        this.disabled,
+        this.active});
+
+  ProductOptionValue.fromJson(Map<String, dynamic> json) {
+    productId = json['product_id'].toString();
+    productOptionValueId = json['product_option_value_id'].toString();
+    optionValueId = json['option_value_id'];
+    name = json['name'];
+    image = json['image'].toString();
+    price = json['price'];
+    optionthumb = json['optionthumb'];
+    disabled = json['disabled'];
+    active = json['active'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['product_id'] = this.productId;
+    data['product_option_value_id'] = this.productOptionValueId;
+    data['option_value_id'] = this.optionValueId;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['price'] = this.price;
+    data['optionthumb'] = this.optionthumb;
+    data['disabled'] = this.disabled;
+    data['active'] = this.active;
+    return data;
+  }
+}
+
