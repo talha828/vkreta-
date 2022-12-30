@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:vkreta/changeaddress.dart';
+import 'package:vkreta/modifyyouraddress.dart';
 import 'package:vkreta/services/apiservice.dart';
 
 import 'models/bages_model.dart';
@@ -35,6 +36,7 @@ class _PaymentState extends State<Payment> {
   ListAddressModel? address;
   @override
   Widget build(BuildContext context) {
+    var width =MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -42,7 +44,7 @@ class _PaymentState extends State<Payment> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back, color: Colors.black, size: 25)),
+            icon: Icon(Icons.arrow_back, color: Colors.black, size: width * 0.06)),
         backgroundColor: Colors.white,
         elevation: 0.5,
         title: Text(
@@ -54,10 +56,10 @@ class _PaymentState extends State<Payment> {
         child: Column(
           children: [
             SizedBox(
-              height: 15,
+              height: width * 0.02,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding:  EdgeInsets.symmetric(horizontal: width * 0.02),
               child: Row(
                 children: [
                   Text(
@@ -68,10 +70,10 @@ class _PaymentState extends State<Payment> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: width * 0.02,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: width * 0.02),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -87,18 +89,18 @@ class _PaymentState extends State<Payment> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: width * 0.02,
             ),
             Container(
-              height: 10,
+              height: width * 0.02,
               width: MediaQuery.of(context).size.width,
               color: Colors.grey.shade100,
             ),
             SizedBox(
-              height: 10,
+              height: width * 0.02,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: width * 0.02),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -106,256 +108,239 @@ class _PaymentState extends State<Payment> {
                     'Payment Change',
                     style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                          enableDrag: true,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                          context: context,
-                          builder: (context) => Column(
-                            children: [
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      height: 30,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Text(
-                                        'Payment Method',
-                                        style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontWeight: FontWeight.bold, fontSize: 16)),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 25,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Divider(height: 1, color: Colors.grey.shade300),
-                              ),
-                              FutureBuilder(
-                                future: ApiService().getPaymentMethod(widget.addressId.toString()),
-                                builder: (context, AsyncSnapshot snapshot) {
-                                  if (snapshot.hasData) {
-                                    return ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: snapshot.data.paymentMethodsList.length,
-                                        itemBuilder: (context, index) {
-                                          return InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                paymentMethods = PaymentMethods(code: snapshot.data.paymentMethodsList[index].code, title: snapshot.data.paymentMethodsList[index].title);
-                                              });
-
-                                              Future.delayed(Duration(milliseconds: 500)).then((value) {
-                                                Navigator.of(context).pop();
-                                              });
-                                            },
-                                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                                            child: Container(
-                                              padding: EdgeInsets.all(10),
-                                              margin: EdgeInsets.all(10),
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(12),
-                                                color: Colors.grey.shade200,
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Text('Code: ${snapshot.data.paymentMethodsList[index].code}'),
-                                                      Icon(
-                                                        Icons.check,
-                                                        color: paymentMethods != null && paymentMethods?.code == snapshot.data.paymentMethodsList[index].code ? Colors.green : Colors.grey,
-                                                      )
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text('Title:'),
-                                                      Expanded(
-                                                        child: Html(data: snapshot.data.paymentMethodsList[index].title),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                    child: Divider(height: 1, color: Colors.grey.shade300),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  } else {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ));
-                    },
-                    child: Text(
-                      'Change',
-                      style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.blue.shade900, fontWeight: FontWeight.bold, fontSize: 13)),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     showModalBottomSheet(
+                  //         enableDrag: true,
+                  //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                  //         context: context,
+                  //         builder: (context) => Column(
+                  //           children: [
+                  //             SizedBox(
+                  //               height: 15,
+                  //             ),
+                  //             Padding(
+                  //               padding: const EdgeInsets.symmetric(horizontal: 10),
+                  //               child: Row(
+                  //                 children: [
+                  //                   SizedBox(
+                  //                     height: 30,
+                  //                   ),
+                  //                   Padding(
+                  //                     padding: const EdgeInsets.symmetric(horizontal: 10),
+                  //                     child: Text(
+                  //                       'Payment Method',
+                  //                       style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontWeight: FontWeight.bold, fontSize: 16)),
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //             SizedBox(
+                  //               height: 25,
+                  //             ),
+                  //             Padding(
+                  //               padding: const EdgeInsets.symmetric(horizontal: 20),
+                  //               child: Divider(height: 1, color: Colors.grey.shade300),
+                  //             ),
+                  //             FutureBuilder(
+                  //               future: ApiService().getPaymentMethod(widget.addressId.toString()),
+                  //               builder: (context, AsyncSnapshot snapshot) {
+                  //                 if (snapshot.hasData) {
+                  //                   return ListView.builder(
+                  //                       shrinkWrap: true,
+                  //                       itemCount: snapshot.data.paymentMethodsList.length,
+                  //                       itemBuilder: (context, index) {
+                  //                         return InkWell(
+                  //                           onTap: () {
+                  //                             setState(() {
+                  //                               paymentMethods = PaymentMethods(code: snapshot.data.paymentMethodsList[index].code, title: snapshot.data.paymentMethodsList[index].title);
+                  //                             });
+                  //
+                  //                             Future.delayed(Duration(milliseconds: 500)).then((value) {
+                  //                               Navigator.of(context).pop();
+                  //                             });
+                  //                           },
+                  //                           borderRadius: BorderRadius.all(Radius.circular(12)),
+                  //                           child: Container(
+                  //                             padding: EdgeInsets.all(10),
+                  //                             margin: EdgeInsets.all(10),
+                  //                             decoration: BoxDecoration(
+                  //                               borderRadius: BorderRadius.circular(12),
+                  //                               color: Colors.grey.shade200,
+                  //                             ),
+                  //                             child: Column(
+                  //                               children: [
+                  //                                 Row(
+                  //                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //                                   children: [
+                  //                                     Text('Code: ${snapshot.data.paymentMethodsList[index].code}'),
+                  //                                     Icon(
+                  //                                       Icons.check,
+                  //                                       color: paymentMethods != null && paymentMethods?.code == snapshot.data.paymentMethodsList[index].code ? Colors.green : Colors.grey,
+                  //                                     )
+                  //                                   ],
+                  //                                 ),
+                  //                                 Row(
+                  //                                   children: [
+                  //                                     Text('Title:'),
+                  //                                     Expanded(
+                  //                                       child: Html(data: snapshot.data.paymentMethodsList[index].title),
+                  //                                     ),
+                  //                                   ],
+                  //                                 ),
+                  //                                 Padding(
+                  //                                   padding: const EdgeInsets.symmetric(horizontal: 20),
+                  //                                   child: Divider(height: 1, color: Colors.grey.shade300),
+                  //                                 ),
+                  //                               ],
+                  //                             ),
+                  //                           ),
+                  //                         );
+                  //                       });
+                  //                 } else {
+                  //                   return Center(
+                  //                     child: CircularProgressIndicator(),
+                  //                   );
+                  //                 }
+                  //               },
+                  //             ),
+                  //           ],
+                  //         ));
+                  //   },
+                  //   child: Text(
+                  //     'Change',
+                  //     style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.blue.shade900, fontWeight: FontWeight.bold, fontSize: 13)),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
             SizedBox(
-              height: 15,
+              height: width * 0.02,
             ),
-            paymentMethods != null
-                ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey.shade200,
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('Code: ${paymentMethods?.code}'),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Title:'),
-                        Expanded(
-                          child: Html(data: paymentMethods?.title),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Divider(height: 1, color: Colors.grey.shade300),
-                    ),
-                  ],
-                ),
+          Column(
+            children: [
+              SizedBox(
+                height: width * 0.03,
               ),
-            )
-                : InkWell(
-              child: TextButton(
-                child: Text('Choose Payment Method'),
-                onPressed: () {
-                  showModalBottomSheet(
-                      enableDrag: true,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                      context: context,
-                      builder: (context) => Column(
-                        children: [
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Text(
-                                    'Payment Method',
-                                    style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontWeight: FontWeight.bold, fontSize: 16)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 25,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Divider(height: 1, color: Colors.grey.shade300),
-                          ),
-                          FutureBuilder(
-                            future: ApiService().getPaymentMethod(widget.addressId.toString()),
-                            builder: (context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                return ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.data.paymentMethodsList.length,
-                                    itemBuilder: (context, index) {
-                                      return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            paymentMethods = PaymentMethods(code: snapshot.data.paymentMethodsList[index].code, title: snapshot.data.paymentMethodsList[index].title);
-                                          });
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                child: Divider(height: 1, color: Colors.grey.shade300),
+              ),
+              FutureBuilder(
+                future: ApiService().getPaymentMethod(widget.addressId.toString()),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.paymentMethodsList.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                paymentMethods = PaymentMethods(code: snapshot.data.paymentMethodsList[index].code, title: snapshot.data.paymentMethodsList[index].title);
+                              });
 
-                                          Future.delayed(Duration(milliseconds: 500)).then((value) {
-                                            Navigator.of(context).pop();
-                                          });
-                                        },
-                                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                                        child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          margin: EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(12),
-                                            color: Colors.grey.shade200,
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text('Code: ${snapshot.data.paymentMethodsList[index].code}'),
-                                                  Icon(
-                                                    Icons.check,
-                                                    color: paymentMethods != null && paymentMethods?.code == snapshot.data.paymentMethodsList[index].code ? Colors.green : Colors.grey,
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text('Title:'),
-                                                  Expanded(
-                                                    child: Html(data: snapshot.data.paymentMethodsList[index].title),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                child: Divider(height: 1, color: Colors.grey.shade300),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    });
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
+                              // Future.delayed(Duration(milliseconds: 500)).then((value) {
+                              //   Navigator.of(context).pop();
+                              // });
                             },
-                          ),
-                        ],
-                      ));
+                            borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
+                            child: Container(
+                              padding: EdgeInsets.all(width * 0.02),
+                              margin: EdgeInsets.all(width * 0.04),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(width * 0.02),
+                                color: Colors.grey.shade200,
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Code: ${snapshot.data.paymentMethodsList[index].code}'),
+                                      Icon(
+                                        Icons.check,
+                                        color: paymentMethods != null && paymentMethods?.code == snapshot.data.paymentMethodsList[index].code ? Colors.green : Colors.grey,
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text('Title:'),
+                                      Expanded(
+                                        child: Html(data: snapshot.data.paymentMethodsList[index].title),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child: Divider(height: 1, color: Colors.grey.shade300),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
                 },
               ),
-            ),
+            ],
+          ),
+            // paymentMethods != null
+            //     ? Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 10),
+            //   child: Container(
+            //     padding: EdgeInsets.all(10),
+            //     margin: EdgeInsets.all(10),
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(12),
+            //       color: Colors.grey.shade200,
+            //     ),
+            //     child: Column(
+            //       children: [
+            //         Row(
+            //           children: [
+            //             Text('Code: ${paymentMethods?.code}'),
+            //           ],
+            //         ),
+            //         Row(
+            //           children: [
+            //             Text('Title:'),
+            //             Expanded(
+            //               child: Html(data: paymentMethods?.title),
+            //             ),
+            //           ],
+            //         ),
+            //         Padding(
+            //           padding: const EdgeInsets.symmetric(horizontal: 20),
+            //           child: Divider(height: 1, color: Colors.grey.shade300),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            //
+            //     : InkWell(
+            //   child: TextButton(
+            //     child: Text('Choose Payment Method'),
+            //     onPressed: () {
+            //       showModalBottomSheet(
+            //           enableDrag: true,
+            //           shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+            //           context: context,
+            //           builder: (context) =>
+            //               ;
+            //     },
+            //   ),
+            // ),
             SizedBox(
-              height: 20,
+              height: width * 0.02,
             ),
             address == null
                 ? Row(
@@ -367,27 +352,26 @@ class _PaymentState extends State<Payment> {
                 ),
                 InkWell(
                   child: TextButton(
-                    child: Text('Change'),
+                    child:const  Text('Change'),
                     onPressed: () async {
-                      address = await Navigator.push(context, MaterialPageRoute(builder: (context) => ChanegAddress()));
-                      if (address != null)
-                        setState(() {
-                          newpaymentadress = int.parse(address!.addressId!);
-                        });
+                      address = await Navigator.push(context, MaterialPageRoute(builder: (context) =>const ModifyYourAddress()));
+                      if (address != null) {
+                        setState(()=> newpaymentadress = int.parse(address!.addressId!));
+                      }
                     },
                   ),
                 ),
               ],
             )
                 : Padding(
-              padding: EdgeInsets.only(left: 15, bottom: 10),
+              padding: EdgeInsets.only(left: width * 0.02, bottom: width * 0.02),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Address',
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -400,18 +384,20 @@ class _PaymentState extends State<Payment> {
                               style: TextStyle(color: Colors.blue.shade900, fontWeight: FontWeight.bold, fontSize: 13),
                             ),
                             onPressed: () async {
-                              address = await Navigator.push(context, MaterialPageRoute(builder: (context) => ChanegAddress()));
-                              if (address != null)
-                                setState(() {
-                                  newpaymentadress = int.parse(address!.addressId!);
-                                });
-                            },
+                              address = await Navigator.push(context, MaterialPageRoute(builder: (context) => const ChanegAddress()));
+                              if (address != null) {
+                                      setState(() {
+                                        newpaymentadress =
+                                            int.parse(address!.addressId!);
+                                      });
+                                    }
+                                  },
                           ),
                         ),
                       ),
                     ],
                   ),
-                  Divider(),
+                  const Divider(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Row(
@@ -428,7 +414,7 @@ class _PaymentState extends State<Payment> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -446,7 +432,7 @@ class _PaymentState extends State<Payment> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -464,7 +450,7 @@ class _PaymentState extends State<Payment> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -482,7 +468,7 @@ class _PaymentState extends State<Payment> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                 ],
               ),
@@ -527,7 +513,7 @@ class _PaymentState extends State<Payment> {
                     }
 
                     if (order.success != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('successfully'),
                         backgroundColor: Colors.green,
                       ));
@@ -544,7 +530,7 @@ class _PaymentState extends State<Payment> {
                   child: Center(
                     child: Text(
                       'Pay',
-                      style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                      style: GoogleFonts.poppins(textStyle:const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
                     ),
                   ),
                 ),
@@ -595,7 +581,7 @@ class _PaymentState extends State<Payment> {
     }
 
     if (order.success != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('successfully'),
         backgroundColor: Colors.green,
       ));

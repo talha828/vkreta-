@@ -570,7 +570,7 @@ class _ProductDisplayState extends State<ProductDisplay> {
                               },
                               child: Container(
                                 height:  width * 0.03,
-                                width:  width * 0.3,
+                                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
                                 color: Colors.white,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,

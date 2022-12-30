@@ -1,12 +1,16 @@
 import 'package:animations/animations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vkreta/allnotifications.dart';
+import 'package:vkreta/editaddress.dart';
 import 'package:vkreta/getx_controllers/homepage.dart';
 import 'package:vkreta/lowtohighprice.dart';
 import 'package:vkreta/models/homemodel.dart';
@@ -20,6 +24,8 @@ import 'package:vkreta/services/apiservice.dart';
 
 import 'package:vkreta/viewall.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
+
+import 'models/listaddressModel.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -42,6 +48,44 @@ class _HomeState extends State<Home> {
   return homeModel;
   }
 
+  String address="Searching";
+  List<ListAddressModel> storeAddress=[];
+  getUserLocation() async {//call this async method from whereever you need
+
+    LocationData myLocation;
+    String error;
+    Location location = Location();
+    try {
+      myLocation = await location.getLocation();
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'please grant permission';
+        print(error);
+      }
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error = 'permission denied- please enable it from app settings';
+        print(error);
+      }
+    }
+    myLocation = await location.getLocation();
+    List<geo.Placemark> placemarks = await geo.placemarkFromCoordinates(
+        myLocation.latitude!, myLocation.longitude!);
+    geo.Placemark place = placemarks[0];
+    print(placemarks.toString());
+
+    storeAddress.add(ListAddressModel(
+
+      address2: placemarks[0].country.toString() + ", "+ placemarks[0].locality.toString() + ", " +placemarks[0].subLocality.toString(),
+      city: placemarks[0].locality,
+      country: placemarks[0].country,
+    ));
+    setState(() {
+      address =placemarks[0].country.toString() + ", "+ placemarks[0].locality.toString() + ", " +placemarks[0].subLocality.toString();
+    });
+   // var first = addresses.first;
+   // print(' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    return place;
+  }
   setLoading(bool value){
     setState(() {
       isLoading=false;
@@ -82,7 +126,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
+  TextEditingController postalCode=TextEditingController();
   openBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -108,6 +152,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
+            //select your address
             InkWell(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>const ModifyYourAddress()));
@@ -179,7 +224,7 @@ class _HomeState extends State<Home> {
                               child: SizedBox(
                                 height: 44,
                                 child: TextField(
-                                  controller: TextEditingController(),
+                                  controller: postalCode,
                                   decoration:const InputDecoration(
                                     border: OutlineInputBorder(),
                                     contentPadding: EdgeInsets.all(10),
@@ -188,17 +233,37 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Container(
-                              height: 44,
-                              width: 100,
-                              color: Colors.blue,
-                              child:const Center(
-                                child: Text(
-                                  "LOGIN",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                            InkWell(
+                              onTap: (){
+                                storeAddress[0].address1 = postalCode.text.toString() ;
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    transitionDuration:const Duration(seconds: 1),
+                                    transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                                      animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                                      return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                                    },
+                                    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                                      return EditAddress(
+                                        object: storeAddress[0],
+                                        default_: 1,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: 44,
+                                width: 100,
+                                color: Colors.blue,
+                                child:const Center(
+                                  child: Text(
+                                    "LOGIN",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -211,30 +276,49 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            Container(
-              margin:const EdgeInsets.only(bottom: 30, left: 20, right: 20),
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
-              width: double.infinity,
-              padding:const EdgeInsets.all(14),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    "assets/location.png",
-                    height: 18,
-                    width: 18,
+            InkWell(
+              onTap: (){
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    transitionDuration: Duration(seconds: 1),
+                    transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                      animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                      return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                    },
+                    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                      return EditAddress(
+                        object: storeAddress[0],
+                        default_: 1,
+                      );
+                    },
                   ),
-                  const SizedBox(width: 6),
-                  const Expanded(
-                    child: Text(
-                      "USE MY CURRENT LOCATION",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                );
+              },
+              child: Container(
+                margin:const EdgeInsets.only(bottom: 30, left: 20, right: 20),
+                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                width: double.infinity,
+                padding:const EdgeInsets.all(14),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      "assets/location.png",
+                      height: 18,
+                      width: 18,
+                    ),
+                    const SizedBox(width: 6),
+                    const Expanded(
+                      child: Text(
+                        "USE MY CURRENT LOCATION",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -250,6 +334,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     getHomeScreenData();
+    getUserLocation();
     super.initState();
   }
   @override
@@ -264,7 +349,7 @@ class _HomeState extends State<Home> {
           onPressed: () {
             launchWhatsApp(phoneNumber);
           },
-          child: Icon(
+          child:const Icon(
             Icons.whatsapp,
             size: 35,
           ),
@@ -384,7 +469,7 @@ class _HomeState extends State<Home> {
                                     Icon(Icons.room,color:Colors.white,size:width * 0.05),
                                     SizedBox(width:width * 0.04),
                                     Text(
-                                      'Deliver to shanti - Uklana Mnadi 125436',
+                                      address,
                                       style: GoogleFonts.poppins(
                                           textStyle: TextStyle(
                                             color: Colors.white,
@@ -399,7 +484,8 @@ class _HomeState extends State<Home> {
 
                       // Top Category
 
-                      SizedBox(
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                         height: width * 0.32,
                         child: ListView.separated(
                             scrollDirection: Axis.horizontal,
@@ -491,38 +577,41 @@ class _HomeState extends State<Home> {
                       SizedBox(
                         height: width * 0.06,
                       ),
-                      SingleChildScrollView(
-                        child: ListView.separated(
-                            physics:const  NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context,index){
-                              return ProductCart(width: width, title: snapshot!.products![index].title!, viewAll: (){
-                                Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:const Duration(seconds: 1),
-                                    transitionsBuilder: (BuildContext context,
-                                        Animation<double> animation,
-                                        Animation<double> secAnimation,
-                                        Widget child) {
-                                      animation = CurvedAnimation(
-                                          parent: animation, curve: Curves.linear);
-                                      return SharedAxisTransition(
-                                          child: child,
-                                          animation: animation,
-                                          secondaryAnimation: secAnimation,
-                                          transitionType:
-                                          SharedAxisTransitionType.horizontal);
-                                    },
-                                    pageBuilder: (BuildContext context,
-                                        Animation<double> animation,
-                                        Animation<double> secAnimation) {
-                                      return ViewAll(
-                                        title:snapshot!.products![index].preset!,
-                                      );
-                                    }));
-                              },  product: snapshot!.products![index].data!);
-                            }, separatorBuilder: (context,index){
-                          return SizedBox(height: width * 0.15,);
-                        }, itemCount: snapshot!.products!.length),
+                      Padding(
+                        padding: EdgeInsets.only(left: width * 0.04),
+                        child: SingleChildScrollView(
+                          child: ListView.separated(
+                              physics:const  NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context,index){
+                                return ProductCart(width: width, title: snapshot.products![index].title!, viewAll: (){
+                                  Navigator.of(context).push(PageRouteBuilder(
+                                      transitionDuration:const Duration(seconds: 1),
+                                      transitionsBuilder: (BuildContext context,
+                                          Animation<double> animation,
+                                          Animation<double> secAnimation,
+                                          Widget child) {
+                                        animation = CurvedAnimation(
+                                            parent: animation, curve: Curves.linear);
+                                        return SharedAxisTransition(
+                                            child: child,
+                                            animation: animation,
+                                            secondaryAnimation: secAnimation,
+                                            transitionType:
+                                            SharedAxisTransitionType.horizontal);
+                                      },
+                                      pageBuilder: (BuildContext context,
+                                          Animation<double> animation,
+                                          Animation<double> secAnimation) {
+                                        return ViewAll(
+                                          title:snapshot.products![index].preset!,
+                                        );
+                                      }));
+                                },  product: snapshot.products![index].data!);
+                              }, separatorBuilder: (context,index){
+                            return SizedBox(height: width * 0.15,);
+                          }, itemCount: snapshot.products!.length),
+                        ),
                       ),
                       SizedBox(height: width * 0.02,),
                       ListView.builder(
@@ -619,7 +708,7 @@ class _ProductCartState extends State<ProductCart> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: widget.width * 0.06),
+          padding: EdgeInsets.only(right: widget.width * 0.06),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -693,14 +782,16 @@ class _ProductCartState extends State<ProductCart> {
                         width: widget.width * 0.4,
                         decoration: BoxDecoration(
                             color: Colors.white,
+                            border: Border.all(color: Colors.grey.withOpacity(0.5)),
                             borderRadius: BorderRadius.circular(7),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Colors.grey,
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(-2, 5))
-                            ]),
+                            // boxShadow: const [
+                            //   BoxShadow(
+                            //       color: Colors.grey,
+                            //       spreadRadius: 1,
+                            //       blurRadius: 2,
+                            //       offset: Offset(-2, 5))
+                            // ]
+                             ),
                         child: Stack(
                             children: [
                               Column(
@@ -709,17 +800,20 @@ class _ProductCartState extends State<ProductCart> {
                                   height: 5,
                                 ),
                                 Container(
-                                  height: widget.width * 0.32,
+                                  height: widget.width * 0.36,
                                   width: widget.width * 0.4,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Padding(
                                     padding: EdgeInsets.all(widget.width * 0.02),
-                                    child: Image.network(widget.product![index].thumb!.toString()=='null'?"https://dfdsf":widget.product![index].thumb!,
-                                        fit: BoxFit.cover,
-                                      errorBuilder: (context,object,straeTree){
-                                      return Icon(Icons.image,color: Colors.grey,size: widget.width * 0.06,);
-                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(7),
+                                      child: Image.network(widget.product![index].thumb!.toString()=='null'?"https://dfdsf":widget.product![index].thumb!,
+                                          fit: BoxFit.fill,
+                                        errorBuilder: (context,object,straeTree){
+                                        return Icon(Icons.image,color: Colors.grey,size: widget.width * 0.06,);
+                                      },
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -757,49 +851,6 @@ class _ProductCartState extends State<ProductCart> {
                                 ),
                                 SizedBox(
                                   height: widget.width * 0.01,
-                                ),
-                                Padding(
-                                  padding:
-                                  EdgeInsets.symmetric(horizontal: widget.width * 0.02),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.orange,
-                                        size: widget.width * 0.04,
-                                      ),
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.orange,
-                                        size: widget.width * 0.04,
-                                      ),
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.orange,
-                                        size: widget.width * 0.04,
-                                      ),
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.orange,
-                                        size: widget.width * 0.04,
-                                      ),
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.orange,
-                                        size: widget.width * 0.04,
-                                      ),
-                                      SizedBox(
-                                        width: widget.width * 0.02,
-                                      ),
-                                      Text(
-                                        '(${widget.product![index].quantity!})',
-                                        style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                                color: Colors.grey.shade500,
-                                                fontSize: widget.width * 0.03)),
-                                      ),
-                                    ],
-                                  ),
                                 ),
                               ],
                             ),

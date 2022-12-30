@@ -24,6 +24,7 @@ class _DeliveryState extends State<Delivery> {
   List addressList = [];
   @override
   Widget build(BuildContext context) {
+    var width=MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -31,7 +32,7 @@ class _DeliveryState extends State<Delivery> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back, color: Colors.black, size: 25)),
+            icon: Icon(Icons.arrow_back, color: Colors.black, size: width * 0.06)),
         backgroundColor: Colors.white,
         elevation: 0.5,
         title: Text(
@@ -43,7 +44,7 @@ class _DeliveryState extends State<Delivery> {
         child: Column(
           children: [
             SizedBox(
-              height: 15,
+              height: width * 0.02,
             ),
             if (addressList.length == 0)
               FutureBuilder(
@@ -57,7 +58,7 @@ class _DeliveryState extends State<Delivery> {
                             Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  padding:   EdgeInsets.symmetric(horizontal: width * 0.02),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -66,18 +67,18 @@ class _DeliveryState extends State<Delivery> {
                                         style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontSize: 16, fontWeight: FontWeight.bold)),
                                       ),
                                       SizedBox(
-                                        width: 10,
+                                        width: width * 0.02,
                                       ),
                                       if (addressList[i].customField != null)
                                         Container(
-                                          height: 20,
-                                          width: 60,
+                                          height: width * 0.08,
+                                          width: width * 0.07,
                                           decoration: BoxDecoration(color: Colors.blue.shade900, borderRadius: BorderRadius.circular(4)),
                                           child: Center(
                                             child: Text(
                                               'Default',
                                               style: GoogleFonts.poppins(
-                                                  textStyle: TextStyle(
+                                                  textStyle: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 11,
                                                   )),
@@ -88,10 +89,10 @@ class _DeliveryState extends State<Delivery> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 10,
+                                  width: width * 0.02,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  padding:   EdgeInsets.symmetric(horizontal: width * 0.02),
                                   child: Row(
                                     children: [
                                       Text(
@@ -106,10 +107,10 @@ class _DeliveryState extends State<Delivery> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 5,
+                                  width: width * 0.02,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  padding:   EdgeInsets.symmetric(horizontal: width * 0.02),
                                   child: Row(
                                     children: [
                                       Text(
@@ -124,10 +125,10 @@ class _DeliveryState extends State<Delivery> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 5,
+                                  width: width * 0.02,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  padding:   EdgeInsets.symmetric(horizontal: width * 0.02),
                                   child: Row(
                                     children: [
                                       Text(
@@ -142,7 +143,7 @@ class _DeliveryState extends State<Delivery> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 5,
+                                  width: width * 0.02,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -160,10 +161,10 @@ class _DeliveryState extends State<Delivery> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 5,
+                                  width: width * 0.02,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  padding:   EdgeInsets.symmetric(horizontal: width * 0.02),
                                   child: Row(
                                     children: [
                                       Text(
@@ -178,27 +179,28 @@ class _DeliveryState extends State<Delivery> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 5,
+                                  width: width * 0.02,
                                 ),
                                 //change address
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  padding:   EdgeInsets.symmetric(horizontal: width * 0.02 ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       GestureDetector(
                                         onTap: () async {
-                                          ListAddressModel? address = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyYourAddress()));
-                                          if (address != null)
+                                          ListAddressModel? address = await Navigator.push(context, MaterialPageRoute(builder: (context) =>const ModifyYourAddress()));
+                                          if (address != null) {
                                             setState(() {
                                               addressList = [];
                                               addressList.add(address);
                                             });
+                                          }
                                         },
                                         child: Text(
                                           'Change Address',
                                           style: GoogleFonts.poppins(
-                                              textStyle: TextStyle(
+                                              textStyle: const TextStyle(
                                                 color: Colors.green,
                                                 fontSize: 14,
                                               )),
@@ -217,11 +219,11 @@ class _DeliveryState extends State<Delivery> {
                       'No address Found, Please add a address',
                       style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontSize: 14)),
                     )
-                        : Center(
+                        :const Center(
                       child: CircularProgressIndicator(),
                     );
                   }),
-            if (addressList.length != 0)
+            if (addressList.isNotEmpty)
               Column(
                 children: [
                   Padding(
@@ -234,17 +236,17 @@ class _DeliveryState extends State<Delivery> {
                           style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontSize: 16, fontWeight: FontWeight.bold)),
                         ),
                         SizedBox(
-                          width: 10,
+                          width: width * 0.02,
                         ),
                         Container(
-                          height: 20,
-                          width: 60,
+                          height: width * 0.08,
+                          width: width * 0.15,
                           decoration: BoxDecoration(color: Colors.blue.shade900, borderRadius: BorderRadius.circular(4)),
                           child: Center(
                             child: Text(
                               'Default',
                               style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                                textStyle:const TextStyle(
                                   color: Colors.white,
                                   fontSize: 11,
                                 ),
@@ -256,10 +258,10 @@ class _DeliveryState extends State<Delivery> {
                     ),
                   ),
                   SizedBox(
-                    width: 10,
+                    width: width * 0.02,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding:   EdgeInsets.symmetric(horizontal: width * 0.02),
                     child: Row(
                       children: [
                         Text(
@@ -274,10 +276,10 @@ class _DeliveryState extends State<Delivery> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding:  EdgeInsets.symmetric(horizontal: width * 0.02),
                     child: Row(
                       children: [
                         Text(
@@ -292,7 +294,7 @@ class _DeliveryState extends State<Delivery> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -310,7 +312,7 @@ class _DeliveryState extends State<Delivery> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -328,7 +330,7 @@ class _DeliveryState extends State<Delivery> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -346,7 +348,7 @@ class _DeliveryState extends State<Delivery> {
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: width * 0.02,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -355,17 +357,18 @@ class _DeliveryState extends State<Delivery> {
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            ListAddressModel? address = await Navigator.push(context, MaterialPageRoute(builder: (context) => ChanegAddress()));
-                            if (address != null)
+                            ListAddressModel? address = await Navigator.push(context, MaterialPageRoute(builder: (context) => const ChanegAddress()));
+                            if (address != null) {
                               setState(() {
                                 addressList = [];
                                 addressList.add(address);
                               });
+                            }
                           },
                           child: Text(
                             'Change Address',
                             style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                                textStyle:const TextStyle(
                                   color: Colors.green,
                                   fontSize: 14,
                                 )),
@@ -376,13 +379,13 @@ class _DeliveryState extends State<Delivery> {
                   ),
                 ],
               ),
-            SizedBox(height: 10),
+            SizedBox(height: width * 0.02),
             Container(height: 10, width: MediaQuery.of(context).size.width, color: Colors.grey.shade100),
             SizedBox(
-              height: 10,
+              height: width * 0.02,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding:   EdgeInsets.symmetric(horizontal: width * 0.02),
               child: Row(
                 children: [
                   Text(
@@ -393,7 +396,7 @@ class _DeliveryState extends State<Delivery> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: width * 0.02,
             ),
             FutureBuilder<CartlistModel>(
                 future: ApiService().getCartItems(),
@@ -407,21 +410,20 @@ class _DeliveryState extends State<Delivery> {
                               Container(
                                 height: 110,
                                 width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(),
+                                decoration:const BoxDecoration(),
                                 child: Row(
                                   children: [
-                                    Container(
-                                      height: 110,
+                                    SizedBox(
+                                      height: width * 0.25,
                                       width: MediaQuery.of(context).size.width / 3,
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: Image.network(
                                           snapshot.data.products[index].thumb,
-                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: 110,
                                       width: MediaQuery.of(context).size.width / 1.5,
                                       child: Column(
@@ -448,9 +450,6 @@ class _DeliveryState extends State<Delivery> {
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: 0,
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -482,12 +481,12 @@ class _DeliveryState extends State<Delivery> {
                       ],
                     );
                   }
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }),
             SizedBox(
-              height: 10,
+              height: width * 0.02,
             ),
             Container(
               height: 10,
@@ -497,7 +496,7 @@ class _DeliveryState extends State<Delivery> {
             Container(
               // height: 220,
               width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(color: Colors.white),
+              decoration:const BoxDecoration(color: Colors.white),
               child: Column(
                 children: [
                   Padding(
@@ -505,29 +504,29 @@ class _DeliveryState extends State<Delivery> {
                     child: InkWell(
                       onTap: () {
                         if (addressList.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                             content: Text('No address Found, Please add a address'),
                             backgroundColor: Colors.red,
                           ));
                         } else {
                           showModalBottomSheet(
                             enableDrag: true,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                            shape:const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
                             context: context,
                             builder: (context) => FutureBuilder(
                               future: ApiService().getShippingList(addressList.first.addressId.toString()),
                               builder: (context, AsyncSnapshot snapshot) {
                                 if (snapshot.hasData) {
-                                  return Container(
+                                  return SizedBox(
                                     height: MediaQuery.of(context).size.height,
                                     width: MediaQuery.of(context).size.width,
                                     child: SingleChildScrollView(
                                       child: Column(
                                         children: [
-                                          SizedBox(height: 20),
+                                          SizedBox(height: width * 0.02),
                                           //choose Courier
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                                            padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                                             child: Row(
                                               children: [
                                                 Text(
@@ -538,12 +537,12 @@ class _DeliveryState extends State<Delivery> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 20,
+                                            height: width * 0.02,
                                           ),
                                           for (int i = 0; i < snapshot.data.length; i++)
                                             CourierOptions(
                                               function: () {
-                                                Future.delayed(Duration(seconds: 2), () {
+                                                Future.delayed(const Duration(seconds: 2), () {
                                                   Navigator.pop(context, true);
                                                 });
                                                 setState(() {});
@@ -568,7 +567,7 @@ class _DeliveryState extends State<Delivery> {
                                     ),
                                   );
                                 } else {
-                                  return Center(
+                                  return const  Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 }
