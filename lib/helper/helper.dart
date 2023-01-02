@@ -2,10 +2,10 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Helper {
-  static String valueSharedPreferences = '';
+  static String valueSharedPreferences = 'customer_id';
 
   // Write DATA
-  static Future<bool> saveUserData(value) async {
+  static Future<bool> saveUserData(int value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return await sharedPreferences.setInt(valueSharedPreferences, value);
   }

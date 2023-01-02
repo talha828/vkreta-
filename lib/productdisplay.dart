@@ -345,55 +345,129 @@ class _ProductDisplayState extends State<ProductDisplay> {
                                   ),
                                 ),
                                 //Sizees
-
-                                if ( snapshot.data!.options!.length == 2)
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            snapshot.data!.options![1].name.toString(),
-                                            maxLines: 1,
-                                            style: GoogleFonts.poppins(
-                                              textStyle: TextStyle(color: Colors.grey.shade900, fontSize: 14),
-                                            ),
+                                  //talha
+                                for (int option = 1; option < snapshot.data!.options!.length; ++option)
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                snapshot.data!.options![option].name!,
+                                                style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+                                              ),
+                                              // Text(
+                                              //   'XS',
+                                              //   style: GoogleFonts.poppins(
+                                              //       textStyle: TextStyle(
+                                              //           color: Colors.grey.shade900,
+                                              //           fontWeight: FontWeight.bold,
+                                              //           fontSize: 14)),
+                                              // ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      //size list
-                                      Row(
-                                        children: [
-                                          for (int i = 0; i < snapshot.data!.options![1].productOptionValue!.length; i++)
-                                            Padding(
-                                              padding: EdgeInsets.all(width * 0.03),
-                                              child: InkWell(
-                                                borderRadius: BorderRadius.circular(35),
-                                                onTap: () {
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return ProductDisplay(
-                                                      int.parse(snapshot
-                                                          .data!
-                                                          .options![0]
-                                                          .productOptionValue![i]
-                                                          .productId!),
-                                                    );
-                                                  }));
-                                                },
-                                                child: Container(
-                                                  decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(12)),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(width * 0.02),
-                                                    child: Text(snapshot.data!.options![1].productOptionValue![i].name.toString()),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          child: Row(
+                                            children: [
+                                              for (int optionValues = 0; optionValues < snapshot.data!.options![option].productOptionValue!.length; ++optionValues)
+                                                InkWell(
+                                                  onTap: () {
+                                                    print(selectedVariants);
+                                                    String product_option_id = snapshot.data!.options![option].productOptionId!;
+                                                    String product_option_value_id = snapshot.data!.options![option].productOptionValue![optionValues].productOptionValueId!;
+                                                    if (selectedVariants.containsKey(product_option_id)) {
+                                                      selectedVariants[product_option_id] = product_option_value_id;
+                                                    } else {
+                                                      selectedVariants.addAll({product_option_id: product_option_value_id});
+                                                    }
+                                                    setState(() {});
+                                                  },
+                                                  child: Container(
+                                                    // height: 35,
+                                                    // width: 35,
+                                                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                                    margin: const EdgeInsets.only(right: 5),
+                                                    decoration: BoxDecoration(
+                                                      color: selectedVariants.containsKey(snapshot.data!.options![option].productOptionId)
+                                                          ? selectedVariants[snapshot.data!.options![option].productOptionId] == snapshot.data!.options![option].productOptionValue![optionValues].productOptionValueId
+                                                          ? Colors.blue.shade900
+                                                          : Colors.black26
+                                                          : Colors.black26,
+                                                      borderRadius: BorderRadiusDirectional.circular(7),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        snapshot.data!.options![option].productOptionValue![optionValues].name!,
+                                                        style: GoogleFonts.poppins(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ],
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                // if ( snapshot.data!.options!.length == 2)
+                                //   Column(
+                                //     children: [
+                                //       Row(
+                                //         children: [
+                                //           Text(
+                                //             snapshot.data!.options![1].name.toString(),
+                                //             maxLines: 1,
+                                //             style: GoogleFonts.poppins(
+                                //               textStyle: TextStyle(color: Colors.grey.shade900, fontSize: 14),
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       //size list
+                                //       Row(
+                                //         children: [
+                                //           for (int i = 0; i < snapshot.data!.options![1].productOptionValue!.length; i++)
+                                //             Padding(
+                                //               padding: EdgeInsets.all(width * 0.03),
+                                //               child: InkWell(
+                                //                 borderRadius: BorderRadius.circular(35),
+                                //                 onTap: () {
+                                //                   Navigator.push(context,
+                                //                       MaterialPageRoute(
+                                //                           builder: (context) {
+                                //                     return ProductDisplay(
+                                //                       int.parse(snapshot
+                                //                           .data!
+                                //                           .options![0]
+                                //                           .productOptionValue![i]
+                                //                           .productId!),
+                                //                     );
+                                //                   }));
+                                //                 },
+                                //                 child: Container(
+                                //                   decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(12)),
+                                //                   child: Padding(
+                                //                     padding: EdgeInsets.all(width * 0.02),
+                                //                     child: Text(snapshot.data!.options![1].productOptionValue![i].name.toString()),
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //         ],
+                                //       ),
+                                //     ],
+                                //   ),
                               ],
                             ),
                           ),
@@ -620,99 +694,26 @@ class _ProductDisplayState extends State<ProductDisplay> {
                         ),
 
                         //section variants
-                        if (snapshot.data!.options!.length > 0)
-                          Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Variants',
-                                      style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontWeight: FontWeight.bold, fontSize: 16)),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              for (int option = 0; option < snapshot.data!.options!.length; ++option)
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              snapshot.data!.options![option].name!,
-                                              style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
-                                            ),
-                                            // Text(
-                                            //   'XS',
-                                            //   style: GoogleFonts.poppins(
-                                            //       textStyle: TextStyle(
-                                            //           color: Colors.grey.shade900,
-                                            //           fontWeight: FontWeight.bold,
-                                            //           fontSize: 14)),
-                                            // ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                        child: Row(
-                                          children: [
-                                            for (int optionValues = 0; optionValues < snapshot.data!.options![option].productOptionValue!.length; ++optionValues)
-                                              InkWell(
-                                                onTap: () {
-                                                  print(selectedVariants);
-                                                  String product_option_id = snapshot.data!.options![option].productOptionId!;
-                                                  String product_option_value_id = snapshot.data!.options![option].productOptionValue![optionValues].productOptionValueId!;
-                                                  if (selectedVariants.containsKey(product_option_id)) {
-                                                    selectedVariants[product_option_id] = product_option_value_id;
-                                                  } else {
-                                                    selectedVariants.addAll({product_option_id: product_option_value_id});
-                                                  }
-                                                  setState(() {});
-                                                },
-                                                child: Container(
-                                                  // height: 35,
-                                                  // width: 35,
-                                                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                                  margin: const EdgeInsets.only(right: 5),
-                                                  decoration: BoxDecoration(
-                                                    color: selectedVariants.containsKey(snapshot.data!.options![option].productOptionId)
-                                                        ? selectedVariants[snapshot.data!.options![option].productOptionId] == snapshot.data!.options![option].productOptionValue![optionValues].productOptionValueId
-                                                        ? Colors.blue.shade900
-                                                        : Colors.black26
-                                                        : Colors.black26,
-                                                    borderRadius: BorderRadiusDirectional.circular(7),
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      snapshot.data!.options![option].productOptionValue![optionValues].name!,
-                                                      style: GoogleFonts.poppins(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
+                        // if (snapshot.data!.options!.length > 0)
+                        //   Column(
+                        //     children: [
+                        //       Padding(
+                        //         padding: const EdgeInsets.symmetric(horizontal: 10),
+                        //         child: Row(
+                        //           children: [
+                        //             Text(
+                        //               'Variants',
+                        //               style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade900, fontWeight: FontWeight.bold, fontSize: 16)),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //       SizedBox(
+                        //         height: 15,
+                        //       ),
+                        //
+                        //     ],
+                        //   ),
 
                         Container(
                           height:  width * 0.02,

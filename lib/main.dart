@@ -18,6 +18,12 @@ void main(List<String> args) {
       ChangeNotifierProvider<Model>(create: (_) => Model()),
     ],
     child: GetMaterialApp(
+      theme: ThemeData(
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: Colors.blue.shade900,
+          ),
+        primaryColor: Colors.blue.shade900
+      ),
       debugShowCheckedModeBanner: false,
       title: 'Vkreta',
       home: AnimatedSplashScreen(

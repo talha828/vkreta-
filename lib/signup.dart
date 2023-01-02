@@ -219,6 +219,8 @@ class _SignUpState extends State<SignUp> {
                                       var response=ApiService().userRegister(_firstname.text, _lastname.text, _email.text, _telephone.text, _password.text, _confirmpassword.text, _value.toString()).then((value)async{
                                         await Helper.prefSetString("email", _email.text);
                                         await Helper.prefSetString("password", _password.text);
+                                        await Helper.saveUserData(int.parse(value.customerId));
+
                                         Navigator.of(context).pushReplacement(PageRouteBuilder(
                                               transitionDuration:const Duration(seconds: 1),
                                               transitionsBuilder: (BuildContext context,

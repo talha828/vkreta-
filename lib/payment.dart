@@ -241,10 +241,6 @@ class _PaymentState extends State<Payment> {
                               setState(() {
                                 paymentMethods = PaymentMethods(code: snapshot.data.paymentMethodsList[index].code, title: snapshot.data.paymentMethodsList[index].title);
                               });
-
-                              // Future.delayed(Duration(milliseconds: 500)).then((value) {
-                              //   Navigator.of(context).pop();
-                              // });
                             },
                             borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
                             child: Container(

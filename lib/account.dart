@@ -1,21 +1,25 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vkreta/about.dart';
-import 'package:vkreta/allnotifications.dart';
 import 'package:vkreta/changepassword.dart';
 import 'package:vkreta/contactus.dart';
+import 'package:vkreta/helper/helper.dart';
+import 'package:vkreta/login.dart';
 import 'package:vkreta/modifyyouraddress.dart';
 import 'package:vkreta/notifications.dart';
-import 'package:vkreta/paymentmethod.dart';
+import 'package:vkreta/pagescreen.dart';
 import 'package:vkreta/privacypolicy.dart';
 import 'package:vkreta/profilechange.dart';
-import 'package:vkreta/reviewproduct.dart';
+import 'package:vkreta/services/apiservice.dart';
 import 'package:vkreta/termandconditions.dart';
 import 'package:vkreta/vieworderhistory.dart';
 
+import 'orderHistoryScreen.dart';
+
 class Account extends StatefulWidget {
-  const Account({ Key? key }) : super(key: key);
+  const Account({Key? key}) : super(key: key);
 
   @override
   State<Account> createState() => _AccountState();
@@ -24,555 +28,572 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
+  var width=MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-     appBar: AppBar(
-       backgroundColor: Colors.white,
-       elevation: 0.1,
-       title:  Text(
-                        'My Account',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                color: Colors.grey.shade900, fontSize: 17)),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.1,
+        title: Text(
+          'My Account',
+          style: GoogleFonts.poppins(
+            textStyle: TextStyle(color: Colors.grey.shade900, fontSize: width * 0.04),
+          ),
+        ),
+      ),
+      body: FutureBuilder(
+        future: ApiService().getcustomerDetail(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: width * 0.04,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const ProfileChange();
+                          },
+                        ),
+                      );
+                    },
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Icon(
+                        Icons.person,
+                        size: width * 0.05,
                       ),
-                      actions: [
-                        
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                          transitionDuration: Duration(seconds: 1),
-                          transitionsBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation,
-                              Widget child) {
-                            animation = CurvedAnimation(
-                                parent: animation, curve: Curves.linear);
-                            return SharedAxisTransition(
-                                child: child,
-                                animation: animation,
-                                secondaryAnimation: secAnimation,
-                                transitionType:
-                                    SharedAxisTransitionType.horizontal);
+                    ),
+                    subtitle: Text(
+                      snapshot.data.email,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade500,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      snapshot.data.firstname + " " + snapshot.data.lastname,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(color: Colors.grey.shade900, fontSize: 17, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 20,
+                    ),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
                           },
-                          pageBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation) {
-                            return AllNotifications();
-                          }));
-                            },
-                            icon: Icon(
-                              Icons.notifications,
-                              color: Colors.grey.shade700,
-                              size: 22,
-                            ))
-                      ],
-     ),
-   body:SingleChildScrollView(
-     child: Column(
-       children: [
-         SizedBox(height: 20,),
-      ListTile(
-        onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                          transitionDuration: Duration(seconds: 1),
-                          transitionsBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation,
-                              Widget child) {
-                            animation = CurvedAnimation(
-                                parent: animation, curve: Curves.linear);
-                            return SharedAxisTransition(
-                                child: child,
-                                animation: animation,
-                                secondaryAnimation: secAnimation,
-                                transitionType:
-                                    SharedAxisTransitionType.horizontal);
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const ChangePassword();
                           },
-                          pageBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation) {
-                            return ProfileChange();
-                          }));
-        },
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(100),
-          child: Image.asset('assets/cr7.jpg',fit: BoxFit.fill,)),
-        subtitle: Text(
-                          'A Great Footballer',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade500, fontSize: 15,
-                                 
-                                  )),
                         ),
-        title: Text(
-                          'Christiano Ronaldo',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade900, fontSize: 17,
-                                  fontWeight: FontWeight.bold
-                                  )),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Change Password',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 14,
                         ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-      ),
-      SizedBox(height: 20,),
-      ListTile(
-        onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                        transitionDuration: Duration(seconds: 1),
-                        transitionsBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation,
-                            Widget child) {
-                          animation = CurvedAnimation(
-                              parent: animation, curve: Curves.linear);
-                          return SharedAxisTransition(
-                              child: child,
-                              animation: animation,
-                              secondaryAnimation: secAnimation,
-                              transitionType:
-                                  SharedAxisTransitionType.horizontal);
-                        },
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation) {
-                          return const ChangePassword();
-                        }));
-        },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-        title: Text(
-                          'Change Password',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14,
-                                 
-                                  )),
-                        ),
-      ),
-       Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-       ListTile(
-         onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                        transitionDuration: Duration(seconds: 1),
-                        transitionsBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation,
-                            Widget child) {
-                          animation = CurvedAnimation(
-                              parent: animation, curve: Curves.linear);
-                          return SharedAxisTransition(
-                              child: child,
-                              animation: animation,
-                              secondaryAnimation: secAnimation,
-                              transitionType:
-                                  SharedAxisTransitionType.horizontal);
-                        },
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation) {
-                          return const ModifyYourAddress();
-                        }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-        title: Text(
-                          'Modify your Address Book Entries',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14,
-                                 
-                                  )),
-                        ),
-      ),
-       Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-       ListTile(
-         onTap: (){
-           Navigator.of(context).push(PageRouteBuilder(
-                        transitionDuration: Duration(seconds: 1),
-                        transitionsBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation,
-                            Widget child) {
-                          animation = CurvedAnimation(
-                              parent: animation, curve: Curves.linear);
-                          return SharedAxisTransition(
-                              child: child,
-                              animation: animation,
-                              secondaryAnimation: secAnimation,
-                              transitionType:
-                                  SharedAxisTransitionType.horizontal);
-                        },
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation) {
-                          return PaymentMethod();
-                        }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-        title: Text(
-                          'Payment Method',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14,
-                                 
-                                  )),
-                        ),
-      ),
-      Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-     
-       ListTile(
-         onTap: (){
-           Navigator.of(context).push(PageRouteBuilder(
-                        transitionDuration: Duration(seconds: 1),
-                        transitionsBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation,
-                            Widget child) {
-                          animation = CurvedAnimation(
-                              parent: animation, curve: Curves.linear);
-                          return SharedAxisTransition(
-                              child: child,
-                              animation: animation,
-                              secondaryAnimation: secAnimation,
-                              transitionType:
-                                  SharedAxisTransitionType.horizontal);
-                        },
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation) {
-                          return ViewOrderHistory();
-                        }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-        title: Text(
-                          'View your Order History',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14,
-                                 
-                                  )),
-                        ),
-      ),
-       Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-       ListTile(
-         onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                        transitionDuration: Duration(seconds: 1),
-                        transitionsBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation,
-                            Widget child) {
-                          animation = CurvedAnimation(
-                              parent: animation, curve: Curves.linear);
-                          return SharedAxisTransition(
-                              child: child,
-                              animation: animation,
-                              secondaryAnimation: secAnimation,
-                              transitionType:
-                                  SharedAxisTransitionType.horizontal);
-                        },
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation) {
-                          return Notifications();
-                        }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-        title: Text(
-                          'Notifications',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14,
-                                 
-                                  )),
-                        ),
-      ),
-       Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-       ListTile(
-         onTap: (){
-             Navigator.of(context).push(PageRouteBuilder(
-                        transitionDuration: Duration(seconds: 1),
-                        transitionsBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation,
-                            Widget child) {
-                          animation = CurvedAnimation(
-                              parent: animation, curve: Curves.linear);
-                          return SharedAxisTransition(
-                              child: child,
-                              animation: animation,
-                              secondaryAnimation: secAnimation,
-                              transitionType:
-                                  SharedAxisTransitionType.horizontal);
-                        },
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secAnimation) {
-                          return ReviewProduct();
-                        }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-        title: Text(
-                          'Review Product',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14,
-                                 
-                                  )),
-                        ),
-      ),
-       Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-     
-       
-     
-       ListTile(
-         onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                          transitionDuration: Duration(seconds: 1),
-                          transitionsBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation,
-                              Widget child) {
-                            animation = CurvedAnimation(
-                                parent: animation, curve: Curves.linear);
-                            return SharedAxisTransition(
-                                child: child,
-                                animation: animation,
-                                secondaryAnimation: secAnimation,
-                                transitionType:
-                                    SharedAxisTransitionType.horizontal);
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
                           },
-                          pageBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation) {
-                            return About();
-                          }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-        title: Text(
-                          'About',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14,
-                                 
-                                  )),
-                        ),
-      ),
-      Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-       ListTile(
-         onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                          transitionDuration: Duration(seconds: 1),
-                          transitionsBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation,
-                              Widget child) {
-                            animation = CurvedAnimation(
-                                parent: animation, curve: Curves.linear);
-                            return SharedAxisTransition(
-                                child: child,
-                                animation: animation,
-                                secondaryAnimation: secAnimation,
-                                transitionType:
-                                    SharedAxisTransitionType.horizontal);
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const ModifyYourAddress();
                           },
-                          pageBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation) {
-                            return Contactus();
-                          }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
                         ),
-        title: Text(
-                          'Contact Us',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 15,
-                                 
-                                  )),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'My Shipping Addresses',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 14,
                         ),
-      ),
-       Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-       ListTile(
-         onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                          transitionDuration: Duration(seconds: 1),
-                          transitionsBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation,
-                              Widget child) {
-                            animation = CurvedAnimation(
-                                parent: animation, curve: Curves.linear);
-                            return SharedAxisTransition(
-                                child: child,
-                                animation: animation,
-                                secondaryAnimation: secAnimation,
-                                transitionType:
-                                    SharedAxisTransitionType.horizontal);
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
                           },
-                          pageBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation) {
-                            return TC();
-                          }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
-                        ),
-        title: Text(
-                          'Terms and Conditions',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 15,
-                                 
-                                  )),
-                        ),
-      ),
-       Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-       ListTile(
-         onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                          transitionDuration: Duration(seconds: 1),
-                          transitionsBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation,
-                              Widget child) {
-                            animation = CurvedAnimation(
-                                parent: animation, curve: Curves.linear);
-                            return SharedAxisTransition(
-                                child: child,
-                                animation: animation,
-                                secondaryAnimation: secAnimation,
-                                transitionType:
-                                    SharedAxisTransitionType.horizontal);
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const OrderHistoryScreen();
                           },
-                          pageBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secAnimation) {
-                            return PP();
-                          }));
-         },
-        trailing: Icon(
-                          Icons.arrow_forward_ios,color: Colors.grey.shade500,size: 16,
                         ),
-        title: Text(
-                          'Privacy Policy',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 15,
-                                 
-                                  )),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Order History',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 14,
                         ),
-      ),
-       Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-             Container(
-               height: 50,
-               width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.logout,color: Colors.red,size: 20,),
-                    SizedBox(width: 10,),
-                    Text(
-                                'Sign Out',
-                                style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                        color: Colors.red, fontSize: 15,
-                                       
-                                        )),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const Notifications();
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Notifications',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const About();
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'About',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return PageScreen(title: 'Frequently Asked Questions', page_id: 7);
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Frequently Asked Questions',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const Contactus();
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Contact Us',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const TC();
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Terms and Conditions',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return const PP();
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Privacy Policy',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return PageScreen(title: 'Disclaimer Policy', page_id: 8);
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Disclaimer Policy',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration: const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return PageScreen(title: 'Return Policy', page_id: 6);
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Return Policy',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return PageScreen(title: 'Cookies Policy', page_id: 9);
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Cookies Policy',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration:const Duration(seconds: 1),
+                          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+                            animation = CurvedAnimation(parent: animation, curve: Curves.linear);
+                            return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                          },
+                          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                            return PageScreen(title: 'Delivery Policy', page_id: 10);
+                          },
+                        ),
+                      );
+                    },
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey.shade500,
+                      size: 16,
+                    ),
+                    title: Text(
+                      'Delivery Policy',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+                      sharedPreference.remove("customer_id");
+                      await Helper.prefSetString("email", null);
+                      await Helper.prefSetString("password", null);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    child: SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.logout,
+                              color: Colors.red,
+                              size: width * 0.04,
+                            ),
+                            SizedBox(
+                              width: width * 0.04,
+                            ),
+                            Text(
+                              'Sign Out',
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: width * 0.04,
+                                ),
                               ),
-                  ],
-                ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                ],
               ),
-             ),
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
-               child: Divider(
-                height: 1,
-                color: Colors.grey.shade400,
-            ),
-             ),
-       ],
-     ),
-   ) ,
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 }

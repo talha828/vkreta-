@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String? password=await Helper.prefGetString("password");
     if(email != null && password != null){
       String? deviceId = await PlatformDeviceId.getDeviceId;
-      var response= ApiService().userLogin(email, password, deviceId!).then((value){
+      var response= ApiService().userLogin(email, password, deviceId!).then((value)async{
         if(value.error == null){
           Get.to(const SelectScreen());
         }
@@ -186,6 +186,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                if(value.error == null){
                                  await Helper.prefSetString("email", _email.text);
                                  await Helper.prefSetString("password", _password.text);
+                                 await Helper.saveUserData(int.parse(value.customerId));
+
+
                                  Navigator.of(context).pushReplacement(PageRouteBuilder(
                                      transitionDuration:const Duration(seconds: 1),
                                      transitionsBuilder: (BuildContext context,

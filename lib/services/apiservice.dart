@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vkreta/getx_controllers/productInfo.dart';
+import 'package:vkreta/models/MyOrderHistoryModel.dart';
 import 'package:vkreta/models/WishlistModel.dart';
 import 'package:vkreta/models/addorderModel.dart';
 import 'package:vkreta/models/addtowishlistModel.dart';
@@ -868,8 +869,12 @@ class ApiService {
     // print("response.body3");
     // return _model;
     // print(response.body);
-    List<OrderlistModel> _model = orderlistModelFromJson(response.body);
-    print(_model[0].status);
+    var data=jsonDecode(response.body);
+    List<MyOrderHistoryModel> _model=[];
+    for(var i in data){
+      _model.add(MyOrderHistoryModel.fromJson(i));
+    }
+    print(_model[0].status![0].product!.length.toString());
     // print("response.body4");
     // print(_model);
     // print("response.body4");

@@ -36,12 +36,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final TextEditingController _search = TextEditingController();
-  final homeScreenModel= Get.put(HomePage());
+  final snapshot= Get.put(HomePage());
 
   Future<HomeScreenModel> getHomeScreenData()async{
    setLoading(true);
   HomeScreenModel homeModel=await ApiService().getHome().then((value){
-  homeScreenModel.homeScreenModel.value=value;
+  snapshot.homeScreenModel.value=value;
   setLoading(false);
     return value;
   });
@@ -80,6 +80,12 @@ class _HomeState extends State<Home> {
       country: placemarks[0].country,
     ));
     setState(() {
+       slider=0;
+       product=0;
+       banner=0;
+       slider1=0;
+       product1=0;
+       banner1=0;
       address =placemarks[0].country.toString() + ", "+ placemarks[0].locality.toString() + ", " +placemarks[0].subLocality.toString();
     });
    // var first = addresses.first;
@@ -341,7 +347,27 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     var width =MediaQuery.of(context).size.width;
     var height =MediaQuery.of(context).size.height;
-    HomeScreenModel snapshot = homeScreenModel.homeScreenModel.value;
+    slider=0;
+    product=0;
+    banner=0;
+    slider1=0;
+    product1=0;
+    banner1=0;
+    //HomeScreenModel snapshot = homeScreenModel.homeScreenModel.value;
+      Map<String, dynamic> map={};
+    if(snapshot.homeScreenModel != null){
+      for(var i in snapshot.homeScreenModel.value.silder!){
+        map.addAll({i.sort.toString():"Slider"});
+      }
+      for(var i in snapshot.homeScreenModel.value.products!){
+        map.addAll({i.sort.toString():"Product"});
+      }
+      for(var i in snapshot.homeScreenModel.value.banner!){
+        map.addAll({i.sort.toString():"banner"});
+      }
+      map.entries.toList().sort((a,b)=>a.key.compareTo(b.key));
+      print(map.toString());
+    }
     return Scaffold(
       backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton(
@@ -363,6 +389,7 @@ class _HomeState extends State<Home> {
                       SizedBox(
                         height: width * 0.04,
                       ),
+                      // search field and notification
                       Padding(
                         padding: EdgeInsets.all(width * 0.04),
                         child: SizedBox(
@@ -417,7 +444,6 @@ class _HomeState extends State<Home> {
                                   ),
                                 ),
                               ),
-
                               IconButton(
                                   onPressed: () {
                                     Navigator.of(context).push(PageRouteBuilder(
@@ -450,6 +476,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
+                      // address
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal:width * 0.028),
                         child: InkWell(
@@ -511,14 +538,17 @@ class _HomeState extends State<Home> {
                                         Animation<double> animation,
                                         Animation<double> secAnimation) {
                                       return ViewAll(
-                                        title: snapshot!.topCategory![index].name!,
+                                        title: snapshot!.homeScreenModel.value.topCategory![index].name!,
                                       );
                                     }));
-                              }, width: width, list: snapshot!.topCategory![index]);
+                              }, width: width, list: snapshot!.homeScreenModel.value.topCategory![index]);
                             }, separatorBuilder: (context,index){
                           return SizedBox(width: width * 0.04,);
-                        }, itemCount: snapshot!.topCategory!.length),
+                        }, itemCount: snapshot!.homeScreenModel.value.topCategory!.length),
                       ),
+
+                      //divider
+
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Divider(
@@ -526,104 +556,98 @@ class _HomeState extends State<Home> {
                           color: Colors.grey.shade500,
                         ),
                       ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics:const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context,index){
-                        return CarouselSlider(
-                            items:snapshot!.silder![index].data!.map((e) => Container(
-                              margin: EdgeInsets.symmetric(vertical: width * 0.02),
-                              width: width * 0.9,
-                              height: width * 0.2,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(7),
-                                  boxShadow:const [
-                                    BoxShadow(
-                                        color: Colors.black38,
-                                        offset: Offset(-2,3),
-                                        blurRadius: 7
-                                    )
-                                  ]
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(7),
-                                child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
-                                  errorBuilder: (context,object,streacTree){
-                                    return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
-                                  },
-                                ),
-                              ),)).toList(),
-                            options: CarouselOptions(
-                              height: width * 0.45,
-                              aspectRatio: 9/14,
-                              viewportFraction: 1,
-                              initialPage: 0,
-                              enableInfiniteScroll: true,
-                              reverse: false,
-                              autoPlay: true,
-                              autoPlayInterval:const Duration(seconds: 3),
-                              autoPlayAnimationDuration:const Duration(milliseconds: 800),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              enlargeCenterPage: true,
-                              onPageChanged: (ss,aa){},
-                              scrollDirection: Axis.horizontal,
-                            )
-                        );
-                      },
-                        itemCount: snapshot!.silder!.length,
-                      ),
 
-                      SizedBox(
-                        height: width * 0.06,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: width * 0.04),
-                        child: SingleChildScrollView(
-                          child: ListView.separated(
-                              physics:const  NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context,index){
-                                return ProductCart(width: width, title: snapshot.products![index].title!, viewAll: (){
-                                  Navigator.of(context).push(PageRouteBuilder(
-                                      transitionDuration:const Duration(seconds: 1),
-                                      transitionsBuilder: (BuildContext context,
-                                          Animation<double> animation,
-                                          Animation<double> secAnimation,
-                                          Widget child) {
-                                        animation = CurvedAnimation(
-                                            parent: animation, curve: Curves.linear);
-                                        return SharedAxisTransition(
-                                            child: child,
-                                            animation: animation,
-                                            secondaryAnimation: secAnimation,
-                                            transitionType:
-                                            SharedAxisTransitionType.horizontal);
-                                      },
-                                      pageBuilder: (BuildContext context,
-                                          Animation<double> animation,
-                                          Animation<double> secAnimation) {
-                                        return ViewAll(
-                                          title:snapshot.products![index].preset!,
-                                        );
-                                      }));
-                                },  product: snapshot.products![index].data!);
-                              }, separatorBuilder: (context,index){
-                            return SizedBox(height: width * 0.15,);
-                          }, itemCount: snapshot.products!.length),
-                        ),
-                      ),
-                      SizedBox(height: width * 0.02,),
-                      ListView.builder(
-                        physics:const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context,index){
-                        return BannerWidget(width: width, snapshot: snapshot.banner![index]);
-                      },itemCount: snapshot.banner!.length,
+                      // Slider
+                      Column(
+                        children: [
+                          for(var i in map.entries)
+                            myWidget(i.value, width, height, snapshot.homeScreenModel.value)
+                        ],
                       )
+                      // CarouselSlider(
+                      //     items:snapshot!.silder![0].data!.map((e) => Container(
+                      //       margin: EdgeInsets.symmetric(vertical: width * 0.02),
+                      //       width: width * 0.9,
+                      //       height: width * 0.2,
+                      //       decoration: BoxDecoration(
+                      //           color: Colors.white,
+                      //           borderRadius: BorderRadius.circular(7),
+                      //           boxShadow:const [
+                      //             BoxShadow(
+                      //                 color: Colors.black38,
+                      //                 offset: Offset(-2,3),
+                      //                 blurRadius: 7
+                      //             )
+                      //           ]
+                      //       ),
+                      //       child: ClipRRect(
+                      //         borderRadius: BorderRadius.circular(7),
+                      //         child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
+                      //           errorBuilder: (context,object,streacTree){
+                      //             return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
+                      //           },
+                      //         ),
+                      //       ),)).toList(),
+                      //     options: CarouselOptions(
+                      //       height: width * 0.45,
+                      //       aspectRatio: 9/14,
+                      //       viewportFraction: 1,
+                      //       initialPage: 0,
+                      //       enableInfiniteScroll: true,
+                      //       reverse: false,
+                      //       autoPlay: true,
+                      //       autoPlayInterval:const Duration(seconds: 3),
+                      //       autoPlayAnimationDuration:const Duration(milliseconds: 800),
+                      //       autoPlayCurve: Curves.fastOutSlowIn,
+                      //       enlargeCenterPage: true,
+                      //       onPageChanged: (ss,aa){},
+                      //       scrollDirection: Axis.horizontal,
+                      //     )
+                      // ),
+                      //
+                      // SizedBox(
+                      //   height: width * 0.06,
+                      // ),
+                      //
+                      // // product
+                      //
+                      // Padding(
+                      //   padding: EdgeInsets.only(left: width * 0.04),
+                      //   child: SingleChildScrollView(
+                      //     child: ProductCart(width: width, title: snapshot.products![0].title!, viewAll: (){
+                      //       Navigator.of(context).push(PageRouteBuilder(
+                      //           transitionDuration:const Duration(seconds: 1),
+                      //           transitionsBuilder: (BuildContext context,
+                      //               Animation<double> animation,
+                      //               Animation<double> secAnimation,
+                      //               Widget child) {
+                      //             animation = CurvedAnimation(
+                      //                 parent: animation, curve: Curves.linear);
+                      //             return SharedAxisTransition(
+                      //                 child: child,
+                      //                 animation: animation,
+                      //                 secondaryAnimation: secAnimation,
+                      //                 transitionType:
+                      //                 SharedAxisTransitionType.horizontal);
+                      //           },
+                      //           pageBuilder: (BuildContext context,
+                      //               Animation<double> animation,
+                      //               Animation<double> secAnimation) {
+                      //             return ViewAll(
+                      //               title:snapshot.products![0].preset!,
+                      //             );
+                      //           }));
+                      //     },  product: snapshot.products![0].data!)
+                      //   ),
+                      // ),
+                      // SizedBox(height: width * 0.02,),
+                      //
+                      // //banner
+                      // BannerWidget(width: width, snapshot: snapshot.banner![0])
+
                     ],
                   ),
-              isLoading?Positioned.fill(child: Container(child:const Center(child: CircularProgressIndicator(),),)):Container()
+              isLoading?Positioned.fill(child: Container(color: Colors.white,  child:const Center(child: CircularProgressIndicator(),),)):Container()
             ],
           )
         ),
@@ -640,6 +664,95 @@ class _HomeState extends State<Home> {
   ];
 
   String title="Flash sale";
+  int slider=0;
+  int product=0;
+  int banner=0;
+  int slider1=0;
+  int product1=0;
+  int banner1=0;
+  Widget myWidget(String key,double width,double height,HomeScreenModel snapshot) {
+    if (key == "Slider") {
+        slider1==0?
+            slider1=slider1+1
+            :slider=slider+1;
+      return CarouselSlider(
+          items:snapshot!.silder![slider].data!.map((e) => Container(
+            margin: EdgeInsets.symmetric(vertical: width * 0.02),
+            width: width * 0.9,
+            height: width * 0.2,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(7),
+                boxShadow:const [
+                  BoxShadow(
+                      color: Colors.black38,
+                      offset: Offset(-2,3),
+                      blurRadius: 7
+                  )
+                ]
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(7),
+              child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
+                errorBuilder: (context,object,streacTree){
+                  return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
+                },
+              ),
+            ),)).toList(),
+          options: CarouselOptions(
+            height: width * 0.45,
+            aspectRatio: 9/14,
+            viewportFraction: 1,
+            initialPage: 0,
+            enableInfiniteScroll: true,
+            reverse: false,
+            autoPlay: true,
+            autoPlayInterval:const Duration(seconds: 3),
+            autoPlayAnimationDuration:const Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+            enlargeCenterPage: true,
+            onPageChanged: (ss,aa){},
+            scrollDirection: Axis.horizontal,
+          )
+      );
+    }else if(key == "Product"){
+      product1==0?
+          product1=product1+1
+          :product=product+1;
+      return  Padding(
+        padding: EdgeInsets.only(left: width * 0.04),
+        child: ProductCart(width: width, title: snapshot.products![product].title!, viewAll: (){
+          Navigator.of(context).push(PageRouteBuilder(
+              transitionDuration:const Duration(seconds: 1),
+              transitionsBuilder: (BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secAnimation,
+                  Widget child) {
+                animation = CurvedAnimation(
+                    parent: animation, curve: Curves.linear);
+                return SharedAxisTransition(
+                    child: child,
+                    animation: animation,
+                    secondaryAnimation: secAnimation,
+                    transitionType:
+                    SharedAxisTransitionType.horizontal);
+              },
+              pageBuilder: (BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secAnimation) {
+                return ViewAll(
+                  title:snapshot.products![product].preset!,
+                );
+              }));
+        },  product: snapshot.products![product].data!),
+      );product++;
+    }else{
+      banner1==0?
+          banner1=banner1+1
+          :banner=banner+1;
+    return BannerWidget(width: width, snapshot: snapshot.banner![banner]);
+    }
+  }
 }
 
 class BannerWidget extends StatelessWidget {

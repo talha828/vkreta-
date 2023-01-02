@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vkreta/services/apiservice.dart';
 
 class TC extends StatefulWidget {
   const TC({Key? key}) : super(key: key);
@@ -11,7 +13,7 @@ class TC extends StatefulWidget {
 class _TCState extends State<TC> {
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
@@ -30,33 +32,37 @@ class _TCState extends State<TC> {
         ),
       ),
       backgroundColor: Colors.white,
-        body: Column(
-        children: [
-          SizedBox(height: 30,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 14,
-                   )),
-        ),
-          ),
-          SizedBox(height: 10,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 14,
-                   )),
-        ),
-          ),
-        ],
+      body: FutureBuilder(
+        future: ApiService().getTermsCondition(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // SizedBox(height: 30,),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 15),
+                    //   child: Html(
+                    //     data:snapshot.data['heading_title']
+                    //   ),
+                    // ),
+                    SizedBox(height: 10,),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child:Html(
+                          data:snapshot.data['description']
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
