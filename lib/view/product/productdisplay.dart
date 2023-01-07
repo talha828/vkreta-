@@ -9,12 +9,13 @@ import 'package:provider/provider.dart';
 import 'package:vkreta/view/product/otherSellerProductsScreen.dart';
 import 'package:vkreta/view/others/return_policy.dart';
 import 'package:vkreta/services/apiservice.dart';
+import 'package:vkreta/view/product/search_screen.dart';
 import 'package:vkreta/view/product/showproduct.dart';
 import '../home/Enterpincode.dart';
 import '../review/allreviews.dart';
 import 'cart.dart';
 import '../others/helpsupport.dart';
-import '../../lowtohighprice.dart';
+
 import '../../models/bages_model.dart';
 import '../../models/listaddressModel.dart';
 import '../../models/productdetailModel.dart';
@@ -828,7 +829,7 @@ class _ProductDisplayState extends State<ProductDisplay> {
                                       return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
                                     },
                                     pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
-                                      return const LowToHighPrice(
+                                      return const SearchScreen(
                                           //snapshot.data!.productId!.toString()
                                       );
                                     },

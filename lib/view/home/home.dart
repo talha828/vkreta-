@@ -14,7 +14,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vkreta/view/notification/allnotifications.dart';
 import 'package:vkreta/view/address/editaddress.dart';
 import 'package:vkreta/getx_controllers/homepage.dart';
-import 'package:vkreta/lowtohighprice.dart';
 import 'package:vkreta/models/homemodel.dart';
 import 'package:vkreta/view/address/modifyyouraddress.dart';
 import 'package:vkreta/view/notification/notifications.dart';
