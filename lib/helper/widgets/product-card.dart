@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vkreta/helper/widgets/product-percentage-label.dart';
 
-import '../../productdisplay.dart';
+import '../../view/product/productdisplay.dart';
 
 class ProductCard extends StatefulWidget {
   ProductCard({

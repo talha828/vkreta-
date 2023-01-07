@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import "package:async/async.dart";
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/interceptors/get_modifiers.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vkreta/getx_controllers/productInfo.dart';
@@ -33,6 +35,7 @@ import 'package:vkreta/models/signupmodel.dart';
 import 'package:vkreta/models/updatecartquantityModel.dart';
 import 'package:vkreta/models/zoneModel.dart';
 import 'package:vkreta/response/sugest_api_response.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 
 import '../models/cartModel.dart';
 import '../models/coupon_moder.dart';
@@ -436,9 +439,21 @@ class ApiService {
   }
 
   Future<HomeScreenModel> getHome() async {
+    //Location location = Location();
+    String pinCode='';
+    try {
+      // var myLocation = await location.getLocation();
+      List<geo.Placemark> placemarks = await geo.placemarkFromCoordinates(
+          29.0588,76.0856);
+      geo.Placemark place = placemarks[0];
+      print(placemarks.toString());
+      pinCode= placemarks[0].postalCode!;
+    }catch(e){
+      Fluttertoast.showToast(msg: "Somethings went wrong");
+    }
     String basicAuth = 'Basic ' +
         base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final data = Uri.parse("https://www.vkreta.com/index.php?route=api/home");
+    final data = Uri.parse("https://www.vkreta.com/index.php?route=api/home&pincode=$pinCode");
     final response = await http.get(
       data,
       headers: {'authorization': basicAuth},

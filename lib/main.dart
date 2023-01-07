@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:vkreta/home.dart';
-import 'package:vkreta/login.dart';
+import 'package:vkreta/view/home/home.dart';
+import 'package:vkreta/view/login_signup/login.dart';
 import 'package:vkreta/providerModel/homedata.dart';
 
 import 'models/bages_model.dart';
