@@ -389,7 +389,7 @@ class _CartState extends State<Cart> {
                                             Row(
                                               children: [
                                                 Text(
-                                                  snapshot.data.totals[i].title,
+                                                  snapshot.data.totals[i].productId,
                                                   style: GoogleFonts.poppins(
                                                     textStyle: TextStyle(
                                                       color: Colors.black,

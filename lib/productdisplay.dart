@@ -2,8 +2,11 @@ import 'package:animations/animations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_badged/flutter_badge.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:vkreta/otherSellerProductsScreen.dart';
 import 'package:vkreta/return_policy.dart';
 import 'package:vkreta/services/apiservice.dart';
 import 'package:vkreta/showproduct.dart';
@@ -13,6 +16,7 @@ import 'cart.dart';
 import 'helpsupport.dart';
 import 'lowtohighprice.dart';
 import 'models/bages_model.dart';
+import 'models/listaddressModel.dart';
 import 'models/productdetailModel.dart';
 
 class ProductDisplay extends StatefulWidget {
@@ -39,6 +43,7 @@ class _ProductDisplayState extends State<ProductDisplay> {
 
   Color _iconColor = Colors.black;
   Map<String, String> selectedVariants = {};
+  String prices="null";
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +165,7 @@ class _ProductDisplayState extends State<ProductDisplay> {
                                   child: Stack(children: [
                                     Center(
                                       child: Text(
-                                        snapshot.data!.price!.toString(),
+                                        prices=="null"?snapshot.data!.price!.toString():prices,
                                         style: GoogleFonts.poppins(textStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey.shade700, fontSize: 14)),
                                       ),
                                     ),
@@ -331,12 +336,25 @@ class _ProductDisplayState extends State<ProductDisplay> {
                                             },
                                             child: Column(
                                               children: [
-                                                CircleAvatar(
-                                                  radius: 35,
-                                                  backgroundColor: Colors.grey.shade200,
-                                                  backgroundImage: NetworkImage(snapshot.data!.options![0].productOptionValue![i].image.toString()),
+                                                snapshot.data!.options![0].productOptionValue![i].image.toString() == "false"?Container():Container(
+                                                  padding: EdgeInsets.symmetric(vertical: width * 0.01,horizontal: width * 0.01),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(color:snapshot.data!.options![0].productOptionValue![i].active == 1? Colors.blue.shade900:Colors.grey.withOpacity(0.5)),
+                                                    borderRadius: BorderRadius.circular(50)
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    radius: 35,
+                                                    backgroundColor: Colors.blue,
+                                                    backgroundImage: NetworkImage(snapshot.data!.options![0].productOptionValue![i].image.toString()),
+                                                  ),
                                                 ),
-                                                Text(snapshot.data!.options![0].productOptionValue![i].name.toString())
+                                                Container(
+                                                    padding: EdgeInsets.symmetric(vertical: width * 0.02,horizontal: width * 0.02),
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(color:snapshot.data!.options![0].productOptionValue![i].active == 1? Colors.blue.shade900:Colors.grey.withOpacity(0.5)),
+                                                        borderRadius: BorderRadius.circular(7)
+                                                    ),
+                                                    child: Text(snapshot.data!.options![0].productOptionValue![i].name.toString()))
                                               ],
                                             ),
                                           ),
@@ -350,14 +368,15 @@ class _ProductDisplayState extends State<ProductDisplay> {
                                   SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          padding: EdgeInsets.symmetric(horizontal: width * 0.04),
                                           child: Row(
                                             children: [
                                               Text(
                                                 snapshot.data!.options![option].name!,
-                                                style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+                                                style: GoogleFonts.poppins(textStyle: TextStyle( fontWeight: FontWeight.bold,fontSize: 14)),
                                               ),
                                               // Text(
                                               //   'XS',
@@ -388,25 +407,28 @@ class _ProductDisplayState extends State<ProductDisplay> {
                                                     } else {
                                                       selectedVariants.addAll({product_option_id: product_option_value_id});
                                                     }
+                                                    prices=snapshot.data!.options![option].productOptionValue![optionValues].price!;
                                                     setState(() {});
+
                                                   },
                                                   child: Container(
                                                     // height: 35,
                                                     // width: 35,
-                                                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                                    padding:  EdgeInsets.symmetric(vertical: width * 0.02,horizontal: width * 0.04),
                                                     margin: const EdgeInsets.only(right: 5),
                                                     decoration: BoxDecoration(
-                                                      color: selectedVariants.containsKey(snapshot.data!.options![option].productOptionId)
+
+                                                      border: Border.all(color: selectedVariants.containsKey(snapshot.data!.options![option].productOptionId)
                                                           ? selectedVariants[snapshot.data!.options![option].productOptionId] == snapshot.data!.options![option].productOptionValue![optionValues].productOptionValueId
                                                           ? Colors.blue.shade900
-                                                          : Colors.black26
-                                                          : Colors.black26,
+                                                          : Colors.grey.withOpacity(0.5)
+                                                          : Colors.grey.withOpacity(0.5),),
                                                       borderRadius: BorderRadiusDirectional.circular(7),
                                                     ),
                                                     child: Center(
                                                       child: Text(
                                                         snapshot.data!.options![option].productOptionValue![optionValues].name!,
-                                                        style: GoogleFonts.poppins(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                                                        style: GoogleFonts.poppins(textStyle: const TextStyle( fontWeight: FontWeight.bold, fontSize: 15)),
                                                       ),
                                                     ),
                                                   ),
@@ -723,19 +745,41 @@ class _ProductDisplayState extends State<ProductDisplay> {
                         SizedBox(
                           height:  width * 0.02,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal:  width * 0.02),
-                          child: Row(children: [
-                            Text(
-                              'SELLER NAME :',
-                              style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade800, fontSize: 13)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal:  width * 0.02),
+                              child: Row(children: [
+                                Text(
+                                  'SELLER NAME :',
+                                  style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.grey.shade800, fontSize: 13)),
+                                ),
+                                SizedBox(width:  width * 0.02),
+                                Text(
+                                  snapshot.data!.sellerDetail!.sellerName ?? "no Name",
+                                  style: GoogleFonts.poppins(textStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade900, fontSize: 13)),
+                                ),
+                              ]),
                             ),
-                            SizedBox(width:  width * 0.02),
-                            Text(
-                              snapshot.data!.sellerDetail!.sellerName ?? "no Name",
-                              style: GoogleFonts.poppins(textStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade900, fontSize: 13)),
+                            InkWell(
+                              onTap: ()async{
+                                Map<String, ListAddressModel>  response=await ApiService().getAddressList();
+                               var addressList = response.values.toList();
+                                print(addressList[0].postcode!.isEmpty?"talha":"nope");
+                                // addressList[0].postcode!.isEmpty?Fluttertoast.showToast(msg: "Please Add postal Code in Your address")
+                                //     :
+                                Get.to(OtherSellerProductScreen(productId:  snapshot.data!.productId!, pinCode: addressList[0].postcode!));
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                                child: Text(
+                                  'Others',
+                                  style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.blue.shade900,fontWeight: FontWeight.w900)),
+                                ),
+                              ),
                             ),
-                          ]),
+                          ],
                         ),
                         SizedBox(
                           height:  width * 0.02,

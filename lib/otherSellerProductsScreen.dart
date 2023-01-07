@@ -9,26 +9,31 @@ import 'package:vkreta/productdisplay.dart';
 import 'package:vkreta/search_screen.dart';
 import 'package:vkreta/services/apiservice.dart';
 
+import 'getx_controllers/productInfo.dart';
 import 'home.dart';
 
-class ViewAll extends StatefulWidget {
-  String title;
-  ViewAll({
-    required this.title,
+class OtherSellerProductScreen extends StatefulWidget {
+  String productId;
+  String pinCode;
+  OtherSellerProductScreen({
+    required this.productId,
+    required this.pinCode,
   });
 
   @override
-  State<ViewAll> createState() => _ViewAllState();
+  State<OtherSellerProductScreen> createState() => _OtherSellerProductScreenState();
 }
 
-class _ViewAllState extends State<ViewAll> {
-  final viewAll=Get.put(ViewAllController());
+class _OtherSellerProductScreenState extends State<OtherSellerProductScreen> {
+  final viewAll=Get.put(SameProduct());
   Future<List<ViewAllModel>> getAllProducts(String page,String title)async{
     setLoading(true);
-    List<ViewAllModel> viewAllModel=await ApiService().viewAll(widget.title, page.toString()).then((value){
-      viewAll.viewAllModel.value=value;
-    setLoading(false);
-    return value;
+    List<ViewAllModel> viewAllModel=await ApiService().otherSellerSameProduct(productId: widget.productId, picCode: widget.pinCode).then((value){
+      if(value.isNotEmpty){
+      viewAll.product.value=value;
+      }
+      setLoading(false);
+      return value;
     });
     return viewAllModel;
   }
@@ -52,7 +57,7 @@ class _ViewAllState extends State<ViewAll> {
       setState(() {
         page=page+1;
       });
-      getAllProducts(page.toString(), widget.title);
+      getAllProducts(page.toString(), widget.productId);
     }else{
       print("error");
     }
@@ -60,13 +65,13 @@ class _ViewAllState extends State<ViewAll> {
 
   @override
   void initState() {
-    getAllProducts(page.toString(), widget.title);
+    getAllProducts(widget.productId, widget.pinCode);
     _controller.addListener(pageListener);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    List<ViewAllModel> snapshot= viewAll.viewAllModel;
+    List<ViewAllModel> snapshot= viewAll.product;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -88,19 +93,19 @@ class _ViewAllState extends State<ViewAll> {
                     ),
                     itemBuilder: (context) => [
                       PopupMenuItem(
-                          onTap:()=> setOrder("prices"),
-                          child:Row(
-                            children: [
-                              Text(
-                                'High Price',
-                                style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: width * 0.035,
-                                    )),
-                              ),
-                            ],
-                          ),),
+                        onTap:()=> setOrder("prices"),
+                        child:Row(
+                          children: [
+                            Text(
+                              'High Price',
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: width * 0.035,
+                                  )),
+                            ),
+                          ],
+                        ),),
                       PopupMenuItem(
                         onTap:()=> setOrder("popularity"),
                         child:Row(
@@ -136,16 +141,16 @@ class _ViewAllState extends State<ViewAll> {
                   'Sort',
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(
-                    color: Colors.black,
-                    fontSize: width * 0.035,
-                  )),
+                        color: Colors.black,
+                        fontSize: width * 0.035,
+                      )),
                 ),
               ],
             ),
           ],
           backgroundColor: Colors.white,
           title: Text(
-            widget.title,
+            "Other Sellers",
             style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                     color: Colors.black,
@@ -164,120 +169,121 @@ class _ViewAllState extends State<ViewAll> {
         ),
         backgroundColor: Colors.white,
         body: Stack(
+          alignment: Alignment.center,
           children: [
             Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: width * 0.2,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            // boxShadow: [BoxShadow(
-                            //   color: Colors.grey.shade100,spreadRadius: 5,
-                            //   offset: Offset(0, 5)
-                            // )]
-                          ),
-                          child: Center(
-                            child: InkWell(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                      const SearchScreen())),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 0),
-                                child: TextFormField(
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.search,
-                                        color: Colors.grey.shade600,
-                                        size: 25,
-                                      ),
-                                      isDense: true,
-                                      filled: true,
-                                      fillColor: Colors.grey.shade100,
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide: BorderSide.none),
-                                      hintText: 'Search Product',
-                                      hintStyle: GoogleFonts.poppins(
-                                          textStyle: TextStyle(
-                                              color: Colors.grey.shade600,
-                                              fontSize: width * 0.04))),
+              padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+              child: Column(
+                children: [
+                  Container(
+                    height: width * 0.2,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      // boxShadow: [BoxShadow(
+                      //   color: Colors.grey.shade100,spreadRadius: 5,
+                      //   offset: Offset(0, 5)
+                      // )]
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        child: InkWell(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  const SearchScreen())),
+                          child: TextFormField(
+                            enabled: false,
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.grey.shade600,
+                                  size: 25,
                                 ),
-                              ),
-                            ),
+                                isDense: true,
+                                filled: true,
+                                fillColor: Colors.grey.shade100,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide.none),
+                                hintText: 'Search Product',
+                                hintStyle: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                        color: Colors.grey.shade600,
+                                        fontSize: width * 0.04))),
                           ),
                         ),
-                        SizedBox(
-                          height: width * 0.02,
-                        ),
-                        Divider(
-                          height: 1,
-                          color: Colors.grey.shade400,
-                        ),
-                        SizedBox(
-                          height: width * 0.02,
-                        ),
-                        SizedBox(
-                          height: width * 0.02,
-                        ),
-                        //ViewAllCard(onTap: onTap, width: width, product: product),
-                        Expanded(
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                             controller: _controller,
-                              itemCount: snapshot.length,
-                              addRepaintBoundaries: false,
-                              addAutomaticKeepAlives: false,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 0.85,
-                                      mainAxisSpacing: width * 0.04,
-                                      crossAxisSpacing: width * 0.04),
-                              itemBuilder: (context, index) {
-                                List<ViewAllModel> product =
-                                    sortList(sortingOrder, snapshot);
-                                return ViewAllCard(
-                                    onTap: () {
-                                      Navigator.of(context).push(PageRouteBuilder(
-                                          transitionDuration:
-                                              const Duration(seconds: 1),
-                                          transitionsBuilder: (BuildContext context,
-                                              Animation<double> animation,
-                                              Animation<double> secAnimation,
-                                              Widget child) {
-                                            animation = CurvedAnimation(
-                                                parent: animation,
-                                                curve: Curves.linear);
-                                            return SharedAxisTransition(
-                                                child: child,
-                                                animation: animation,
-                                                secondaryAnimation: secAnimation,
-                                                transitionType:
-                                                    SharedAxisTransitionType
-                                                        .horizontal);
-                                          },
-                                          pageBuilder: (BuildContext context,
-                                              Animation<double> animation,
-                                              Animation<double> secAnimation) {
-                                            return ProductDisplay(int.parse(product[index].productId!));
-                                          }));
-                                    },
-                                    width: width,
-                                    product: product[index]);
-                              }),
-                        )
-                      ],
+                      ),
                     ),
                   ),
+                  SizedBox(
+                    height: width * 0.02,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.shade400,
+                  ),
+                  SizedBox(
+                    height: width * 0.02,
+                  ),
+                  SizedBox(
+                    height: width * 0.02,
+                  ),
+                  //ViewAllCard(onTap: onTap, width: width, product: product),
+                  Expanded(
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        controller: _controller,
+                        itemCount: snapshot.length,
+                        addRepaintBoundaries: false,
+                        addAutomaticKeepAlives: false,
+                        gridDelegate:
+                        SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.85,
+                            mainAxisSpacing: width * 0.04,
+                            crossAxisSpacing: width * 0.04),
+                        itemBuilder: (context, index) {
+                          List<ViewAllModel> product =
+                          sortList(sortingOrder, snapshot);
+                          return ViewAllCard(
+                              onTap: () {
+                                Navigator.of(context).push(PageRouteBuilder(
+                                    transitionDuration:
+                                    const Duration(seconds: 1),
+                                    transitionsBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secAnimation,
+                                        Widget child) {
+                                      animation = CurvedAnimation(
+                                          parent: animation,
+                                          curve: Curves.linear);
+                                      return SharedAxisTransition(
+                                          child: child,
+                                          animation: animation,
+                                          secondaryAnimation: secAnimation,
+                                          transitionType:
+                                          SharedAxisTransitionType
+                                              .horizontal);
+                                    },
+                                    pageBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secAnimation) {
+                                      return ProductDisplay(int.parse(product[index].productId!));
+                                    }));
+                              },
+                              width: width,
+                              product: product[index]);
+                        }),
+                  )
+                ],
+              ),
+            ),
             isLoading?Positioned.fill(child: Container(child:const Center(child: CircularProgressIndicator(),),)):Container()
           ],
         )
-            );
+    );
   }
 
   List<ViewAllModel> sortList(String sortingOrder, List<ViewAllModel> list) {
@@ -288,7 +294,7 @@ class _ViewAllState extends State<ViewAll> {
         break;
       case "prices":
         list.sort(
-            (a, b) => double.parse(b.price!.toString().replaceAll("₹", "").replaceAll(",", "")).compareTo(double.parse(a.price!.toString().replaceAll("₹", "").replaceAll(",", ""))));
+                (a, b) => double.parse(b.price!.toString().replaceAll("₹", "").replaceAll(",", "")).compareTo(double.parse(a.price!.toString().replaceAll("₹", "").replaceAll(",", ""))));
         break;
       case "Rating":
         list.sort((a, b) => int.parse(b.rating!.toString())
@@ -342,7 +348,7 @@ class ViewAllCard extends StatelessWidget {
                 height: width * 0.25,
                 width: width * 0.4,
                 decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                BoxDecoration(borderRadius: BorderRadius.circular(20)),
                 child: Padding(
                   padding: EdgeInsets.all(
                     width * 0.02,

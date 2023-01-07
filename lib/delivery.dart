@@ -632,7 +632,7 @@ class _DeliveryState extends State<Delivery> {
                                         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                            snapshot.data.totals[i].title,
+                                            snapshot.data.totals[i].productId,
                                             style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14)),
                                           ),
                                           Spacer(),

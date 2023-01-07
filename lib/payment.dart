@@ -239,7 +239,7 @@ class _PaymentState extends State<Payment> {
                           return InkWell(
                             onTap: () {
                               setState(() {
-                                paymentMethods = PaymentMethods(code: snapshot.data.paymentMethodsList[index].code, title: snapshot.data.paymentMethodsList[index].title);
+                                paymentMethods = PaymentMethods(code: snapshot.data.paymentMethodsList[index].code, title: snapshot.data.paymentMethodsList[index].productId);
                               });
                             },
                             borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
@@ -266,7 +266,7 @@ class _PaymentState extends State<Payment> {
                                     children: [
                                       const Text('Title:'),
                                       Expanded(
-                                        child: Html(data: snapshot.data.paymentMethodsList[index].title),
+                                        child: Html(data: snapshot.data.paymentMethodsList[index].productId),
                                       ),
                                     ],
                                   ),

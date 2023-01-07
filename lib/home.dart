@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:animations/animations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -36,21 +38,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final TextEditingController _search = TextEditingController();
-  final snapshot= Get.put(HomePage());
+  final snapshot = Get.put(HomePage());
 
-  Future<HomeScreenModel> getHomeScreenData()async{
-   setLoading(true);
-  HomeScreenModel homeModel=await ApiService().getHome().then((value){
-  snapshot.homeScreenModel.value=value;
-  setLoading(false);
-    return value;
-  });
-  return homeModel;
+  Future<HomeScreenModel> getHomeScreenData() async {
+    setLoading(true);
+    HomeScreenModel homeModel = await ApiService().getHome().then((value) {
+      snapshot.homeScreenModel.value = value;
+      setLoading(false);
+      return value;
+    });
+    return homeModel;
   }
 
-  String address="Searching";
-  List<ListAddressModel> storeAddress=[];
-  getUserLocation() async {//call this async method from whereever you need
+  String address = "Searching";
+  List<ListAddressModel> storeAddress = [];
+  getUserLocation() async {
+    //call this async method from whereever you need
 
     LocationData myLocation;
     String error;
@@ -74,36 +77,46 @@ class _HomeState extends State<Home> {
     print(placemarks.toString());
 
     storeAddress.add(ListAddressModel(
-
-      address2: placemarks[0].country.toString() + ", "+ placemarks[0].locality.toString() + ", " +placemarks[0].subLocality.toString(),
+      address2: placemarks[0].country.toString() +
+          ", " +
+          placemarks[0].locality.toString() +
+          ", " +
+          placemarks[0].subLocality.toString(),
       city: placemarks[0].locality,
       country: placemarks[0].country,
     ));
     setState(() {
-       slider=0;
-       product=0;
-       banner=0;
-       slider1=0;
-       product1=0;
-       banner1=0;
-      address =placemarks[0].country.toString() + ", "+ placemarks[0].locality.toString() + ", " +placemarks[0].subLocality.toString();
+      slider = 0;
+      product = 0;
+      banner = 0;
+      slider1 = 0;
+      product1 = 0;
+      banner1 = 0;
+      address = placemarks[0].country.toString() +
+          ", " +
+          placemarks[0].locality.toString() +
+          ", " +
+          placemarks[0].subLocality.toString();
     });
-   // var first = addresses.first;
-   // print(' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    // var first = addresses.first;
+    // print(' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
     return place;
   }
-  setLoading(bool value){
+
+  setLoading(bool value) {
     setState(() {
-      isLoading=false;
+      isLoading = false;
     });
   }
-  bool isLoading=false;
+
+  bool isLoading = false;
   Widget commonBottomSheets({
     BuildContext? context,
     Widget? widget,
   }) {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context!).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context!).viewInsets.bottom),
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -132,7 +145,8 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-  TextEditingController postalCode=TextEditingController();
+
+  TextEditingController postalCode = TextEditingController();
   openBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -147,8 +161,8 @@ class _HomeState extends State<Home> {
             Container(
               color: Colors.grey.withOpacity(0.1),
               width: MediaQuery.of(context).size.width,
-              padding:const EdgeInsets.symmetric(vertical: 16),
-              child:const Center(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: const Center(
                 child: Text(
                   "CHOOSE YOUR LOCATION",
                   style: TextStyle(
@@ -160,14 +174,20 @@ class _HomeState extends State<Home> {
             ),
             //select your address
             InkWell(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>const ModifyYourAddress()));
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ModifyYourAddress()));
               },
               child: Container(
-                margin:const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(5)),
                 width: double.infinity,
-                padding:const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(14),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -191,10 +211,12 @@ class _HomeState extends State<Home> {
               ),
             ),
             Container(
-              margin:const EdgeInsets.only(bottom: 30, left: 20, right: 20),
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+              margin: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
+              decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(5)),
               width: double.infinity,
-              padding:const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(14),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -231,7 +253,7 @@ class _HomeState extends State<Home> {
                                 height: 44,
                                 child: TextField(
                                   controller: postalCode,
-                                  decoration:const InputDecoration(
+                                  decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     contentPadding: EdgeInsets.all(10),
                                   ),
@@ -240,16 +262,31 @@ class _HomeState extends State<Home> {
                             ),
                             const SizedBox(width: 10),
                             InkWell(
-                              onTap: (){
-                                storeAddress[0].address1 = postalCode.text.toString() ;
+                              onTap: () {
+                                storeAddress[0].address1 =
+                                    postalCode.text.toString();
                                 Navigator.of(context).push(
                                   PageRouteBuilder(
-                                    transitionDuration:const Duration(seconds: 1),
-                                    transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
-                                      animation = CurvedAnimation(parent: animation, curve: Curves.linear);
-                                      return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                                    transitionDuration:
+                                        const Duration(seconds: 1),
+                                    transitionsBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secAnimation,
+                                        Widget child) {
+                                      animation = CurvedAnimation(
+                                          parent: animation,
+                                          curve: Curves.linear);
+                                      return SharedAxisTransition(
+                                          child: child,
+                                          animation: animation,
+                                          secondaryAnimation: secAnimation,
+                                          transitionType:
+                                              SharedAxisTransitionType
+                                                  .horizontal);
                                     },
-                                    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                                    pageBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secAnimation) {
                                       return EditAddress(
                                         object: storeAddress[0],
                                         default_: 1,
@@ -262,7 +299,7 @@ class _HomeState extends State<Home> {
                                 height: 44,
                                 width: 100,
                                 color: Colors.blue,
-                                child:const Center(
+                                child: const Center(
                                   child: Text(
                                     "LOGIN",
                                     style: TextStyle(
@@ -283,15 +320,25 @@ class _HomeState extends State<Home> {
               ),
             ),
             InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     transitionDuration: Duration(seconds: 1),
-                    transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
-                      animation = CurvedAnimation(parent: animation, curve: Curves.linear);
-                      return SharedAxisTransition(child: child, animation: animation, secondaryAnimation: secAnimation, transitionType: SharedAxisTransitionType.horizontal);
+                    transitionsBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secAnimation,
+                        Widget child) {
+                      animation = CurvedAnimation(
+                          parent: animation, curve: Curves.linear);
+                      return SharedAxisTransition(
+                          child: child,
+                          animation: animation,
+                          secondaryAnimation: secAnimation,
+                          transitionType: SharedAxisTransitionType.horizontal);
                     },
-                    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secAnimation) {
                       return EditAddress(
                         object: storeAddress[0],
                         default_: 1,
@@ -301,10 +348,12 @@ class _HomeState extends State<Home> {
                 );
               },
               child: Container(
-                margin:const EdgeInsets.only(bottom: 30, left: 20, right: 20),
-                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                margin: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(5)),
                 width: double.infinity,
-                padding:const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(14),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -332,10 +381,13 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
   launchWhatsApp(phone) async {
-    final link = WhatsAppUnilink(phoneNumber: phone, text: "Hey! I'm looking ?");
+    final link =
+        WhatsAppUnilink(phoneNumber: phone, text: "Hey! I'm looking ?");
     await launch('$link');
   }
+
   String phoneNumber = '';
   @override
   void initState() {
@@ -343,414 +395,462 @@ class _HomeState extends State<Home> {
     getUserLocation();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    var width =MediaQuery.of(context).size.width;
-    var height =MediaQuery.of(context).size.height;
-    slider=0;
-    product=0;
-    banner=0;
-    slider1=0;
-    product1=0;
-    banner1=0;
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    slider = 0;
+    product = 0;
+    banner = 0;
+    slider1 = 0;
+    product1 = 0;
+    banner1 = 0;
+    var sortedByValueMap;
     //HomeScreenModel snapshot = homeScreenModel.homeScreenModel.value;
-      Map<String, dynamic> map={};
-    if(snapshot.homeScreenModel != null){
-      for(var i in snapshot.homeScreenModel.value.silder!){
-        map.addAll({i.sort.toString():"Slider"});
+    Map<int, dynamic> map = {};
+    Map<String, dynamic> sortMap = {};
+    if (snapshot.homeScreenModel != null) {
+      for (var i in snapshot.homeScreenModel.value.silder!) {
+        map.addAll({ int.parse(i.sort!):"Slider"});
       }
-      for(var i in snapshot.homeScreenModel.value.products!){
-        map.addAll({i.sort.toString():"Product"});
+      for (var i in snapshot.homeScreenModel.value.products!) {
+        map.addAll({int.parse(i.sort!):"Product"});
       }
-      for(var i in snapshot.homeScreenModel.value.banner!){
-        map.addAll({i.sort.toString():"banner"});
+      for (var i in snapshot.homeScreenModel.value.banner!) {
+        map.addAll({ int.parse(i.sort!):"banner"});
       }
-      map.entries.toList().sort((a,b)=>a.key.compareTo(b.key));
-      print(map.toString());
+      // for(int i=0;i<map.length;i++){
+      //   for(int j=0;j<i;j++){
+      //     if(map[i.toString()]==i){
+      //       print(map[i.toString()].toString());
+      //     }
+      //   }
+      // }
+      sortedByValueMap = Map.fromEntries(
+          map.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
+      // map.values.toList()
+      //     .sort()
+      print(sortedByValueMap);
     }
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.green,
           onPressed: () {
             launchWhatsApp(phoneNumber);
           },
-          child:const Icon(
+          child: const Icon(
             Icons.whatsapp,
             size: 35,
           ),
         ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
+        body: SafeArea(
+          child: SingleChildScrollView(
+              child: Stack(
             children: [
               Column(
-                    children: [
-                      SizedBox(
-                        height: width * 0.04,
-                      ),
-                      // search field and notification
-                      Padding(
-                        padding: EdgeInsets.all(width * 0.04),
-                        child: SizedBox(
-                          height: width * 0.12,
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchScreen())),
-                                  child: TextFormField(
-                                    enabled: false,
-                                    controller: _search,
-                                    textInputAction: TextInputAction.search,
-                                    onFieldSubmitted: (value) {
+                children: [
+                  SizedBox(
+                    height: width * 0.04,
+                  ),
+                  // search field and notification
+                  Padding(
+                    padding: EdgeInsets.all(width * 0.04),
+                    child: SizedBox(
+                      height: width * 0.12,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SearchScreen())),
+                              child: TextFormField(
+                                enabled: false,
+                                controller: _search,
+                                textInputAction: TextInputAction.search,
+                                onFieldSubmitted: (value) {
+                                  showSearch(
+                                    query: _search.text,
+                                    context: context,
+                                    delegate: CustomSearchDelegate(
+                                        search:
+                                            _search.text.trim().toLowerCase()),
+                                  );
+                                },
+                                decoration: InputDecoration(
+                                  prefixIcon: InkWell(
+                                    onTap: () {
                                       showSearch(
                                         query: _search.text,
                                         context: context,
-                                        delegate: CustomSearchDelegate(search: _search.text.trim().toLowerCase()),
+                                        delegate: CustomSearchDelegate(
+                                            search: _search.text
+                                                .trim()
+                                                .toLowerCase()),
                                       );
                                     },
-                                    decoration: InputDecoration(
-                                      prefixIcon: InkWell(
-                                        onTap: () {
-                                          showSearch(
-                                            query: _search.text,
-                                            context: context,
-                                            delegate: CustomSearchDelegate(search: _search.text.trim().toLowerCase()),
-                                          );
-                                        },
-                                        child: Icon(
-                                          Icons.search,
-                                          color: Colors.grey.shade600,
-                                          size: 25,
-                                        ),
-                                      ),
-                                      isDense: true,
-                                      filled: true,
-                                      fillColor: Colors.grey.shade100,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      hintText: 'Search Product',
-                                      hintStyle: GoogleFonts.poppins(
-                                        textStyle: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontSize: 14,
-                                        ),
-                                      ),
+                                    child: Icon(
+                                      Icons.search,
+                                      color: Colors.grey.shade600,
+                                      size: 25,
+                                    ),
+                                  ),
+                                  isDense: true,
+                                  filled: true,
+                                  fillColor: Colors.grey.shade100,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  hintText: 'Search Product',
+                                  hintStyle: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 14,
                                     ),
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(PageRouteBuilder(
-                                        transitionDuration:const Duration(seconds: 1),
-                                        transitionsBuilder: (BuildContext context,
-                                            Animation<double> animation,
-                                            Animation<double> secAnimation,
-                                            Widget child) {
-                                          animation = CurvedAnimation(
-                                              parent: animation, curve: Curves.linear);
-                                          return SharedAxisTransition(
-                                              child: child,
-                                              animation: animation,
-                                              secondaryAnimation: secAnimation,
-                                              transitionType:
-                                              SharedAxisTransitionType.horizontal);
-                                        },
-                                        pageBuilder: (BuildContext context,
-                                            Animation<double> animation,
-                                            Animation<double> secAnimation) {
-                                          return const AllNotifications();
-                                        }));
-                                  },
-                                  icon: Icon(
-                                    Icons.notifications,
-                                    color: Colors.black,
-                                    size: width * 0.06,
-                                  ))
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      // address
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal:width * 0.028),
-                        child: InkWell(
-                          onTap:(){
-                            openBottomSheet(context);
-                          },
-                          child: Container(
-                              height:width * 0.14,
-                              width:MediaQuery.of(context).size.width,
-                              decoration:BoxDecoration(
-                                  color:Colors.blue,
-                                  borderRadius:BorderRadius.circular(5)
-                              ),
-                              child:Row(
-                                  children:[
-                                    SizedBox(width:width * 0.02),
-                                    Icon(Icons.room,color:Colors.white,size:width * 0.05),
-                                    SizedBox(width:width * 0.04),
-                                    Text(
-                                      address,
-                                      style: GoogleFonts.poppins(
-                                          textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: width * 0.035,
-                                          )),
-                                    ),
-                                  ]
-                              )
-                          ),
-                        ),
-                      ),
-
-                      // Top Category
-
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.02),
-                        height: width * 0.32,
-                        child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context,index){
-                              return CategoryButton(
-                                  onTap: (){
+                          IconButton(
+                              onPressed: () {
                                 Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:const Duration(seconds: 1),
+                                    transitionDuration:
+                                        const Duration(seconds: 1),
                                     transitionsBuilder: (BuildContext context,
                                         Animation<double> animation,
                                         Animation<double> secAnimation,
                                         Widget child) {
                                       animation = CurvedAnimation(
-                                          parent: animation, curve: Curves.linear);
+                                          parent: animation,
+                                          curve: Curves.linear);
                                       return SharedAxisTransition(
                                           child: child,
                                           animation: animation,
                                           secondaryAnimation: secAnimation,
                                           transitionType:
-                                          SharedAxisTransitionType.horizontal);
+                                              SharedAxisTransitionType
+                                                  .horizontal);
+                                    },
+                                    pageBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secAnimation) {
+                                      return const AllNotifications();
+                                    }));
+                              },
+                              icon: Icon(
+                                Icons.notifications,
+                                color: Colors.black,
+                                size: width * 0.06,
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                  // address
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.028),
+                    child: InkWell(
+                      onTap: () {
+                        openBottomSheet(context);
+                      },
+                      child: Container(
+                          height: width * 0.14,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Row(children: [
+                            SizedBox(width: width * 0.02),
+                            Icon(Icons.room,
+                                color: Colors.white, size: width * 0.05),
+                            SizedBox(width: width * 0.04),
+                            Text(
+                              address,
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: width * 0.035,
+                              )),
+                            ),
+                          ])),
+                    ),
+                  ),
+
+                  // Top Category
+
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                    height: width * 0.32,
+                    child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return CategoryButton(
+                              onTap: () {
+                                Navigator.of(context).push(PageRouteBuilder(
+                                    transitionDuration:
+                                        const Duration(seconds: 1),
+                                    transitionsBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secAnimation,
+                                        Widget child) {
+                                      animation = CurvedAnimation(
+                                          parent: animation,
+                                          curve: Curves.linear);
+                                      return SharedAxisTransition(
+                                          child: child,
+                                          animation: animation,
+                                          secondaryAnimation: secAnimation,
+                                          transitionType:
+                                              SharedAxisTransitionType
+                                                  .horizontal);
                                     },
                                     pageBuilder: (BuildContext context,
                                         Animation<double> animation,
                                         Animation<double> secAnimation) {
                                       return ViewAll(
-                                        title: snapshot!.homeScreenModel.value.topCategory![index].name!,
+                                        title: snapshot.homeScreenModel.value
+                                            .topCategory![index].name!,
                                       );
                                     }));
-                              }, width: width, list: snapshot!.homeScreenModel.value.topCategory![index]);
-                            }, separatorBuilder: (context,index){
-                          return SizedBox(width: width * 0.04,);
-                        }, itemCount: snapshot!.homeScreenModel.value.topCategory!.length),
-                      ),
-
-                      //divider
-
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Divider(
-                          height: 1,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-
-                      // Slider
-                      Column(
-                        children: [
-                          for(var i in map.entries)
-                            myWidget(i.value, width, height, snapshot.homeScreenModel.value)
-                        ],
-                      )
-                      // CarouselSlider(
-                      //     items:snapshot!.silder![0].data!.map((e) => Container(
-                      //       margin: EdgeInsets.symmetric(vertical: width * 0.02),
-                      //       width: width * 0.9,
-                      //       height: width * 0.2,
-                      //       decoration: BoxDecoration(
-                      //           color: Colors.white,
-                      //           borderRadius: BorderRadius.circular(7),
-                      //           boxShadow:const [
-                      //             BoxShadow(
-                      //                 color: Colors.black38,
-                      //                 offset: Offset(-2,3),
-                      //                 blurRadius: 7
-                      //             )
-                      //           ]
-                      //       ),
-                      //       child: ClipRRect(
-                      //         borderRadius: BorderRadius.circular(7),
-                      //         child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
-                      //           errorBuilder: (context,object,streacTree){
-                      //             return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
-                      //           },
-                      //         ),
-                      //       ),)).toList(),
-                      //     options: CarouselOptions(
-                      //       height: width * 0.45,
-                      //       aspectRatio: 9/14,
-                      //       viewportFraction: 1,
-                      //       initialPage: 0,
-                      //       enableInfiniteScroll: true,
-                      //       reverse: false,
-                      //       autoPlay: true,
-                      //       autoPlayInterval:const Duration(seconds: 3),
-                      //       autoPlayAnimationDuration:const Duration(milliseconds: 800),
-                      //       autoPlayCurve: Curves.fastOutSlowIn,
-                      //       enlargeCenterPage: true,
-                      //       onPageChanged: (ss,aa){},
-                      //       scrollDirection: Axis.horizontal,
-                      //     )
-                      // ),
-                      //
-                      // SizedBox(
-                      //   height: width * 0.06,
-                      // ),
-                      //
-                      // // product
-                      //
-                      // Padding(
-                      //   padding: EdgeInsets.only(left: width * 0.04),
-                      //   child: SingleChildScrollView(
-                      //     child: ProductCart(width: width, title: snapshot.products![0].title!, viewAll: (){
-                      //       Navigator.of(context).push(PageRouteBuilder(
-                      //           transitionDuration:const Duration(seconds: 1),
-                      //           transitionsBuilder: (BuildContext context,
-                      //               Animation<double> animation,
-                      //               Animation<double> secAnimation,
-                      //               Widget child) {
-                      //             animation = CurvedAnimation(
-                      //                 parent: animation, curve: Curves.linear);
-                      //             return SharedAxisTransition(
-                      //                 child: child,
-                      //                 animation: animation,
-                      //                 secondaryAnimation: secAnimation,
-                      //                 transitionType:
-                      //                 SharedAxisTransitionType.horizontal);
-                      //           },
-                      //           pageBuilder: (BuildContext context,
-                      //               Animation<double> animation,
-                      //               Animation<double> secAnimation) {
-                      //             return ViewAll(
-                      //               title:snapshot.products![0].preset!,
-                      //             );
-                      //           }));
-                      //     },  product: snapshot.products![0].data!)
-                      //   ),
-                      // ),
-                      // SizedBox(height: width * 0.02,),
-                      //
-                      // //banner
-                      // BannerWidget(width: width, snapshot: snapshot.banner![0])
-
-                    ],
+                              },
+                              width: width,
+                              list: snapshot
+                                  .homeScreenModel.value.topCategory![index]);
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            width: width * 0.04,
+                          );
+                        },
+                        itemCount:
+                            snapshot.homeScreenModel.value.topCategory!.length),
                   ),
-              isLoading?Positioned.fill(child: Container(color: Colors.white,  child:const Center(child: CircularProgressIndicator(),),)):Container()
+
+                  //divider
+
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Divider(
+                      height: 1,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+
+                  // Slider
+                  Column(
+                    children: [
+                      for (var i in sortedByValueMap.entries)
+                        myWidget(i.value, width, height,
+                            snapshot.homeScreenModel.value)
+                    ],
+                  )
+                  // CarouselSlider(
+                  //     items:snapshot!.silder![0].data!.map((e) => Container(
+                  //       margin: EdgeInsets.symmetric(vertical: width * 0.02),
+                  //       width: width * 0.9,
+                  //       height: width * 0.2,
+                  //       decoration: BoxDecoration(
+                  //           color: Colors.white,
+                  //           borderRadius: BorderRadius.circular(7),
+                  //           boxShadow:const [
+                  //             BoxShadow(
+                  //                 color: Colors.black38,
+                  //                 offset: Offset(-2,3),
+                  //                 blurRadius: 7
+                  //             )
+                  //           ]
+                  //       ),
+                  //       child: ClipRRect(
+                  //         borderRadius: BorderRadius.circular(7),
+                  //         child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
+                  //           errorBuilder: (context,object,streacTree){
+                  //             return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
+                  //           },
+                  //         ),
+                  //       ),)).toList(),
+                  //     options: CarouselOptions(
+                  //       height: width * 0.45,
+                  //       aspectRatio: 9/14,
+                  //       viewportFraction: 1,
+                  //       initialPage: 0,
+                  //       enableInfiniteScroll: true,
+                  //       reverse: false,
+                  //       autoPlay: true,
+                  //       autoPlayInterval:const Duration(seconds: 3),
+                  //       autoPlayAnimationDuration:const Duration(milliseconds: 800),
+                  //       autoPlayCurve: Curves.fastOutSlowIn,
+                  //       enlargeCenterPage: true,
+                  //       onPageChanged: (ss,aa){},
+                  //       scrollDirection: Axis.horizontal,
+                  //     )
+                  // ),
+                  //
+                  // SizedBox(
+                  //   height: width * 0.06,
+                  // ),
+                  //
+                  // // product
+                  //
+                  // Padding(
+                  //   padding: EdgeInsets.only(left: width * 0.04),
+                  //   child: SingleChildScrollView(
+                  //     child: ProductCart(width: width, title: snapshot.products![0].title!, viewAll: (){
+                  //       Navigator.of(context).push(PageRouteBuilder(
+                  //           transitionDuration:const Duration(seconds: 1),
+                  //           transitionsBuilder: (BuildContext context,
+                  //               Animation<double> animation,
+                  //               Animation<double> secAnimation,
+                  //               Widget child) {
+                  //             animation = CurvedAnimation(
+                  //                 parent: animation, curve: Curves.linear);
+                  //             return SharedAxisTransition(
+                  //                 child: child,
+                  //                 animation: animation,
+                  //                 secondaryAnimation: secAnimation,
+                  //                 transitionType:
+                  //                 SharedAxisTransitionType.horizontal);
+                  //           },
+                  //           pageBuilder: (BuildContext context,
+                  //               Animation<double> animation,
+                  //               Animation<double> secAnimation) {
+                  //             return ViewAll(
+                  //               title:snapshot.products![0].preset!,
+                  //             );
+                  //           }));
+                  //     },  product: snapshot.products![0].data!)
+                  //   ),
+                  // ),
+                  // SizedBox(height: width * 0.02,),
+                  //
+                  // //banner
+                  // BannerWidget(width: width, snapshot: snapshot.banner![0])
+                ],
+              ),
+              isLoading
+                  ? Positioned.fill(
+                      child: Container(
+                      color: Colors.white,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ))
+                  : Container()
             ],
-          )
-        ),
-              )
-    );
+          )),
+        ));
   }
-  List<Category>list=[
-    Category(image: "assets/baby.png",label: "Baby"),
-    Category(image: "assets/beauty.png",label: "Beauty"),
-    Category(image: "assets/food.png",label: "Foods"),
-    Category(image: "assets/grocery.png",label: "Grocery"),
-    Category(image: "assets/health.png",label: "Health"),
-    Category(image: "assets/home.png",label: "Home"),
+
+  List<Category> list = [
+    Category(image: "assets/baby.png", label: "Baby"),
+    Category(image: "assets/beauty.png", label: "Beauty"),
+    Category(image: "assets/food.png", label: "Foods"),
+    Category(image: "assets/grocery.png", label: "Grocery"),
+    Category(image: "assets/health.png", label: "Health"),
+    Category(image: "assets/home.png", label: "Home"),
   ];
 
-  String title="Flash sale";
-  int slider=0;
-  int product=0;
-  int banner=0;
-  int slider1=0;
-  int product1=0;
-  int banner1=0;
-  Widget myWidget(String key,double width,double height,HomeScreenModel snapshot) {
+  String title = "Flash sale";
+  int slider = 0;
+  int product = 0;
+  int banner = 0;
+  int slider1 = 0;
+  int product1 = 0;
+  int banner1 = 0;
+  Widget myWidget(
+      String key, double width, double height, HomeScreenModel snapshot) {
     if (key == "Slider") {
-        slider1==0?
-            slider1=slider1+1
-            :slider=slider+1;
+      slider1 == 0 ? slider1 = slider1 + 1 : slider = slider + 1;
       return CarouselSlider(
-          items:snapshot!.silder![slider].data!.map((e) => Container(
-            margin: EdgeInsets.symmetric(vertical: width * 0.02),
-            width: width * 0.9,
-            height: width * 0.2,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(7),
-                boxShadow:const [
-                  BoxShadow(
-                      color: Colors.black38,
-                      offset: Offset(-2,3),
-                      blurRadius: 7
-                  )
-                ]
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(7),
-              child: Image.network(e.image!.toString()=='null'?'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp':e.image!,fit: BoxFit.cover,
-                errorBuilder: (context,object,streacTree){
-                  return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
-                },
-              ),
-            ),)).toList(),
+          items: snapshot.silder![slider].data!
+              .map((e) => Container(
+                    margin: EdgeInsets.symmetric(vertical: width * 0.02),
+                    width: width * 0.9,
+                    height: width * 0.2,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(7),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.black38,
+                              offset: Offset(-2, 3),
+                              blurRadius: 7)
+                        ]),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(7),
+                      child: Image.network(
+                        e.image!.toString() == 'null'
+                            ? 'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp'
+                            : e.image!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, object, streacTree) {
+                          return Icon(
+                            Icons.image,
+                            size: width * 0.06,
+                            color: Colors.grey,
+                          );
+                        },
+                      ),
+                    ),
+                  ))
+              .toList(),
           options: CarouselOptions(
             height: width * 0.45,
-            aspectRatio: 9/14,
+            aspectRatio: 9 / 14,
             viewportFraction: 1,
             initialPage: 0,
             enableInfiniteScroll: true,
             reverse: false,
             autoPlay: true,
-            autoPlayInterval:const Duration(seconds: 3),
-            autoPlayAnimationDuration:const Duration(milliseconds: 800),
+            autoPlayInterval: const Duration(seconds: 3),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
             autoPlayCurve: Curves.fastOutSlowIn,
             enlargeCenterPage: true,
-            onPageChanged: (ss,aa){},
+            onPageChanged: (ss, aa) {},
             scrollDirection: Axis.horizontal,
-          )
-      );
-    }else if(key == "Product"){
-      product1==0?
-          product1=product1+1
-          :product=product+1;
-      return  Padding(
+          ));
+    } else if (key == "Product") {
+      product1 == 0 ? product1 = product1 + 1 : product = product + 1;
+      return Padding(
         padding: EdgeInsets.only(left: width * 0.04),
-        child: ProductCart(width: width, title: snapshot.products![product].title!, viewAll: (){
-          Navigator.of(context).push(PageRouteBuilder(
-              transitionDuration:const Duration(seconds: 1),
-              transitionsBuilder: (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secAnimation,
-                  Widget child) {
-                animation = CurvedAnimation(
-                    parent: animation, curve: Curves.linear);
-                return SharedAxisTransition(
-                    child: child,
-                    animation: animation,
-                    secondaryAnimation: secAnimation,
-                    transitionType:
-                    SharedAxisTransitionType.horizontal);
-              },
-              pageBuilder: (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secAnimation) {
-                return ViewAll(
-                  title:snapshot.products![product].preset!,
-                );
-              }));
-        },  product: snapshot.products![product].data!),
-      );product++;
-    }else{
-      banner1==0?
-          banner1=banner1+1
-          :banner=banner+1;
-    return BannerWidget(width: width, snapshot: snapshot.banner![banner]);
+        child: ProductCart(
+            width: width,
+            title: snapshot.products![product].title!,
+            viewAll: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                  transitionDuration: const Duration(seconds: 1),
+                  transitionsBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secAnimation,
+                      Widget child) {
+                    animation = CurvedAnimation(
+                        parent: animation, curve: Curves.linear);
+                    return SharedAxisTransition(
+                        child: child,
+                        animation: animation,
+                        secondaryAnimation: secAnimation,
+                        transitionType: SharedAxisTransitionType.horizontal);
+                  },
+                  pageBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secAnimation) {
+                    return ViewAll(
+                      title: snapshot.products![product].preset!,
+                    );
+                  }));
+            },
+            product: snapshot.products![product].data!),
+      );
+      product++;
+    } else {
+      banner1 == 0 ? banner1 = banner1 + 1 : banner = banner + 1;
+      return BannerWidget(width: width, snapshot: snapshot.banner![banner]);
     }
   }
 }
@@ -773,24 +873,39 @@ class BannerWidget extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.all(width * 0.04),
-            child: Text(snapshot.title!,textAlign: TextAlign.start,style: TextStyle(fontSize:width * 0.06,fontWeight: FontWeight.w900 ),),
-          ),
-            GridView.count(
-              shrinkWrap: true,
-              childAspectRatio: 1.1,
-              physics:const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              children: snapshot.data!.map((e) => Container(
-                child: Column(
-                  children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(7),
-                        child: Image.network(e.image!,width: width * 0.4,height: width * 0.4,fit: BoxFit.cover,)),
-                    Text(e.name!,style: TextStyle(fontSize: width * 0.04),)
-                  ],
-                ),
-              )).toList(),
+            child: Text(
+              snapshot.title!,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                  fontSize: width * 0.06, fontWeight: FontWeight.w900),
             ),
+          ),
+          GridView.count(
+            shrinkWrap: true,
+            childAspectRatio: 1.1,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            children: snapshot.data!
+                .map((e) => Container(
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(7),
+                              child: Image.network(
+                                e.image!,
+                                width: width * 0.4,
+                                height: width * 0.4,
+                                fit: BoxFit.cover,
+                              )),
+                          Text(
+                            e.name!,
+                            style: TextStyle(fontSize: width * 0.04),
+                          )
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
         ],
       ),
     );
@@ -834,7 +949,7 @@ class _ProductCartState extends State<ProductCart> {
                         fontWeight: FontWeight.bold)),
               ),
               GestureDetector(
-                onTap:widget.viewAll,
+                onTap: widget.viewAll,
                 child: Text(
                   'View All',
                   style: GoogleFonts.poppins(
@@ -850,155 +965,176 @@ class _ProductCartState extends State<ProductCart> {
         SizedBox(
           height: widget.width * 0.02,
         ),
-         widget.product!.length>1?SizedBox(
-          height: widget.width * 0.58,
-          child: ListView.separated(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.product!.length,
-              separatorBuilder: (context,index){
-                return SizedBox(width: widget.width * 0.04,);
-              },
-              itemBuilder: (context,index){
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: widget.width * 0.01),
-              child: Container(
-                height: widget.width * 0.6,
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width * 0.4,
-                child:
-                InkWell(
-                      onTap: (){
-                        Navigator.of(context).push(PageRouteBuilder(
-                            transitionDuration:const Duration(seconds: 1),
-                            transitionsBuilder: (BuildContext context,
-                                Animation<double> animation,
-                                Animation<double> secAnimation,
-                                Widget child) {
-                              animation = CurvedAnimation(
-                                  parent: animation, curve: Curves.linear);
-                              return SharedAxisTransition(
-                                  child: child,
-                                  animation: animation,
-                                  secondaryAnimation: secAnimation,
-                                  transitionType:
-                                  SharedAxisTransitionType.horizontal);
+        widget.product!.length > 1
+            ? SizedBox(
+                height: widget.width * 0.58,
+                child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.product!.length,
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        width: widget.width * 0.04,
+                      );
+                    },
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: widget.width * 0.01),
+                        child: Container(
+                          height: widget.width * 0.6,
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(PageRouteBuilder(
+                                  transitionDuration:
+                                      const Duration(seconds: 1),
+                                  transitionsBuilder: (BuildContext context,
+                                      Animation<double> animation,
+                                      Animation<double> secAnimation,
+                                      Widget child) {
+                                    animation = CurvedAnimation(
+                                        parent: animation,
+                                        curve: Curves.linear);
+                                    return SharedAxisTransition(
+                                        child: child,
+                                        animation: animation,
+                                        secondaryAnimation: secAnimation,
+                                        transitionType: SharedAxisTransitionType
+                                            .horizontal);
+                                  },
+                                  pageBuilder: (BuildContext context,
+                                      Animation<double> animation,
+                                      Animation<double> secAnimation) {
+                                    return ProductDisplay(int.parse(
+                                        widget.product![index].productId!));
+                                  }));
                             },
-                            pageBuilder: (BuildContext context,
-                                Animation<double> animation,
-                                Animation<double> secAnimation) {
-                              return  ProductDisplay(int.parse(widget.product![index].productId!));
-                            }));
-                      },
-                      child: Container(
-                        height: widget.width * 0.55,
-                        width: widget.width * 0.4,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(7),
-                            // boxShadow: const [
-                            //   BoxShadow(
-                            //       color: Colors.grey,
-                            //       spreadRadius: 1,
-                            //       blurRadius: 2,
-                            //       offset: Offset(-2, 5))
-                            // ]
-                             ),
-                        child: Stack(
-                            children: [
-                              Column(
-                              children: [
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Container(
-                                  height: widget.width * 0.36,
-                                  width: widget.width * 0.4,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(widget.width * 0.02),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(7),
-                                      child: Image.network(widget.product![index].thumb!.toString()=='null'?"https://dfdsf":widget.product![index].thumb!,
-                                          fit: BoxFit.fill,
-                                        errorBuilder: (context,object,straeTree){
-                                        return Icon(Icons.image,color: Colors.grey,size: widget.width * 0.06,);
-                                      },
+                            child: Container(
+                              height: widget.width * 0.55,
+                              width: widget.width * 0.4,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Colors.grey.withOpacity(0.5)),
+                                borderRadius: BorderRadius.circular(7),
+                                // boxShadow: const [
+                                //   BoxShadow(
+                                //       color: Colors.grey,
+                                //       spreadRadius: 1,
+                                //       blurRadius: 2,
+                                //       offset: Offset(-2, 5))
+                                // ]
+                              ),
+                              child: Stack(children: [
+                                Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Container(
+                                      height: widget.width * 0.36,
+                                      width: widget.width * 0.4,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.all(widget.width * 0.02),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          child: Image.network(
+                                            widget.product![index].thumb!
+                                                        .toString() ==
+                                                    'null'
+                                                ? "https://dfdsf"
+                                                : widget.product![index].thumb!,
+                                            fit: BoxFit.fill,
+                                            errorBuilder:
+                                                (context, object, straeTree) {
+                                              return Icon(
+                                                Icons.image,
+                                                color: Colors.grey,
+                                                size: widget.width * 0.06,
+                                              );
+                                            },
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                  EdgeInsets.symmetric(horizontal: widget.width * 0.02),
-                                  child: Text(
-                                    widget.product![index].name!,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.poppins(
-                                        textStyle: TextStyle(
-                                            color: Colors.grey.shade900,
-                                            fontSize: widget.width * 0.03)),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: widget.width * 0.01,
-                                ),
-                                Padding(
-                                  padding:
-                                  EdgeInsets.symmetric(horizontal: widget.width * 0.01),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        widget.product![index].price!,
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: widget.width * 0.02),
+                                      child: Text(
+                                        widget.product![index].name!,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.poppins(
                                             textStyle: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
+                                                color: Colors.grey.shade900,
                                                 fontSize: widget.width * 0.03)),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    SizedBox(
+                                      height: widget.width * 0.01,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: widget.width * 0.01),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            widget.product![index].price!,
+                                            style: GoogleFonts.poppins(
+                                                textStyle: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize:
+                                                        widget.width * 0.03)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: widget.width * 0.01,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: widget.width * 0.01,
-                                ),
-                              ],
+                                // Padding(
+                                //   padding: EdgeInsets.all(widget.width * 0.01),
+                                //   child: Row(children: [
+                                //     Container(
+                                //         height: widget.width * 0.12,
+                                //         width: widget.width * 0.1,
+                                //         decoration:const BoxDecoration(
+                                //             color: Colors.red,
+                                //             borderRadius: BorderRadius.only(
+                                //                 bottomRight: Radius.circular(20))),
+                                //         child: Center(
+                                //           child: Text(
+                                //             widget.product![0].special!,
+                                //             style: GoogleFonts.poppins(
+                                //                 textStyle: TextStyle(
+                                //                     color: Colors.white, fontSize: widget.width * 0.03)),
+                                //           ),
+                                //         ))
+                                //   ]),
+                                // ),
+                              ]),
                             ),
-                              // Padding(
-                              //   padding: EdgeInsets.all(widget.width * 0.01),
-                              //   child: Row(children: [
-                              //     Container(
-                              //         height: widget.width * 0.12,
-                              //         width: widget.width * 0.1,
-                              //         decoration:const BoxDecoration(
-                              //             color: Colors.red,
-                              //             borderRadius: BorderRadius.only(
-                              //                 bottomRight: Radius.circular(20))),
-                              //         child: Center(
-                              //           child: Text(
-                              //             widget.product![0].special!,
-                              //             style: GoogleFonts.poppins(
-                              //                 textStyle: TextStyle(
-                              //                     color: Colors.white, fontSize: widget.width * 0.03)),
-                              //           ),
-                              //         ))
-                              //   ]),
-                              // ),
-                            ]
+                          ),
                         ),
-                      ),
-                    ),
-              ),
-            );
-          }),
-        ):Container(height: widget.width * 0.58,
-         //width: widget.width * 0.3,
-           alignment: Alignment.center,
-           child: const Text("No result are found"),
-         )
+                      );
+                    }),
+              )
+            : Container(
+                height: widget.width * 0.58,
+                //width: widget.width * 0.3,
+                alignment: Alignment.center,
+                child: const Text("No result are found"),
+              )
       ],
     );
   }
@@ -1021,7 +1157,7 @@ class CategoryButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(width * 0.02),
       child: InkWell(
-        onTap:onTap,
+        onTap: onTap,
         child: Container(
           height: width * 0.2,
           width: width * 0.2,
@@ -1033,9 +1169,16 @@ class CategoryButton extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(7),
                   child: Image.network(
-                    list.image.toString()=="null"?"https://kdfsdf":list.image!,fit: BoxFit.cover,
-                    errorBuilder: (context,object,stracktree){
-                      return Icon(Icons.image,size: width * 0.06,color: Colors.grey,);
+                    list.image.toString() == "null"
+                        ? "https://kdfsdf"
+                        : list.image!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, object, stracktree) {
+                      return Icon(
+                        Icons.image,
+                        size: width * 0.06,
+                        color: Colors.grey,
+                      );
                     },
                   ),
                 )),
@@ -1047,7 +1190,7 @@ class CategoryButton extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.poppins(
-                  textStyle:const TextStyle(
+                  textStyle: const TextStyle(
                       color: Colors.black,
                       fontSize: 10,
                       fontWeight: FontWeight.bold)),
@@ -1059,7 +1202,7 @@ class CategoryButton extends StatelessWidget {
   }
 }
 
-class Category{
+class Category {
   String image;
   String label;
   Category({required this.image, required this.label});
@@ -1091,48 +1234,63 @@ class CustomSearchDelegate extends SearchDelegate {
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-        icon:const Icon(Icons.filter_alt_outlined),
+        icon: const Icon(Icons.filter_alt_outlined),
         onPressed: () async {
-          SearchApiResponse response = await Provider.of<Model>(context, listen: false).response;
+          SearchApiResponse response =
+              await Provider.of<Model>(context, listen: false).response;
           print(response.filter?.first.priceRange?.min);
           print(response.filter?.first.priceRange?.max);
 
-          Get.defaultDialog(contentPadding:const EdgeInsets.symmetric(horizontal: 10, vertical: 10), title: "Filter", titleStyle: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold), content: Text('Please select Filters'), actions: [
-            ChangeNotifierProvider(
-              create: (context) => Model(),
-              child: Consumer<Model>(builder: (context, model, child) {
-                Provider.of<Model>(context, listen: false).valu = response.filter?.first.priceRange?.min?.toDouble() ?? 100;
+          Get.defaultDialog(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              title: "Filter",
+              titleStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+              content: Text('Please select Filters'),
+              actions: [
+                ChangeNotifierProvider(
+                  create: (context) => Model(),
+                  child: Consumer<Model>(builder: (context, model, child) {
+                    Provider.of<Model>(context, listen: false).valu =
+                        response.filter?.first.priceRange?.min?.toDouble() ??
+                            100;
 
-                return Column(
-                  children: [
-                    Text(
-                      'Price ${model.valu.toInt()}',
-                      style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    if (response.filter?.first.priceRange?.min != null)
-                      Row(
-                        children: [
-                          Text('${response.filter?.first.priceRange?.min}'),
-                          Slider(
-                              label: model.valu.toString(),
-                              min: response.filter!.first.priceRange!.min!.toDouble(),
-                              max: response.filter!.first.priceRange!.max!.toDouble(),
-                              value: model.valu,
-                              onChanged: (value) {
-                                model.updateValue(value);
-                              }),
-                          Text('${response.filter!.first.priceRange!.max}'),
-                        ],
-                      ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    //Text('${model.valu.toInt()}'),
-                  ],
-                );
-              }),
-            ),
-          ]);
+                    return Column(
+                      children: [
+                        Text(
+                          'Price ${model.valu.toInt()}',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        if (response.filter?.first.priceRange?.min != null)
+                          Row(
+                            children: [
+                              Text('${response.filter?.first.priceRange?.min}'),
+                              Slider(
+                                  label: model.valu.toString(),
+                                  min: response.filter!.first.priceRange!.min!
+                                      .toDouble(),
+                                  max: response.filter!.first.priceRange!.max!
+                                      .toDouble(),
+                                  value: model.valu,
+                                  onChanged: (value) {
+                                    model.updateValue(value);
+                                  }),
+                              Text('${response.filter!.first.priceRange!.max}'),
+                            ],
+                          ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        //Text('${model.valu.toInt()}'),
+                      ],
+                    );
+                  }),
+                ),
+              ]);
         },
       ),
       //open sample dailog
@@ -1144,7 +1302,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      icon:const Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -1154,7 +1312,8 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
-      future: ApiService().searchApiCalled(item: search, pageNO: '1', lmit: '30'),
+      future:
+          ApiService().searchApiCalled(item: search, pageNO: '1', lmit: '30'),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           Provider.of<Model>(context, listen: false).snapshotTop = snapshot;
@@ -1177,12 +1336,27 @@ class CustomSearchDelegate extends SearchDelegate {
                       height: 20,
                     ),
                     GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, childAspectRatio: 0.85, crossAxisSpacing: 10, mainAxisSpacing: 10,),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 0.85,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
                         shrinkWrap: true,
-                        itemCount: Provider.of<Model>(context, listen: false).snapshotTop!.data.products.length,
+                        itemCount: Provider.of<Model>(context, listen: false)
+                            .snapshotTop!
+                            .data
+                            .products
+                            .length,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext ctx, index) {
-                          return searchProductCardModel(context, Provider.of<Model>(context, listen: false).snapshotTop!.data.products[index]);
+                          return searchProductCardModel(
+                              context,
+                              Provider.of<Model>(context, listen: false)
+                                  .snapshotTop!
+                                  .data
+                                  .products[index]);
                         }),
                     const SizedBox(
                       height: 8,
@@ -1231,12 +1405,18 @@ class CustomSearchDelegate extends SearchDelegate {
                       height: 20,
                     ),
                     GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, childAspectRatio: 0.85, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 200,
+                                childAspectRatio: 0.85,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10),
                         shrinkWrap: true,
                         itemCount: snapshot.data.response.length,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext ctx, index) {
-                          return searchProductCardModel(context, snapshot.data.response[index]);
+                          return searchProductCardModel(
+                              context, snapshot.data.response[index]);
                         }),
                     const SizedBox(
                       height: 10,
@@ -1256,13 +1436,17 @@ class CustomSearchDelegate extends SearchDelegate {
 //deflult
 
 }
+
 Widget searchProductCardModel(context, product) {
   return InkWell(
     onTap: () {
       Navigator.of(context).push(
         PageRouteBuilder(
-          transitionDuration:const Duration(seconds: 1),
-          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child) {
+          transitionDuration: const Duration(seconds: 1),
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secAnimation,
+              Widget child) {
             animation = CurvedAnimation(
               parent: animation,
               curve: Curves.linear,
@@ -1274,14 +1458,15 @@ Widget searchProductCardModel(context, product) {
               transitionType: SharedAxisTransitionType.horizontal,
             );
           },
-          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation) {
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secAnimation) {
             return ProductDisplay(int.parse(product.productId.toString()));
           },
         ),
       );
     },
     child: Container(
-      margin:const EdgeInsets.all(5),
+      margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -1290,7 +1475,7 @@ Widget searchProductCardModel(context, product) {
             color: Colors.grey.shade200,
             spreadRadius: 1,
             blurRadius: 2,
-            offset:const Offset(1, 3),
+            offset: const Offset(1, 3),
           ),
         ],
       ),
@@ -1301,10 +1486,13 @@ Widget searchProductCardModel(context, product) {
               const SizedBox(height: 5),
               Container(
                 width: 130,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: product.thumb != null ? Image.network(product.thumb) : Image.asset('assets/grocery.png'),
+                  child: product.thumb != null
+                      ? Image.network(product.thumb)
+                      : Image.asset('assets/grocery.png'),
                 ),
               ),
               Padding(

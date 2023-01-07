@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:io';
+import "package:async/async.dart";
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/interceptors/get_modifiers.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -40,12 +41,14 @@ import '../models/loginmodel.dart';
 import '../models/paymentmethodList.dart';
 import '../models/productdetailModel.dart';
 import '../response/search_products_response.dart';
+import 'package:dio/dio.dart' as dio;
 
 class ApiService {
   final log = Logger();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   String basicAuth_username = 'mobile_API';
-  String basicAuth_password = 'A4kNlBvMYLpBRwzVuvY8oyVJaHdehe7wyAJDXaT5dUSD7sWKKErT7wpJurwa7ViByfQMLfX6gy7EL8PRbCWtjN4rwjmUcbAEb62dwN14m8ksdcL2DAaNKhsSUvGWaEpN6ywVKZRiBXLsCHHf86Bltxz3zRC1vpPAZZooVNw3HtUCwWmwK2xoKtsWiVUxnNc1CbLvLWt1JkmkZfNhcMP0VdMLxwSPleAGTTi5APr1Lh4gzxCRM4QdrC5UzIbRuqjS';
+  String basicAuth_password =
+      'A4kNlBvMYLpBRwzVuvY8oyVJaHdehe7wyAJDXaT5dUSD7sWKKErT7wpJurwa7ViByfQMLfX6gy7EL8PRbCWtjN4rwjmUcbAEb62dwN14m8ksdcL2DAaNKhsSUvGWaEpN6ywVKZRiBXLsCHHf86Bltxz3zRC1vpPAZZooVNw3HtUCwWmwK2xoKtsWiVUxnNc1CbLvLWt1JkmkZfNhcMP0VdMLxwSPleAGTTi5APr1Lh4gzxCRM4QdrC5UzIbRuqjS';
   // Future<AuthResponse> loginWithGoogle() async {
   //   late AuthResponse response;
   //   try {
@@ -74,9 +77,18 @@ class ApiService {
   //   return response;
   // }
 
-    Future userRegister(String firstname, String lastname, String email, String telephone, String password, String confirm, String newsletter) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/register");
+  Future userRegister(
+      String firstname,
+      String lastname,
+      String email,
+      String telephone,
+      String password,
+      String confirm,
+      String newsletter) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/register");
     final response = await http.post(loginUrl, headers: {
       'authorization': basicAuth
     }, body: {
@@ -91,14 +103,20 @@ class ApiService {
     // print(response.statusCode.toString());
     // print(response.body.toString());
     RegisterModel _model = registerModelFromJson(response.body);
-     print(_model);
+    print(_model);
     return _model;
     // return json.decode(response.body);
   }
 
-  Future userLogin(String email, String password, String deviceId,) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/loginverify");
+  Future userLogin(
+    String email,
+    String password,
+    String deviceId,
+  ) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/loginverify");
     final response = await http.post(loginUrl, headers: {
       'authorization': basicAuth
     }, body: {
@@ -113,23 +131,27 @@ class ApiService {
     return _model;
     // return json.decode(response.body);
   }
+
   Future<List<ViewAllModel>> viewAll(String preset, String page) async {
-      final data= Get.put(ProductList());
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/home/products&preset=$preset&page=$page");
-    final response = await http.post(loginUrl, headers: {
-      'authorization': basicAuth
-    },);
-    var object=jsonDecode(response.body);
+    final data = Get.put(ProductList());
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/home/products&preset=$preset&page=$page");
+    final response = await http.post(
+      loginUrl,
+      headers: {'authorization': basicAuth},
+    );
+    var object = jsonDecode(response.body);
     print(response.statusCode.toString());
 
-    if(int.parse(page)==1){
+    if (int.parse(page) == 1) {
       data.product.clear();
-      for (var i in object){
+      for (var i in object) {
         data.product.add(ViewAllModel.fromJson(i));
       }
-      }else{
-      for (var i in object){
+    } else {
+      for (var i in object) {
         data.product.add(ViewAllModel.fromJson(i));
       }
     }
@@ -137,9 +159,31 @@ class ApiService {
     // return json.decode(response.body);
   }
 
-  Future forgotPssword(String email,) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/checkUser/forgotPasswordApi");
+  Future<List<ViewAllModel>> otherSellerSameProduct(
+      {required String productId, required String picCode}) async {
+    final data = Get.put(SameProduct());
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=common/other_seller_product/othersellerproductapi&product_id=$productId&pincode=$picCode");
+    final response = await http.post(
+      loginUrl,
+      headers: {'authorization': basicAuth},
+    );
+    var object = jsonDecode(response.body);
+    print(response.statusCode.toString());
+
+    return data.product;
+    // return json.decode(response.body);
+  }
+
+  Future forgotPssword(
+    String email,
+  ) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/checkUser/forgotPasswordApi");
     final response = await http.post(
       loginUrl,
       headers: {'authorization': basicAuth},
@@ -159,8 +203,10 @@ class ApiService {
 //home api
 
   Future getAboutUs() async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final allAboutUs = Uri.parse("https://www.vkreta.com/index.php?route=api/info&information_id=5");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final allAboutUs = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/info&information_id=5");
     final response = await http.get(
       allAboutUs,
       headers: {'authorization': basicAuth},
@@ -171,8 +217,10 @@ class ApiService {
   }
 
   Future getPrivacyPolicy() async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final allPrivayPolicy = Uri.parse("https://www.vkreta.com/index.php?route=api/info&information_id=3");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final allPrivayPolicy = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/info&information_id=3");
     final response = await http.get(
       allPrivayPolicy,
       headers: {'authorization': basicAuth},
@@ -182,9 +230,52 @@ class ApiService {
     return json.decode(response.body);
   }
 
+  Future getOrderTrack(
+      {required String orderId,
+      required String productId,
+      required String sellerId}) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? customer_id = prefs.getInt('customer_id');
+    final allPrivayPolicy = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/ordernew/trackorder&order_id=$orderId&seller_id=$sellerId&customer_id=$customer_id&product_id=$productId");
+    final response = await http.get(
+      allPrivayPolicy,
+      headers: {'authorization': basicAuth},
+    );
+    print(response.statusCode);
+    print(response.body);
+    return json.decode(response.body);
+  }
+
+  Future<dynamic> cancelOrder(
+      {required String orderId,
+      required String productId,
+      required String sellerId}) async {
+    //final data= Get.put(SameProduct());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? customer_id = prefs.getInt('customer_id');
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/ordernew/cancelProduct&order_id=$orderId&seller_id=$sellerId&product_id=$productId&customer_id=$customer_id");
+    final response = await http.post(
+      loginUrl,
+      headers: {'authorization': basicAuth},
+    );
+    var object = jsonDecode(response.body);
+    print(response.statusCode.toString());
+
+    return jsonDecode(response.body);
+    // return json.decode(response.body);
+  }
+
   Future getTermsCondition() async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final allTermsCondition = Uri.parse("https://www.vkreta.com/index.php?route=api/info&information_id=5");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final allTermsCondition = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/info&information_id=5");
     final response = await http.get(
       allTermsCondition,
       headers: {'authorization': basicAuth},
@@ -194,9 +285,147 @@ class ApiService {
     return json.decode(response.body);
   }
 
+  Future sellerReview(
+      {required String seller_id,
+      required String order_id,
+      required String rating,
+      required String review_title,
+      required String review_description}) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? customer_id = prefs.getInt('customer_id');
+    final allTermsCondition = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/productdetail/ordersellerreview");
+    final response = await http.post(
+      allTermsCondition,
+      body: {
+        "customer_id": customer_id.toString(),
+        "seller_id": seller_id,
+        "order_id": order_id,
+        "rating": rating,
+        "review_title": review_title,
+        "review_description": review_description,
+      },
+      headers: {'authorization': basicAuth},
+    );
+    print(response.statusCode);
+    print(response.body);
+    return json.decode(response.body);
+  }
+
+  Future productReview(
+      {required String seller_id,
+      required String order_id,
+      required String rating,
+      required String review_title,
+      required String review_description,
+      required List<File> image}) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? customer_id = prefs.getInt('customer_id');
+    final allTermsCondition = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/productdetail/ordersellerreview");
+    var request = new http.MultipartRequest("POST", allTermsCondition);
+
+    if (image.isNotEmpty) {
+      for (int i = 0; i < image.length; i++) {
+        var stream =
+            new http.ByteStream(DelegatingStream.typed(image[i].openRead()));
+        var length = await image[i].length();
+        var multipartFile = new http.MultipartFile("image", stream, length,
+            filename: "image[$i]");
+        request.files.add(multipartFile);
+      }
+    }
+
+    request.fields['customer_id'] = customer_id.toString();
+    request.fields['seller_id'] = seller_id;
+    request.fields['order_id'] = order_id;
+    request.fields['rating'] = rating;
+    request.fields['review_title'] = review_title;
+    request.fields['review_description'] = review_description;
+
+    var response = await request.send();
+    print(response.statusCode);
+    print(response.stream);
+    return response;
+  }
+
+  Future orderReturn(
+      {
+      required String order_id,
+      required String product_id,
+      required String comment,
+      required String firstname,
+      required String lastname,
+      required String email,
+      required String telephone,
+      required String date_ordered,
+      required String product,
+      required String model,
+      required String payment_code,
+      required String quantity,
+      required String return_reason_id,
+      required String opened,
+      required String bank_swift_code,
+      required String bank_account_name,
+      required String bank_account_number,
+      required String agree,
+
+      required List<File> image}) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? customerId = prefs.getInt('customer_id');
+    final allTermsCondition = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/ordernew/returnorder");
+    var request = http.MultipartRequest("POST", allTermsCondition);
+
+    if (image.isNotEmpty) {
+      for (int i = 0; i < image.length; i++) {
+        var stream =
+        new http.ByteStream(DelegatingStream.typed(image[i].openRead()));
+        var length = await image[i].length();
+        var multipartFile = new http.MultipartFile("image", stream, length,
+            filename: "image[$i]");
+        request.files.add(multipartFile);
+      }
+    }
+    request.fields['order_id'] = order_id;
+    request.fields['customer_id'] = customerId.toString();
+    request.fields['product_id'] = product_id;
+    request.fields['comment'] = comment;
+    request.fields['firstname'] = firstname;
+    request.fields['lastname'] = lastname;
+    request.fields['email'] = email;
+    request.fields['telephone'] = telephone;
+    request.fields['date_ordered'] = date_ordered;
+    request.fields['product'] = product;
+    request.fields['model'] = model;
+    request.fields['payment_code'] = payment_code;
+    request.fields['quantity'] = quantity;
+    request.fields['return_reason_id'] = return_reason_id;
+    request.fields['opened'] = opened;
+    request.fields['bank_swift_code'] = bank_swift_code;
+    request.fields['bank_account_name'] = bank_account_name;
+    request.fields['bank_account_number'] = bank_account_number;
+    request.fields['agree'] = agree;
+
+    var response = await request.send();
+    print(response.statusCode);
+    print(response.stream);
+    return response;
+
+  }
+
   Future getPageScreenData(int id) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final data = Uri.parse("https://www.vkreta.com/index.php?route=api/info&information_id=" + id.toString());
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final data = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/info&information_id=" +
+            id.toString());
     final response = await http.get(
       data,
       headers: {'authorization': basicAuth},
@@ -207,7 +436,8 @@ class ApiService {
   }
 
   Future<HomeScreenModel> getHome() async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     final data = Uri.parse("https://www.vkreta.com/index.php?route=api/home");
     final response = await http.get(
       data,
@@ -233,12 +463,14 @@ class ApiService {
   }
 
   Future getcustomerDetail() async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
     // print(customer_id);
 
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/cutomerInfo");
+    final loginUrl =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/cutomerInfo");
     final response = await http.post(loginUrl, headers: {
       'authorization': basicAuth
     }, body: {
@@ -262,10 +494,14 @@ class ApiService {
   }
 
   Future changePassword(String email, String password) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/reset");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/reset");
     // print(0);
-    final response = await http.post(loginUrl, headers: {'authorization': basicAuth}, body: {'email': email, 'password': password});
+    final response = await http.post(loginUrl,
+        headers: {'authorization': basicAuth},
+        body: {'email': email, 'password': password});
     // print(0);
     // print(response.statusCode.toString());
     // // print(response.body.toString());
@@ -273,11 +509,24 @@ class ApiService {
     // print(_model);
   }
 
-  Future addAddress(String firstname, String lastname, String company, String address_1, String address_2, String city, String postcode, int country_id, int zone_id, int _default,) async {
+  Future addAddress(
+    String firstname,
+    String lastname,
+    String company,
+    String address_1,
+    String address_2,
+    String city,
+    String postcode,
+    int country_id,
+    int zone_id,
+    int _default,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/cutomerInfo/address_add");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cutomerInfo/address_add");
     // print(0);
     final response = await http.post(loginUrl, headers: {
       'authorization': basicAuth
@@ -304,8 +553,10 @@ class ApiService {
   Future<WishlistModel> getWishlist(int product_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/wishlist");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/wishlist");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -321,9 +572,12 @@ class ApiService {
   }
 
   Future<ProductDetailModel> getProductDetail(int product_id) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/productdetail&product_id=${product_id.toString()}");
-    final response = await http.post(wishlist, headers: {'authorization': basicAuth}, body: {});
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/productdetail&product_id=${product_id.toString()}");
+    final response = await http
+        .post(wishlist, headers: {'authorization': basicAuth}, body: {});
 
     print("wishlist ---------->> $wishlist");
     print("response.body --------------->>${response.body}");
@@ -336,8 +590,10 @@ class ApiService {
   //
   Future googleLogin(String email, String firstname) async {
     List name = firstname.split(' ');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/register/googleRegisterOrLogin");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/register/googleRegisterOrLogin");
     final response = await http.post(loginUrl, headers: {
       'authorization': basicAuth
     }, body: {
@@ -383,8 +639,10 @@ class ApiService {
   Future<RemoveproductModel> removewishlistproduct(int product_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/wishlist/remove");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/wishlist/remove");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -402,9 +660,12 @@ class ApiService {
   }
 
   Future<CountryModel> getCountry() async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cutomerInfo/country");
-    final response = await http.post(wishlist, headers: {'authorization': basicAuth}, body: {});
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cutomerInfo/country");
+    final response = await http
+        .post(wishlist, headers: {'authorization': basicAuth}, body: {});
     var data = jsonDecode(response.body.toString());
     // print("response.body2");
     // WishlistModel _model = wishlistModelFromJson(response.body);
@@ -416,8 +677,10 @@ class ApiService {
   }
 
   Future<ZoneModel> getZone(int country_id) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cutomerInfo/zone&country_id=99");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cutomerInfo/zone&country_id=99");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -433,12 +696,15 @@ class ApiService {
     return _model;
   }
 
-  Future<CartModel> AddToCart(int product_id, int quantity, Map<String, String>? selectedVariants) async {
+  Future<CartModel> AddToCart(int product_id, int quantity,
+      Map<String, String>? selectedVariants) async {
     print("response.bod");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/add");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/add");
 
     //
     Map<String, String> body = {
@@ -453,7 +719,8 @@ class ApiService {
     }
 
     print(body.toString());
-    final response = await http.post(wishlist, headers: {'authorization': basicAuth}, body: body);
+    final response = await http.post(wishlist,
+        headers: {'authorization': basicAuth}, body: body);
     var data = jsonDecode(response.body.toString());
     // print("response.body2");
     // WishlistModel _model = wishlistModelFromJson(response.body);
@@ -468,8 +735,10 @@ class ApiService {
   Future<CartlistModel> getCartItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -488,8 +757,10 @@ class ApiService {
   Future<RemovecartitemModel> removeCartItems(int cart_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/remove");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/remove");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -506,11 +777,14 @@ class ApiService {
     return _model;
   }
 
-  Future<UpdatecartquantityModel> updateCartQuantity(int cart_id, int quantity) async {
+  Future<UpdatecartquantityModel> updateCartQuantity(
+      int cart_id, int quantity) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/edit");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/edit");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -521,7 +795,8 @@ class ApiService {
 
     print(jsonDecode(response.body.toString()));
 
-    UpdatecartquantityModel _model = updatecartquantityModelFromJson(response.body);
+    UpdatecartquantityModel _model =
+        updatecartquantityModelFromJson(response.body);
     // print(_model);
     return _model;
   }
@@ -529,8 +804,10 @@ class ApiService {
   Future<CarttotalModel> getTotalCart() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/cartTotal");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cartnew/cartTotal");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -548,8 +825,10 @@ class ApiService {
     print("address id ????????" + address_id);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/shipping_method");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cartnew/shipping_method");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -566,8 +845,10 @@ class ApiService {
   Future getCoupon() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/coupon_lists&customer_id=$customer_id");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cartnew/coupon_lists&customer_id=$customer_id");
     final response = await http.get(
       wishlist,
       headers: {'authorization': basicAuth},
@@ -582,8 +863,10 @@ class ApiService {
   Future applyCoupon(String name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/coupon/check");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/coupon/check");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -597,8 +880,10 @@ class ApiService {
     print("address id ????????" + address_id);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/payment_method");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cartnew/payment_method");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -609,7 +894,8 @@ class ApiService {
 
     Autogenerated data = Autogenerated.fromJson(jsonDecode(response.body));
 
-    print("response.body>>>>>>>>>>>>>>>>>>>>: ${data.paymentMethodsList?[0].code}");
+    print(
+        "response.body>>>>>>>>>>>>>>>>>>>>: ${data.paymentMethodsList?[0].code}");
 
     return data;
   }
@@ -617,8 +903,10 @@ class ApiService {
   Future getAddressList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cutomerInfo/address_list");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cutomerInfo/address_list");
     final response = await http.post(
       wishlist,
       headers: {'authorization': basicAuth},
@@ -627,12 +915,15 @@ class ApiService {
 
     log.d(response.body);
 
-    Map<String, ListAddressModel> _model = listAddressModelFromJson(response.body);
+    Map<String, ListAddressModel> _model =
+        listAddressModelFromJson(response.body);
     return _model;
   }
 
-  Future<ReviewModel> getProductReview(int product_id, int page, int limit) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+  Future<ReviewModel> getProductReview(
+      int product_id, int page, int limit) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     final data = Uri.parse("https://www.vkreta.com/index.php?route=api/"
         "productdetail/review&product_id=${product_id.toString()}&page=${page.toInt()}&limit=${limit.toInt()}");
     final response = await http.get(
@@ -655,8 +946,10 @@ class ApiService {
   Future<DeleteaddressModel> deletAddress(int address_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final wishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/cutomerInfo/address_delete");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final wishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cutomerInfo/address_delete");
     final response = await http.post(wishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -673,11 +966,24 @@ class ApiService {
     return _model;
   }
 
-  Future editAddress(String firstname, String lastname, String company, String address_1, String address_2, String city, String postcode, int country_id, int zone_id, int _default,) async {
+  Future editAddress(
+    String firstname,
+    String lastname,
+    String company,
+    String address_1,
+    String address_2,
+    String city,
+    String postcode,
+    int country_id,
+    int zone_id,
+    int _default,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/cutomerInfo/address_update");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cutomerInfo/address_update");
     // print(0);
     final response = await http.post(loginUrl, headers: {
       'authorization': basicAuth
@@ -701,11 +1007,14 @@ class ApiService {
     // print(_model);
   }
 
-  Future<AddorderModel> addOrder(int payment_address, int shipping_address, String payment_method, String shipping_method, String comment) async {
+  Future<AddorderModel> addOrder(int payment_address, int shipping_address,
+      String payment_method, String shipping_method, String comment) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/ordernew/add");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/ordernew/add");
 
     print("customer_id -------------->> ${customer_id}");
     print("payment_address -------------->> ${payment_address}");
@@ -738,8 +1047,10 @@ class ApiService {
   }
 
   Future getRazorPay() async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/cartnew/razorpay_access");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/cartnew/razorpay_access");
     final response = await http.get(
       loginUrl,
       headers: {'authorization': basicAuth},
@@ -750,9 +1061,11 @@ class ApiService {
   }
 
   Future<SearchModel> getProductSearch({String? search}) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
 
-    String url = "https://www.vkreta.com/index.php?route=api/search&search=$search";
+    String url =
+        "https://www.vkreta.com/index.php?route=api/search&search=$search";
     // if (search != "") {
     //   url += "&search=${search.toString()}";
     // }
@@ -792,15 +1105,23 @@ class ApiService {
     print("response.body3");
     return _model;
   }
-  Future<SearchModel> getFilterSearch({String? min,String? max,String? brand,String? discount,String? prices,String? rating}) async {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+
+  Future<SearchModel> getFilterSearch(
+      {String? min,
+      String? max,
+      String? brand,
+      String? discount,
+      String? prices,
+      String? rating}) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
 
     String url = "https://www.vkreta.com/index.php?route=api/search";
-      url += "&fp=$min,$max";
+    url += "&fp=$min,$max";
     if (brand != "bbb") {
       url += "&fm=$brand";
     }
-    if (discount!= "bbb") {
+    if (discount != "bbb") {
       url += "&f4=$discount";
     }
     if (rating != "bbb") {
@@ -834,8 +1155,10 @@ class ApiService {
   Future<AddtowishlistModel> addtowishlist(int product_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final addwishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/wishlist/add");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final addwishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/wishlist/add");
     final response = await http.post(addwishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -856,12 +1179,14 @@ class ApiService {
   Future Orderlist() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final addwishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/ordernew/OrderList");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final addwishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/ordernew/OrderList");
     final response = await http.post(addwishlist, headers: {
       'authorization': basicAuth
     }, body: {
-      'customer_id': customer_id.toString(),
+      'customer_id': 5.toString(),
     });
     // var data= jsonDecode(response.body.toString());
     // print("response.body2");
@@ -869,9 +1194,9 @@ class ApiService {
     // print("response.body3");
     // return _model;
     // print(response.body);
-    var data=jsonDecode(response.body);
-    List<MyOrderHistoryModel> _model=[];
-    for(var i in data){
+    var data = jsonDecode(response.body);
+    List<MyOrderHistoryModel> _model = [];
+    for (var i in data) {
       _model.add(MyOrderHistoryModel.fromJson(i));
     }
     print(_model[0].status![0].product!.length.toString());
@@ -884,8 +1209,10 @@ class ApiService {
   Future Orderinformationdetail(int order_id, int seller_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final addwishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/ordernew/info");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final addwishlist =
+        Uri.parse("https://www.vkreta.com/index.php?route=api/ordernew/info");
     print("customer_id --------->> ${customer_id}");
     print("order_id --------->> ${order_id}");
     print("seller_id --------->> ${seller_id}");
@@ -905,11 +1232,14 @@ class ApiService {
     return _model;
   }
 
-  Future SellerRating(int order_id, int seller_id, int rating, String review_description) async {
+  Future SellerRating(int order_id, int seller_id, int rating,
+      String review_description) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final addwishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/productdetail/ordersellerreview");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final addwishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/productdetail/ordersellerreview");
     final response = await http.post(addwishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -928,11 +1258,16 @@ class ApiService {
     return _model;
   }
 
-  Future OrderReturnAdd(int order_id, int product_id,) async {
+  Future OrderReturnAdd(
+    int order_id,
+    int product_id,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final addwishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/ordernew/returnorderadd");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final addwishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/ordernew/returnorderadd");
     final response = await http.post(addwishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -949,11 +1284,31 @@ class ApiService {
     return _model;
   }
 
-  Future OrderReturnSave(int order_id, int product_id, String firstname, String lastname, String email, String telephone, String date_ordered, String product, String model, String payment_code, int quantity, int return_reason_id, int opened, String comment, String bank_swift_code, String bank_account_name, String bank_account_number, int agree) async {
+  Future OrderReturnSave(
+      int order_id,
+      int product_id,
+      String firstname,
+      String lastname,
+      String email,
+      String telephone,
+      String date_ordered,
+      String product,
+      String model,
+      String payment_code,
+      int quantity,
+      int return_reason_id,
+      int opened,
+      String comment,
+      String bank_swift_code,
+      String bank_account_name,
+      String bank_account_number,
+      int agree) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? customer_id = prefs.getInt('customer_id');
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
-    final addwishlist = Uri.parse("https://www.vkreta.com/index.php?route=api/ordernew/returnorder");
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final addwishlist = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/ordernew/returnorder");
     final response = await http.post(addwishlist, headers: {
       'authorization': basicAuth
     }, body: {
@@ -989,12 +1344,14 @@ class ApiService {
 
   Future sugestSearchApiCalled(String item) async {
     try {
-      String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+      String basicAuth = 'Basic ' +
+          base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // int? customer_id = prefs.getInt('customer_id');
       // print(customer_id);
 
-      final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=journal3/search&category_id=250&search=${item}");
+      final loginUrl = Uri.parse(
+          "https://www.vkreta.com/index.php?route=journal3/search&category_id=250&search=${item}");
       final response = await http.get(
         loginUrl,
         headers: {'authorization': basicAuth},
@@ -1009,14 +1366,17 @@ class ApiService {
     // return json.decode(response.body);
   }
 
-  Future searchApiCalled({String item = '', String pageNO = '', String lmit = ''}) async {
+  Future searchApiCalled(
+      {String item = '', String pageNO = '', String lmit = ''}) async {
     // try {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // int? customer_id = prefs.getInt('customer_id');
     // print(customer_id);
 
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/search&search=${item}&page=${pageNO}&limit=${lmit}");
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/search&search=${item}&page=${pageNO}&limit=${lmit}");
     final response = await http.get(
       loginUrl,
       headers: {'authorization': basicAuth},
@@ -1030,14 +1390,24 @@ class ApiService {
     // return json.decode(response.body);
   }
 
-  Future filterApiCalled({String item = '', String pageNO = '', String lmit = '', String minp = '', String maxp = '', String category = '', String avaliable = '',}) async {
+  Future filterApiCalled({
+    String item = '',
+    String pageNO = '',
+    String lmit = '',
+    String minp = '',
+    String maxp = '',
+    String category = '',
+    String avaliable = '',
+  }) async {
     // try {
-    String basicAuth = 'Basic ' + base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // int? customer_id = prefs.getInt('customer_id');
     // print(customer_id);
 
-    final loginUrl = Uri.parse("https://www.vkreta.com/index.php?route=api/search&search=${item}&page=${pageNO}&limit=${lmit}&fmin=${minp}&fmax=${maxp}&fc=${category}&fm=167&fq=${avaliable}");
+    final loginUrl = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/search&search=${item}&page=${pageNO}&limit=${lmit}&fmin=${minp}&fmax=${maxp}&fc=${category}&fm=167&fq=${avaliable}");
     final response = await http.get(
       loginUrl,
       headers: {'authorization': basicAuth},
