@@ -191,7 +191,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
                         await _picker.pickImage(source: ImageSource.gallery);
                     if (image != null) {
                       setState(() {
-                        list.add(File(image!.path));
+                        list.add(File(image.path));
                       });
                     }
                   },

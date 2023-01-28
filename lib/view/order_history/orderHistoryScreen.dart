@@ -306,7 +306,7 @@ class OrderItems extends StatelessWidget {
                   ? Expanded(
                       child: ElevatedButton(
                           onPressed: (){
-                            Get.to(ReturnOrderScreen(order_id: orderId, status: status,product: product!,));
+                            Get.to(ReturnOrderScreen(order_id: orderId, status: status,product: product,));
                           }, child: const Text("Return")))
                   : Container(),
               SizedBox(

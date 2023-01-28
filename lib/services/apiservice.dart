@@ -218,6 +218,19 @@ class ApiService {
     print(response.body);
     return json.decode(response.body);
   }
+  Future getProductList(String id) async {
+    String basicAuth = 'Basic ' +
+        base64.encode(utf8.encode('$basicAuth_username:$basicAuth_password'));
+    final allAboutUs = Uri.parse(
+        "https://www.vkreta.com/index.php?route=api/product&path=$id&sort=pd.name&order=ASC");
+    final response = await http.get(
+      allAboutUs,
+      headers: {'authorization': basicAuth},
+    );
+    print(response.statusCode);
+    print(response.body);
+    return json.decode(response.body);
+  }
 
   Future getPrivacyPolicy() async {
     String basicAuth = 'Basic ' +

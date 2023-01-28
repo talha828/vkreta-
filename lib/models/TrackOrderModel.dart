@@ -11,7 +11,7 @@ class TrackOrderModel {
       this.journey,});
 
   TrackOrderModel.fromJson(dynamic json) {
-    orderId = json['OrderId'].toString() ?? "";
+    orderId = json['OrderId'].toString() ;
     orderAdded = json['order_added'];
     if (json['history'] != null) {
       history = [];

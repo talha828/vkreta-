@@ -1,12 +1,10 @@
 import 'dart:collection';
-
 import 'package:animations/animations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:get/get.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
@@ -17,15 +15,13 @@ import 'package:vkreta/getx_controllers/homepage.dart';
 import 'package:vkreta/models/homemodel.dart';
 import 'package:vkreta/view/address/modifyyouraddress.dart';
 import 'package:vkreta/view/notification/notifications.dart';
+import 'package:vkreta/view/product/category_screen.dart';
 import 'package:vkreta/view/product/productdisplay.dart';
 import 'package:vkreta/response/search_products_response.dart';
 import 'package:vkreta/view/product/search_screen.dart';
-
 import 'package:vkreta/services/apiservice.dart';
-
 import 'package:vkreta/view/product/viewall.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
-
 import '../../models/listaddressModel.dart';
 
 class Home extends StatefulWidget {
@@ -596,11 +592,12 @@ class _HomeState extends State<Home> {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => ViewAll(
-                                      title: snapshot.homeScreenModel.value
-                                          .topCategory![index].name!,
-                                    ),
-                                  ),
+                                      builder: (context) => TopCategoryScreen(
+                                          id: snapshot
+                                              .homeScreenModel
+                                              .value
+                                              .topCategory![index]
+                                              .categoryId!)),
                                 );
                               },
                               width: width,
@@ -738,7 +735,7 @@ class _HomeState extends State<Home> {
     Category(image: "assets/health.png", label: "Health"),
     Category(image: "assets/home.png", label: "Home"),
   ];
-
+  int page = 0;
   String title = "Flash sale";
   int slider = 0;
   int product = 0;
@@ -768,54 +765,74 @@ class _HomeState extends State<Home> {
           SizedBox(
             height: width * 0.04,
           ),
-          CarouselSlider(
-              items: snapshot.silder![slider].data!
-                  .map((e) => Container(
-                        margin: EdgeInsets.symmetric(vertical: width * 0.02),
-                        width: width * 0.9,
-                        height: width * 0.2,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Colors.black38,
-                                  offset: Offset(-2, 3),
-                                  blurRadius: 7)
-                            ]),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: Image.network(
-                            e.image!.toString() == 'null'
-                                ? 'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp'
-                                : e.image!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, object, streacTree) {
-                              return Icon(
-                                Icons.image,
-                                size: width * 0.06,
-                                color: Colors.grey,
-                              );
-                            },
+          InkWell(
+            onTap: () {},
+            child: CarouselSlider(
+                items: snapshot.silder![slider].data!
+                    .map((e) => InkWell(
+                          onTap: () {
+                            switch (e.linkType) {
+                              case "product_id":
+                                {
+                                  Get.to(ProductDisplay(int.parse(e.link!)));
+                                }
+                                break;
+                              case "category_id":
+                                {
+                                  Get.to(TopCategoryScreen(id: e.link!));
+                                }
+                                break;
+                            }
+                          },
+                          child: Container(
+                            margin:
+                                EdgeInsets.symmetric(vertical: width * 0.02),
+                            width: width * 0.9,
+                            height: width * 0.2,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(7),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Colors.black38,
+                                      offset: Offset(-2, 3),
+                                      blurRadius: 7)
+                                ]),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(7),
+                              child: Image.network(
+                                e.image!.toString() == 'null'
+                                    ? 'https://www.vkreta.com/image/cache/catalog/category-data/baby-care-products-100x100.webp'
+                                    : e.image!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, object, streacTree) {
+                                  return Icon(
+                                    Icons.image,
+                                    size: width * 0.06,
+                                    color: Colors.grey,
+                                  );
+                                },
+                              ),
+                            ),
                           ),
-                        ),
-                      ))
-                  .toList(),
-              options: CarouselOptions(
-                height: width * 0.45,
-                aspectRatio: 9 / 14,
-                viewportFraction: 1,
-                initialPage: 0,
-                enableInfiniteScroll: true,
-                reverse: false,
-                autoPlay: true,
-                autoPlayInterval: const Duration(seconds: 3),
-                autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                autoPlayCurve: Curves.fastOutSlowIn,
-                enlargeCenterPage: true,
-                onPageChanged: (ss, aa) {},
-                scrollDirection: Axis.horizontal,
-              )),
+                        ))
+                    .toList(),
+                options: CarouselOptions(
+                  height: width * 0.45,
+                  aspectRatio: 9 / 14,
+                  viewportFraction: 1,
+                  initialPage: 0,
+                  enableInfiniteScroll: true,
+                  reverse: false,
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 3),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enlargeCenterPage: true,
+                  onPageChanged: (ss, aa) {},
+                  scrollDirection: Axis.horizontal,
+                )),
+          ),
           SizedBox(
             height: width * 0.04,
           ),
@@ -1125,7 +1142,9 @@ class _ProductCartState extends State<ProductCart> {
                 alignment: Alignment.center,
                 child: const Text("No result are found"),
               ),
-        SizedBox(height: widget.width * 0.04,),
+        SizedBox(
+          height: widget.width * 0.04,
+        ),
       ],
     );
   }

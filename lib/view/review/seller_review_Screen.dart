@@ -299,7 +299,7 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
                     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
                     if(image != null){
                       setState(() {
-                        list.add(File(image!.path));
+                        list.add(File(image.path));
                       });
                     }
                   },
